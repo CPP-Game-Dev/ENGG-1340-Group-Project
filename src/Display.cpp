@@ -1,10 +1,6 @@
+#include"include/Display.h"
 
-
-/*
-Class to store functions to draw the game on the console
-*/
-class Display
+Display::Display()
 {
-public:
-	
-};
+	//TODO:Implementation
+}

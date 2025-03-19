@@ -1,25 +1,17 @@
+#include"include/Player.h"
 
-
-class Player
+Player::Player()
 {
-private:
+	//TODO:Implementation
+}
 
-public:
-	/*
-	Constructor
-	*/
-	Player()
-	{
+Player::Player(int xPos, int yPos,
+			   int stamina, int staminaMax, int fov);
+{
+	//TODO:Implementation
+}
 
-	}
-
-	/*
-	Deconstrucutor
-
-	Frees any dynamically allocated memory within the class and delete the object
-	*/
-	~Player()
-	{
-
-	}
-};
+Player::~Player()
+{
+	//TODO:Implementation
+}

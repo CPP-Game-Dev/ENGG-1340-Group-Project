@@ -1,15 +1,21 @@
+#include"include/Level.h"
 
-/*
-Class to store the current level's maze,
-player position, positions of all props, e.t.c.
-*/
-class Level
+Level::Level(int mazeSize, int itemCount)
 {
-private:
+	//TODO:Implementation
+}
 
-public:
-	Level()
-	{
+Level::initMaze(int size)
+{
+	//TODO:Implementation
+}
 
-	}
-};
+Level::generateMaze(int size)
+{
+	//TODO:Implementation
+}
+
+Level::placeItems(int itemCount)
+{
+	//TODO:Implementation
+}
