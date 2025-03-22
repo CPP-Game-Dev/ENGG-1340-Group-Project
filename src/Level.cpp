@@ -1,10 +1,8 @@
 #include <vector>
-#include <ctime>
 #include <stdlib.h>
 #include <utility>
 #include <iostream>
 #include <string>
-#include <chrono>
 #include <unistd.h>
 #include "include/level.h"
 #include "include/enums.h"
@@ -82,7 +80,6 @@ void getAdjWalls(Vector2D pos)
     if (pos.x < this->size - 1 && this->maze[pos.y][pos.x + 1] == Wall)
         this->wallList.push_back(Vector2D(pos.y, pos.x + 1));
 }
-
 
 /*
 * Function to verify if a wall can be removed
@@ -185,7 +182,6 @@ void setEndpoint()
         }
     }
 }
-
 
 /*
 * == FOR DEBUG PURPOSES ONLY ==
