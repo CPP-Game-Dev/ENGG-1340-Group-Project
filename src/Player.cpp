@@ -1,17 +1,13 @@
-#include"include/Player.h"
+#include "player.h"
+#include "include/player.h"
+#include "include/vector2d.h"
 
 Player::Player()
 {
 	//TODO:Implementation
 }
 
-Player::Player(int xPos, int yPos,
-			   int stamina, int staminaMax, int fov);
-{
-	//TODO:Implementation
-}
-
-Player::~Player()
+Player::Player(Vector2D pos, int stamina, int staminaMax, int fov)
 {
 	//TODO:Implementation
 }

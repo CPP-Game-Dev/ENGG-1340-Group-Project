@@ -1,7 +1,10 @@
 #pragma once
 
+#include "vector2d.h"
+
+
 /*
-Class to store player-related functions & player data
+* Class to store player-related functions & player data
 */
 class Player
 {
@@ -9,21 +12,12 @@ private:
 	#pragma region Class Variables
 	int stamina;	//Current stamina
 	int staminaMax;	//Maximum stamina
-	int xPos;		//X position, right is positive
-	int yPos;		//Y position, down is positive
 	int fov;		//Radius of field-of-view
+	Vector2D pos;	//Player position
 	#pragma endregion
 public:
 	
-	Player();										//Initialize a new Player object (used for new game)
-	Player(int xPos, int yPos, 
-		   int stamina, int staminaMax, int fov);	//Create a Player object with predetermined stats (used to load a save)
+	Player();													//Initialize a new Player object (used for new game)
+	Player(Vector2D pos, int stamina, int staminaMax, int fov);	//Create a Player object with predetermined stats (used to load a save)
 
-
-	/*
-	Deconstrucutor
-
-	Frees any dynamically allocated memory within the class and delete the object
-	*/
-	~Player();
 };

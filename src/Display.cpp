@@ -1,4 +1,4 @@
-#include"include/Display.h"
+#include "include/display.h"
 
 Display::Display()
 {
