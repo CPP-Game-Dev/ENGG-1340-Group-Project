@@ -4,7 +4,7 @@
 
 Player::Player()
 {
-	//TODO:Implementation
+	
 }
 
 Player::Player(Vector2D pos, int stamina, int staminaMax, int fov)
