@@ -15,6 +15,15 @@ private:
 	Vector2D startPos;
 	Vector2D endPos;
 	int itemCount;
+	int size;
+	
+	void generateMaze(Vector2D pos);
+	void getAdjWalls(Vector2D pos);
+	bool verifyWall(Vector2D wallPos);
+	void placeItems(int itemCount);
+	void setEndpoint();
+
+	void print();
 public:
 	Level(int size, Vector2D startPos, int itemCount);
 };

@@ -25,7 +25,7 @@ Level::Level(int size, Vector2D startPos, int itemCount)
 * 
 * Args: starting position
 */
-void generateMaze(Vector2D pos)
+void Level::generateMaze(Vector2D pos)
 {
     #pragma region Starting Cell
     this->maze[pos.y][pos.x] = None;
@@ -62,7 +62,7 @@ void generateMaze(Vector2D pos)
 * Args: position to check
 * 
 */
-void getAdjWalls(Vector2D pos)
+void Level::getAdjWalls(Vector2D pos)
 {
     //Check above
     if (pos.y > 0 && this->maze[pos.y - 1][pos.x] == Wall)
@@ -91,23 +91,23 @@ void getAdjWalls(Vector2D pos)
 * 
 * Return: if the wall can be removed or not
 */
-bool verifyWall(Vector2D wallPos)
+bool Level::verifyWall(Vector2D wallPos)
 {
     int count = 0;
     //Check up
-    if (wallPos.y > 0 && this->cellMap[wallPos.y - 1][wallPos.x])
+    if (wallPos.y > 0 && this->maze[wallPos.y - 1][wallPos.x] == None)
         count++;
 
     //Check left
-    if (wallPos.x > 0 && this->cellMap[wallPos.y][wallPos.x - 1])
+    if (wallPos.x > 0 && this->maze[wallPos.y][wallPos.x - 1] == None)
         count++;
     
     //Check down
-    if (wallPos.y < this->size - 1 && this->cellMap[wallPos.y + 1][wallPos.x])
+    if (wallPos.y < this->size - 1 && this->maze[wallPos.y + 1][wallPos.x] == None)
         count++;
 
     //Check right
-    if (wallPos.x < this->size - 1 && this->cellMap[wallPos.y][wallPos.x + 1])
+    if (wallPos.x < this->size - 1 && this->maze[wallPos.y][wallPos.x + 1] == None)
         count++;
 
     return count == 1;
@@ -118,10 +118,10 @@ bool verifyWall(Vector2D wallPos)
 * 
 * Args: number of items to put
 */
-void placeItems(int itemCount)
+void Level::placeItems(int itemCount)
 {
     //Make temporary variable to store a list of useful
-	std::vector<Vector2D> tileList = new std::vector<Vector2D>();
+	std::vector<Vector2D> tileList = std::vector<Vector2D>(this->size * this->size);
     for (int i = 0; i < this->size; i++)
         for (int j = 0; j < this->size; j++)
             if (this->maze[i][j] == None)
@@ -135,7 +135,7 @@ void placeItems(int itemCount)
         5, 2, 1
     };
     TileObject items[9] = {
-        RegenSmall, RegenMedium, RegenBig,
+        RationSmall, RationMedium, RationBig,
         StaminaSmall, StaminaMedium, StaminaBig,
         VisionSmall, VisionMedium, VisionBig
     };
@@ -159,16 +159,13 @@ void placeItems(int itemCount)
                 this->maze[tilePos.y][tilePos.x] = items[j];
                 continue;
             }
-            rnd -= choice_weight[j];
+            rnd -= weights[j];
         }
     }
     #pragma endregion
-
-    //Free allocated memory
-	delete tileList;
 }
 
-void setEndpoint()
+void Level::setEndpoint()
 {
     for (int i = this->size-1; i >= 0; i--)
     {
@@ -176,7 +173,7 @@ void setEndpoint()
         {
             if (this->maze[i][j] != Wall && this->maze[i][j] != Player)
             {
-                this->endPoint = Vector2D(i, j);
+                this->endPos = Vector2D(i, j);
                 return;
             }
         }
@@ -189,35 +186,39 @@ void setEndpoint()
 * Pretty Print function, prints according to tile types
 * Does not require ncurses
 */
-void print()
+void Level::print()
 {
     system("clear");
     //Lambda function to convert TileObject into Char
     auto tts = [](TileObject tile)
     {
-        if (tile == Player)
-            return "P";
-        if (tile == Wall)
-            return "#";
-        if (tile == RegenSmall)
-            return "1";
-        if (tile == RegenMedium)
-            return "2";
-        if (tile == RegenBig)
-            return "3";
-		if (tile == StaminaSmall)
-			return "4";
-		if (tile == StaminaMedium)
-			return "5";
-		if (tile == StaminaBig)
-			return "6";
-		if (tile == VisionSmall)
-			return "7";
-		if (tile == VisionMedium)
-			return "8";
-		if (tile == VisionBig)
-			return "9";
-		return " ";
+        switch(tile)
+        {
+            case Player:
+                return "P";
+            case Wall:
+                return "#";
+            case RationSmall:
+                return "1";
+            case RationMedium:
+                return "2";
+            case RationBig:
+                return "3";
+            case StaminaSmall:
+                return "4";
+            case StaminaMedium:
+                return "5";
+            case StaminaBig:
+                return "6";
+            case VisionSmall:
+                return "7";
+            case VisionMedium:
+                return "8";
+            case VisionBig:
+                return "9";
+            default:
+                return " ";
+        }
     };
 
     std::vector<std::string> rows;
@@ -231,7 +232,7 @@ void print()
         row = "#";
         for (int j = 0; j < this->size; j++)
         {
-            row.append(tts(this->maze[i][j]);
+            row.append(tts(this->maze[i][j]));
         }
         row.append("#");
         rows.push_back(row);

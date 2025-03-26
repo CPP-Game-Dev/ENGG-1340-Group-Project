@@ -1,4 +1,8 @@
-﻿#include <iostream>
+﻿#include <ncurses.h>
+#include <ctime>
+#include <chrono>
+#include <fstream>
+#include <assert.h>
 #include "include/display.h"
 #include "include/enums.h"
 #include "include/level.h"
@@ -23,6 +27,40 @@ public:
 	{
 		//TODO:Implementation
 	}
+
+
+	/*
+	* Loads save data into the game
+	* Throws error when there isn't one
+	*/
+	void loadSave()
+	{
+		//TODO:Implementation
+	}
+
+
+	/*
+	* Updates an existing save with new data
+	* If there isn't an existing save, throw an error
+	*/
+	void updateSave()
+	{
+		//TODO:Implementation
+	}
+
+	/*
+	* Create a new save with default values
+	*/
+	void newSave()
+	{
+
+	}
+
+	/*
+	* Handles all inputs and interpret them
+	* Also handles screen resizing
+	* Returns: the key pressed as an enum
+	*/
 
 	// Main game loop
 	void runGame()
