@@ -2,22 +2,9 @@
 #include <iostream>
 #include <ncurses.h>
 #include <vector>
-using namespace std;
+#include "../src/include/vector2d.h"
+#include "../src/include/level.h" //enum included
 
-enum TileObject {
-    Player,
-    Wall,
-    None, // Player, Wall of maze, Path
-    RegenSmall,
-    RegenMedium,
-    RegenBig, // 3 tiers of instant Stamina replenish
-    StaminaSmall,
-    StaminaMedium,
-    StaminaBig, // 3 tiers of maximum Stamina boost
-    VisionSmall,
-    VisionMedium,
-    VisionBig // 3 tiers of vision range boost
-};
 
 char getTileChar(TileObject tile) {
     switch (tile) {
@@ -27,10 +14,10 @@ char getTileChar(TileObject tile) {
         return '#';
     case None:
         return '.';
-    case RegenSmall:
+    case RationSmall:
         return 'r';
-    case RegenMedium:
-    case RegenBig:
+    case RationMedium:
+    case RationBig:
         return 'R';
     case StaminaSmall:
         return 's';
@@ -75,7 +62,7 @@ bool checkValid(int playerX, int playerY, int fov) {
     return playerX >= 0 && playerY >= 0 && fov >= 0;
 }
 
-void printMap(const vector<vector<TileObject> > &map, int playerX, int playerY,
+void printMap(const std::vector<std::vector<TileObject> > &map, int playerX, int playerY,
               int fov) {
     for (int i = 0; i < (int)map.size(); i++) {
         for (int j = 0; j < (int)map[i].size(); j++) {
@@ -91,7 +78,7 @@ void printMap(const vector<vector<TileObject> > &map, int playerX, int playerY,
                     printw("  "); // Print two spaces as a "block"
                 } else {
                     char t = getTileChar(map[i][j]);
-                    if (map[i][j] == RegenBig || map[i][j] == StaminaBig ||
+                    if (map[i][j] == RationBig || map[i][j] == StaminaBig ||
                         map[i][j] == VisionBig) {
                         attron(A_BOLD);
                         printw("%c ", t);
@@ -114,10 +101,10 @@ void printMap(const vector<vector<TileObject> > &map, int playerX, int playerY,
 }
 
 void TesterProgram() {
-    vector<vector<TileObject> > map = {
+    std::vector<std::vector<TileObject> > map = {
         {Wall, Wall, Wall, Wall, Wall, Wall, Wall},
         {Wall, StaminaBig, VisionSmall, None, None, None, Wall},
-        {Wall, RegenMedium, Player, None, None, None, Wall},
+        {Wall, RationMedium, Player, None, None, None, Wall},
         {Wall, None, None, None, None, None, Wall},
         {Wall, Wall, Wall, Wall, Wall, Wall, Wall}};
 
