@@ -75,7 +75,7 @@ bool checkValid(int playerX, int playerY, int fov) {
     return playerX >= 0 && playerY >= 0 && fov >= 0;
 }
 
-void printMap(const vector<vector<TileObject>> &map, int playerX, int playerY,
+void printMap(const vector<vector<TileObject> > &map, int playerX, int playerY,
               int fov) {
     for (int i = 0; i < (int)map.size(); i++) {
         for (int j = 0; j < (int)map[i].size(); j++) {
@@ -114,7 +114,7 @@ void printMap(const vector<vector<TileObject>> &map, int playerX, int playerY,
 }
 
 void TesterProgram() {
-    vector<vector<TileObject>> map = {
+    vector<vector<TileObject> > map = {
         {Wall, Wall, Wall, Wall, Wall, Wall, Wall},
         {Wall, StaminaBig, VisionSmall, None, None, None, Wall},
         {Wall, RegenMedium, Player, None, None, None, Wall},
