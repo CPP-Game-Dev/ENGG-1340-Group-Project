@@ -1,6 +1,5 @@
 #include "include/display.h"
 
-Display::Display()
-{
-	//TODO:Implementation
+Display::Display() {
+    // TODO:Implementation
 }
