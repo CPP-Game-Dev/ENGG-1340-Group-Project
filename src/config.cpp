@@ -10,9 +10,13 @@
 Config::Config() {
     // Config files adhere to XDG Base Directory Specification
     // See: https://specifications.freedesktop.org/basedir-spec/latest/
-    homePath = getenv("XDG_DATA_HOME");
-    if (homePath.empty()) // if XDG_DATA_HOME is not set, fallback to $HOME
-        homePath = getenv("HOME");
+    configDir = getenv("XDG_CONFIG_HOME"); //
+
+    if (!configDir.empty()) // If XDG_CONFIG_HOME exists, then we don't need to
+                            // do any further checking
+        return;
+
+    std::string homePath = getenv("HOME");
 
     // Constructing base directory
     configDir = homePath + "/.config/" + GAME_FOLDER + "/";

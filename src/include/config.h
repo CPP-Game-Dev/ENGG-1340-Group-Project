@@ -8,7 +8,6 @@ class Config {
     const std::string CONFIG_FILE = "config.txt";
 
     std::string configDir;
-    std::string homePath;
 
     Config();
 
