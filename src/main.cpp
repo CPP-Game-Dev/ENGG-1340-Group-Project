@@ -51,6 +51,22 @@ class Main {
      * Also handles screen resizing
      * Returns: the key pressed as an enum
      */
+    KeyInput getInput() {
+        char inp = getch();
+
+        switch (inp) {
+        case 'w':
+            return KeyInput::Up;
+        case 'a':
+            return KeyInput::Left;
+        case 's':
+            return KeyInput::Down;
+        case 'd':
+            return KeyInput::Right;
+        default:
+            return KeyInput::Nothing;
+        }
+    }
 
     // Main game loop
     void runGame() {
