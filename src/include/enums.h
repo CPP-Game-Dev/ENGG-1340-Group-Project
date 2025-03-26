@@ -39,5 +39,6 @@ enum KeyInput {
     Pause,
     Ability1,
     UsePickaxe,
-    UseRation
+    UseRation,
+    Nothing
 };
