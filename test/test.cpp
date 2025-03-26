@@ -1,10 +1,9 @@
+#include "../src/include/level.h" //enum included
+#include "../src/include/vector2d.h"
 #include <cmath> // For distance calculation
 #include <iostream>
 #include <ncurses.h>
 #include <vector>
-#include "../src/include/vector2d.h"
-#include "../src/include/level.h" //enum included
-
 
 char getTileChar(TileObject tile) {
     switch (tile) {
@@ -62,8 +61,8 @@ bool checkValid(int playerX, int playerY, int fov) {
     return playerX >= 0 && playerY >= 0 && fov >= 0;
 }
 
-void printMap(const std::vector<std::vector<TileObject> > &map, int playerX, int playerY,
-              int fov) {
+void printMap(const std::vector<std::vector<TileObject> > &map, int playerX,
+              int playerY, int fov) {
     for (int i = 0; i < (int)map.size(); i++) {
         for (int j = 0; j < (int)map[i].size(); j++) {
             if (i >= playerY - fov && i <= playerY + fov &&
@@ -130,9 +129,25 @@ void TesterProgram() {
     // Refresh the screen to show the map
     refresh();
 
-    // Pause the screen output
-    getch();
+    // Sample proof-of-concept to get input
+    while (true) {
+        char ch = getch();
 
+        if (ch == 'w') {
+            printw("Forward");
+        } else if (ch == 'a') {
+            printw("left");
+        } else if (ch == 's') {
+            printw("back");
+        } else if (ch == 'd') {
+            printw("right");
+        } else if (ch == 'q') {
+            break;
+        } else {
+            printw("Invalid input");
+        }
+    }
+    //
     // Deallocate memory and end ncurses
     endwin();
 }
