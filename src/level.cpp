@@ -222,3 +222,11 @@ void Level::print() {
         std::cout << rows[i] << std::endl;
     }
 }
+
+int Level::getSize() const { return this->size; }
+
+std::vector<std::vector<TileObject>> Level::getMaze() const { return this->maze; }
+
+Vector2D Level::getStart() const { return this->startPos; }
+
+Vector2D Level::getEnd() const { return this->endPos; }

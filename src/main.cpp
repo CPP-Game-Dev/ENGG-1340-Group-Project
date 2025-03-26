@@ -44,12 +44,14 @@ class Main {
     /*
      * Create a new save with default values
      */
-    void newSave() {}
+    void newSave() {
+
+    }
 
     /*
      * Handles all inputs and interpret them
      * Also handles screen resizing
-     * Returns: the key pressed as an enum
+     * Returns: the key pressed as a KeyInput
      */
     KeyInput getInput() {
         char inp = getch();

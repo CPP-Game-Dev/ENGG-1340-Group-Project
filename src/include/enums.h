@@ -37,7 +37,7 @@ enum KeyInput {
     Confirm,
     Cancel,
     Pause,
-    Ability1,
+    UseAbility,
     UsePickaxe,
     UseRation,
     Nothing

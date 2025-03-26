@@ -26,4 +26,8 @@ class Level {
 
   public:
     Level(int size, Vector2D startPos, int itemCount);
+    int getSize() const;
+    std::vector<std::vector<TileObject>> getMaze() const;
+    Vector2D getStart() const;
+    Vector2D getEnd() const;
 };
