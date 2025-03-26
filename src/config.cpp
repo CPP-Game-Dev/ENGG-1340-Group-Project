@@ -1,5 +1,6 @@
 #include "include/config.h"
 #include <fstream>
+#include <stdlib.h>
 
 /*
  * Config class constructor
@@ -10,13 +11,15 @@
 Config::Config() {
     // Config files adhere to XDG Base Directory Specification
     // See: https://specifications.freedesktop.org/basedir-spec/latest/
-    configDir = getenv("XDG_CONFIG_HOME"); //
+    char *cConfigDir = getenv("XDG_CONFIG_HOME");
 
-    if (!configDir.empty()) // If XDG_CONFIG_HOME exists, then we don't need to
-                            // do any further checking
+    if (cConfigDir != NULL) {
+        configDir = cConfigDir;
         return;
+    }
 
-    std::string homePath = getenv("HOME");
+    char *cHomePath = getenv("HOME");
+    std::string homePath = cHomePath;
 
     // Constructing base directory
     configDir = homePath + "/.config/" + GAME_FOLDER + "/";

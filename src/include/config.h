@@ -1,18 +1,15 @@
 #include <iostream>
 
-#pragma once
+const std::string GAME_FOLDER = "game_name";
+const std::string CONFIG_FILE = "config.txt";
 
 class Config {
   private:
-    const std::string GAME_FOLDER = "game_name";
-    const std::string CONFIG_FILE = "config.txt";
-
     std::string configDir;
-
-    Config();
 
   public:
     std::string getConfigDir();
     void addPair(std::string key, std::string value);
     std::string readPair(std::string key);
+    Config();
 };
