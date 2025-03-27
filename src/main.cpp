@@ -69,6 +69,13 @@ class Main {
             return KeyInput::Nothing;
         }
     }
+    
+    /*
+    * Active tick update, only runs when there's an input
+    */
+    void update() {
+        // TODO:Implementtion
+    }
 
     // Main game loop
     void runGame() {
