@@ -21,9 +21,11 @@ class Player {
 
   public:
     Player(); // Initialize a new Player object (used for new game)
-    Player(Vector2D pos, int stamina, int staminaMax,
-           int fov); // Create a Player object with predetermined stats (used to
-                     // load a save)
+    Player( Vector2D pos, int stamina, int staminaMax, int fov, 
+            int rationStaminaBonus, int rationCapacityBonus,
+            int fovBonus, int staminaMaxBonus, 
+            int pickaxeCapacityBonus);  // Create a Player object with predetermined stats (used to
+                                        // load a save)
 
     #pragma region Getters
     Vector2D getPos() const;

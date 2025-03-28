@@ -10,6 +10,11 @@ Vector2D::Vector2D(int y, int x) {
     this->x = x;
 }
 
+Vector2D::Vector2D(const Vector2D &vector2d) {
+    this->y = vector2d.y;
+    this->x = vector2d.x;
+}
+
 Vector2D &Vector2D::operator=(const Vector2D &rhs) {
     this->y = rhs.y;
     this->x = rhs.x;
@@ -22,10 +27,8 @@ bool Vector2D::operator==(const Vector2D &rhs) const {
 
 bool Vector2D::operator!=(const Vector2D &rhs) const { return !(*this == rhs); }
 
-Vector2D &Vector2D::operator+(const Vector2D &rhs) {
-    this->y += rhs.y;
-    this->x += rhs.x;
-    return *this;
+Vector2D Vector2D::operator+(const Vector2D &rhs) const {
+    return Vector2D(*this) += rhs;
 }
 
 Vector2D &Vector2D::operator+=(const Vector2D &rhs) {
@@ -34,10 +37,8 @@ Vector2D &Vector2D::operator+=(const Vector2D &rhs) {
     return *this;
 }
 
-Vector2D &Vector2D::operator-(const Vector2D &rhs) {
-    this->y -= rhs.y;
-    this->x -= rhs.x;
-    return *this;
+Vector2D Vector2D::operator-(const Vector2D &rhs) const {
+    return Vector2D(*this) -= rhs;
 }
 
 Vector2D &Vector2D::operator-=(const Vector2D &rhs) {

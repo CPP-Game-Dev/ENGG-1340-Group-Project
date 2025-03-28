@@ -10,4 +10,5 @@ class IItem
     int rarity;               // Rarity for item generation weights, 0 is rarest [0-4] 
   public:
     virtual void update(Player player);
+    virtual ~IItem();
 };

@@ -3,10 +3,30 @@
 #include "include/vector2d.h"
 #include <iostream>
 
-Player::Player() {}
+Player::Player() {
+    this->pos = Vector2D();
+    this->stamina = 20;
+    this->staminaMax = 20;
+    this->fov = 3;
+    this->rationStaminaBonus = 0;
+    this->rationCapacityBonus = 0;
+    this->fovBonus = 0;
+    this->staminaMaxBonus = 0;
+    this->pickaxeCapacityBonus = 0;
+}
 
-Player::Player(Vector2D pos, int stamina, int staminaMax, int fov) {
-
+Player::Player( Vector2D pos, int stamina, int staminaMax, int fov, 
+                int rationStaminaBonus, int rationCapacityBonus,
+                int fovBonus, int staminaMaxBonus, 
+                int pickaxeCapacityBonus) {
+    this->stamina = 20;
+    this->staminaMax = 20;
+    this->fov = 3;
+    this->rationStaminaBonus = 0;
+    this->rationCapacityBonus = 0;
+    this->fovBonus = 0;
+    this->staminaMaxBonus = 0;
+    this->pickaxeCapacityBonus = 0;
 }
 
 #pragma region Getters
