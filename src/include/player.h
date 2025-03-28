@@ -26,9 +26,25 @@ class Player {
                      // load a save)
 
     #pragma region Getters
-
+    Vector2D getPos() const;
+    int getStamina() const;
+    int getStaminaMax() const;
+    int getFov() const;
+    int getRationStaminaBonus() const;
+    int getStaminaMaxBonus() const;
+    int getFovBonus() const;
+    int getRationCapacityBonus() const;
+    int getPickaxeCapacityBonus() const;
     #pragma endregion
     #pragma region Setters
-
+    void setPos(const Vector2D pos);
+    void setStamina(const int value);
+    void setStaminaMax(const int value);
+    void setFov(const int value);
+    void setRationStaminaBonus(const int value);
+    void setStaminaMaxBonus(const int value);
+    void setFovBonus(const int value);
+    void setRationCapacityBonus(const int value);
+    void setPickaxeCapacityBonus(const int value);
     #pragma endregion
 };
