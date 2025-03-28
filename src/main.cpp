@@ -20,9 +20,10 @@
 
 class Main {
   private:
+    GameState gamestate;
   public:
     Main() {
-        // TODO:Implementation
+        // TODO(Joe): Implement default constructor
     }
 
     /*
@@ -30,7 +31,7 @@ class Main {
      * Throws error when there isn't one
      */
     void loadSave() {
-        // TODO:Implementation
+        // TODO(Jenna, after MVP): Implementation
     }
 
     /*
@@ -38,14 +39,14 @@ class Main {
      * If there isn't an existing save, throw an error
      */
     void updateSave() {
-        // TODO:Implementation
+        // TODO(Jenna, after MVP): Implementation
     }
 
     /*
      * Create a new save with default values
      */
     void newSave() {
-
+        // TODO(Jenna, after MVP): Implementation
     }
 
     /*
@@ -71,19 +72,50 @@ class Main {
     }
     
     /*
-    * Active tick update, only runs when there's an input
+    * Function to update player stats at the start of a turn
+    * Set player stats to their respective base stats
+    * Do not touch stats without a respective base stat
     */
-    void update() {
-        // TODO:Implementtion
+    void updatePlayerStats() {
+        // TODO(Joe): Implementation
     }
+
+    /*
+    * Function to update player inventory items
+    * Calls the update() function of every item in the player's inventory
+    */
+    void updatePlayerInventory() {
+        // TODO(Joe, after MVP): Implementation
+    }
+
+    /*
+    * Function to hold all display related code
+    * Note that game logic does not affect display
+    */
+    void draw() {
+        // TODO(Chris): Implementation
+    }
+
+    // Function to move the player and handle stamina reduction
+    void movePlayer() {
+        // TODO(Joe): Implementation
+    }
+
+    /*
+    * Game Logic:
+    * Game is not updated at all if no valid player input is detected
+    * Otherwise, perform an action according to current gamestate & key input
+    * player stats are
+    * 
+    */
 
     // Main game loop
     void runGame() {
-        // TODO:Implementation
+        // TODO(James): Implementation
     }
 };
 
 // DRIVER CODE //
 int main() {
-    // TODO:Implementation
+    // TODO(James):Implementation
 }

@@ -3,29 +3,35 @@
 /*
 File to store all enums used in other classes
 */
+enum GameState {
+    StartMenu,
+    HelpMenu,
+    SettingsMenu,
+    InLevel,
+    PauseMenu,
+    InventoryMenu
+};
+
 
 // Enum for different tile objects (anything that appears on the map is a tile
 // object)
 enum TileObject {
-    Player,
-    Wall,
-    None, // Player, Wall of maze, Path
-    RationSmall,
-    RationMedium,
-    RationBig, // 3 tiers of instant Stamina replenish
-    StaminaSmall,
-    StaminaMedium,
-    StaminaBig, // 3 tiers of maximum Stamina boost
-    VisionSmall,
-    VisionMedium,
-    VisionBig, // 3 tiers of vision range boost
+    Player,         // Player
+    Wall,           // Maze Wall
+    None,           // Path
+    Ration,         // Collectable Ration
+    EnergyDrink,    // Max Stamina Boost (temporary) (also regenerates stamina)
+    Battery,        // FOV boost (temporary)
+    Pickaxe,        // Doesn't do anything for now
+    Chest,          // Gives random item    
+    Mimic           // Doesn't do anything for now
 };
 
 // Enum for the 3 levels of difficulty (to be implemented after MVP)
 enum Difficulty {
-    Catacombs,
-    Labyrinth,
-    Purgatory // Easy, Medium, Hard :3
+    Catacombs,  // Easy
+    Labyrinth,  // Medium
+    Purgatory   // Hardx
 };
 
 // Enum to store meaningful keyboard inputs

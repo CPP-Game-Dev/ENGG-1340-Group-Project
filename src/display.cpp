@@ -37,6 +37,9 @@ void Display::flush() {
 }
 
 void Display::drawLevel(Level level) {
+    //TODO(Chris): Implement Manhatton distance based radius calculation
+    //             & related drawing calculations
+
     // Initialize an anchor point (topleft of the maze)
     Vector2D maxSize;
     getmaxyx(stdscr, maxSize.y, maxSize.x);

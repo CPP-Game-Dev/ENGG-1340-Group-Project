@@ -11,9 +11,11 @@
 // This class serves as an example & framework as to how items should be implemented
 class ExampleItem : public IItem
 {
+  private:
+    bool hasTriggered;
   public:
     ExampleItem();
     ~ExampleItem();
-
+    
     void update(Player player) override;
 };

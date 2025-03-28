@@ -10,4 +10,8 @@ class Display {
     static void initCurses();
     static void flush();
     static void drawLevel(Level level);
+    static void drawMainMenu(int highlighted);
+    static void drawPauseMenu(int highlighted);
+    static void drawInventory(int highlighted); 
+
 };

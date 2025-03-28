@@ -1,52 +1,55 @@
 #pragma once
 
 #include "vector2d.h"
+#include "iitem.h"
+#include <memory>
+#include <vector>
 
 /*
  * Class to store player-related functions & player data
  */
 class Player {
   private:
+    #pragma region Base Stats
+    int baseStaminaMax;       // The max amount of stamina that can be carried at any time
+    int baseRationRegen;      // The amount of stamina regenerated when using a ration
+    int baseFov;              // The radius of FOV
+    int baseRationCapacity;   // The number of rations that can be carried
+    int basePickaxeCapacity;  // The number of pickaxes that can be carried
+    #pragma endregion
 
-    int stamina;              // Current stamina
-    int staminaMax;           // Maximum stamina
-    int fov;                  // Radius of field-of-view
-    Vector2D pos;             // Player position
-
-    int rationStaminaBonus;   // Bonus stamina when using rations
-    int staminaMaxBonus;      // Bonus max stamina
-    int fovBonus;             // Bonus field-of-view
-    int rationCapacityBonus;  // Bonus ration carry capacity
-    int pickaxeCapacityBonus; // Bonus pickaxe carry capacity
+    std::vector<std::unique_ptr<IItem>> inventory;  // Inventory storage
 
   public:
+    #pragma region Current Stats
+    int stamina;          // Current stamina  
+    int staminaMax;       // Current max stamina
+    int rationRegen;      // Current ration regeneration amount
+    int fov;              // Current FOV
+    int rationCapacity;   // Current ration capacity
+    int pickaxeCapacity;  // Current pickaxe capacity
+    Vector2D pos;         // Current position
+    #pragma region endregion
+    #pragma region Stat Multipliers
+    double staminaMaxMult;      // Multiplier for max stamina
+    double rationRegenMult;     // Multiplier for ration stamina regen
+    double fovMult;             // Multiplier for FOV
+    double rationCapacityMult;  // Multiplier for ration capacity
+    double pickaxeCapacityMult; // Multiplier for pickaxe capacity
+    #pragma endregion
+
     Player(); // Initialize a new Player object (used for new game)
-    Player( Vector2D pos, int stamina, int staminaMax, int fov, 
-            int rationStaminaBonus, int rationCapacityBonus,
-            int fovBonus, int staminaMaxBonus, 
-            int pickaxeCapacityBonus);  // Create a Player object with predetermined stats (used to
-                                        // load a save)
+    Player( int baseStamina, int baseStaminaMax, int baseRationRegen,
+            int baseFov, int baseRationCapacity, int basePickaxeCapacity,
+            Vector2D pos, std::vector<std::unique_ptr<IItem>> inventory); // Set player base stats, pos & inventory to given values
+
+    void addItem(std::unique_ptr<IItem>);
+    void removeItem(std::unique_ptr<IItem>);
 
     #pragma region Getters
-    Vector2D getPos() const;
-    int getStamina() const;
-    int getStaminaMax() const;
-    int getFov() const;
-    int getRationStaminaBonus() const;
-    int getStaminaMaxBonus() const;
-    int getFovBonus() const;
-    int getRationCapacityBonus() const;
-    int getPickaxeCapacityBonus() const;
+    //TOD(Jenna):Declare getters for all base stats
     #pragma endregion
     #pragma region Setters
-    void setPos(const Vector2D pos);
-    void setStamina(const int value);
-    void setStaminaMax(const int value);
-    void setFov(const int value);
-    void setRationStaminaBonus(const int value);
-    void setStaminaMaxBonus(const int value);
-    void setFovBonus(const int value);
-    void setRationCapacityBonus(const int value);
-    void setPickaxeCapacityBonus(const int value);
+    //TODO(Jenna):Declare setters for all base stats
     #pragma endregion
 };
