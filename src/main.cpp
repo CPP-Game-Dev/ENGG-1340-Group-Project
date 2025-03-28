@@ -1,4 +1,4 @@
-#include "include/display.h"
+﻿#include "include/display.h"
 #include "include/enums.h"
 #include "include/level.h"
 #include "include/player.h"
@@ -23,8 +23,7 @@ class Main {
     GameState gamestate;
   public:
     Main() {
-        Main::Main() : gamestate() {
-        }
+        // TODO(Joe): Implement default constructor
     }
 
     /*
@@ -78,8 +77,7 @@ class Main {
     * Do not touch stats without a respective base stat
     */
     void updatePlayerStats() {
-            gamestate.player.currentStamina = gamestate.player.baseStamina;
-        }
+        // TODO(Joe): Implementation
     }
 
     /*
@@ -87,9 +85,7 @@ class Main {
     * Calls the update() function of every item in the player's inventory
     */
     void updatePlayerInventory() {
-        for (auto& item : gamestate.player.inventory){
-            item-> update ;
-        }
+        // TODO(Joe, after MVP): Implementation
     }
 
     /*
@@ -102,31 +98,7 @@ class Main {
 
     // Function to move the player and handle stamina reduction
     void movePlayer() {
-        void Main::movePlayer(KeyInput direction) {
-            Vector2D moveDirection;
-            switch (direction) {
-                case KeyInput::Up:
-                    moveDirection = Vector2D(0, -1); 
-                    break;
-                case KeyInput::Left:
-                    moveDirection = Vector2D(-1, 0); 
-                    break;
-                case KeyInput::Down:
-                    moveDirection = Vector2D(0, 1);  
-                    break;
-                case KeyInput::Right:
-                    moveDirection = Vector2D(1, 0);  
-                    break;
-                default:
-                    return; }
-
-        
-            Vector2D newPosition = gamestate.player.position + moveDirection;
-            if (gamestate.level.isWalkable(newPosition) && gamestate.player.currentStamina > 0) {
-                gamestate.player.position = newPosition;
-                gamestate.player.currentStamina -= 1; 
-            }
-        }
+        // TODO(Joe): Implementation
     }
 
     /*
