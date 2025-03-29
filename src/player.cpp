@@ -15,20 +15,20 @@ Player::Player() {
     * Pos is set to 0, 0
     * Ignore inventory, let me(Arthur) deal with it
     */ 
-    baseStamina = 0;
-    baseStaminaMax = 0;
-    baseRationRegen = 0;
-    baseFov = 0;
-    baseRationCapacity = 0;
-    basePickaxeCapacity = 0;
+    this-> baseStamina = 0;
+    this-> baseStaminaMax = 0;
+    this-> baseRationRegen = 0;
+    this-> baseFov = 0;
+    this-> baseRationCapacity = 0;
+    this-> basePickaxeCapacity = 0;
 
-    staminaMultiplier = 1;
-    rationRegenMultiplier = 1;
-    fovMultiplier = 1;
-    rationCapacityMultiplier = 1;
-    pickaxeCapacityMultiplier = 1;
+    this-> staminaMultiplier = 1;
+    this-> rationRegenMultiplier = 1;
+    this-> fovMultiplier = 1;
+    this-> rationCapacityMultiplier = 1;
+    this-> pickaxeCapacityMultiplier = 1;
 
-    position = Vector2D(0, 0);
+    this-> position = Vector2D(0, 0);
 
     
 }
