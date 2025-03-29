@@ -20,4 +20,7 @@ struct Vector2D {
     Vector2D operator-(const Vector2D &rhs) const;  // Subtraction
     Vector2D &operator-=(const Vector2D &rhs);      // Subtraction + Assignment
     #pragma endregion
+
+    static inline Vector2D UnitX() { return Vector2D(0, 1); }
+    static inline Vector2D UnitY() { return Vector2D(1, 0); }
 };

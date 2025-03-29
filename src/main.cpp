@@ -23,7 +23,7 @@ class Main {
     GameState gamestate;
   public:
     Main() {
-        // TODO(Joe): Implement default constructor
+        // TODO(James): Implement default constructor
     }
 
     /*
@@ -77,7 +77,7 @@ class Main {
     * Do not touch stats without a respective base stat
     */
     void updatePlayerStats() {
-        // TODO(Joe): Implementation
+        // TODO(James): Implementation
     }
 
     /*
@@ -85,7 +85,7 @@ class Main {
     * Calls the update() function of every item in the player's inventory
     */
     void updatePlayerInventory() {
-        // TODO(Joe, after MVP): Implementation
+        // TODO(James, after MVP): Implementation
     }
 
     /*
@@ -98,7 +98,7 @@ class Main {
 
     // Function to move the player and handle stamina reduction
     void movePlayer() {
-        // TODO(Joe): Implementation
+        // TODO(James): Implementation
     }
 
     /*
