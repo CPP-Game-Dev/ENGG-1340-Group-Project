@@ -48,13 +48,38 @@ class Player {
                inventory); // Set player base stats, pos & inventory to given
                            // values
 
-    void addItem(std::unique_ptr<IItem>);
-    void removeItem(std::unique_ptr<IItem>);
 
-#pragma region Getters
-// TOD(Jenna):Declare getters for all base stats
-#pragma endregion
-#pragma region Setters
-// TODO(Jenna):Declare setters for all base stats
-#pragma endregion
+
+    #pragma region Inventory Management
+    void addItem(std::unique_ptr<IItem>);
+
+    template <typename ItemType>
+    void removeItem(std::vector<std::unique_ptr<IItem> > itemList) {
+        for (auto &item : this->inventory) {
+            if (dynamic_cast<ItemType *>(item.get()) != nullptr) {
+                itemList.push_back(std::move(item));
+            }
+        }
+    }
+
+    template <typename ItemType> bool hasItem() {
+        for (auto &item : this->inventory)
+            if (dynamic_cast<ItemType *>(item.get()) != nullptr)
+                return true;
+        return false;
+    }
+    #pragma endregion
+
+    /*
+    void preUpdate();   // Prepares the player instance for update()
+    void update();      // Updates statz & shitz
+    void postUpdate();  // Cleans up
+    */
+
+    #pragma region Getters
+    // TOD(Jenna):Declare getters for all base stats
+    #pragma endregion
+    #pragma region Setters
+    // TODO(Jenna):Declare setters for all base stats
+    #pragma endregion
 };

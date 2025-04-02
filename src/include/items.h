@@ -2,11 +2,18 @@
 
 #include "iitem.h"
 #include "player.h"
-
+#include <memory>
 /*
 * This file contains all class declarations for the in game items
 * Note that each item has it's own class
 */
+
+#pragma region Generator Function
+// Function to generate an item instance based on input item class name
+template <typename ItemType> std::unique_ptr<IItem> createItem() {
+    return std::make_unique<ItemType>();
+}
+#pragma endregion
 
 // This class serves as an example & framework as to how items should be implemented
 class ExampleItem : public IItem
@@ -14,8 +21,10 @@ class ExampleItem : public IItem
   private:
     bool hasTriggered;
   public:
-    ExampleItem();
-    ~ExampleItem();
+    using IItem::IItem;
+    ~ExampleItem() = default;
     
-    void update(Player player) override;
+    void setDefaults() override;
+
+    void update(Player player);
 };

@@ -12,10 +12,18 @@ enum GameState {
     InventoryMenu
 };
 
+enum Rarity
+{
+    Common,
+    Uncommon,
+    Rare,
+    Relic
+};
+
 
 // Enum for different tile objects (anything that appears on the map is a tile
 // object)
-enum TileObject {
+enum class TileObject {
     Player,         // Player
     Wall,           // Maze Wall
     None,           // Path
