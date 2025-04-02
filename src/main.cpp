@@ -21,6 +21,7 @@
 class Main {
   private:
     GameState gamestate;
+
   public:
     Main() {
         // TODO(James): Implement default constructor
@@ -70,28 +71,28 @@ class Main {
             return KeyInput::Nothing;
         }
     }
-    
+
     /*
-    * Function to update player stats at the start of a turn
-    * Set player stats to their respective base stats
-    * Do not touch stats without a respective base stat
-    */
+     * Function to update player stats at the start of a turn
+     * Set player stats to their respective base stats
+     * Do not touch stats without a respective base stat
+     */
     void updatePlayerStats() {
         // TODO(James): Implementation
     }
 
     /*
-    * Function to update player inventory items
-    * Calls the update() function of every item in the player's inventory
-    */
+     * Function to update player inventory items
+     * Calls the update() function of every item in the player's inventory
+     */
     void updatePlayerInventory() {
         // TODO(James, after MVP): Implementation
     }
 
     /*
-    * Function to hold all display related code
-    * Note that game logic does not affect display
-    */
+     * Function to hold all display related code
+     * Note that game logic does not affect display
+     */
     void draw() {
         // TODO(Chris): Implementation
     }
@@ -102,20 +103,31 @@ class Main {
     }
 
     /*
-    * Game Logic:
-    * Game is not updated at all if no valid player input is detected
-    * Otherwise, perform an action according to current gamestate & key input
-    * player stats are
-    * 
-    */
+     * Game Logic:
+     * Game is not updated at all if no valid player input is detected
+     * Otherwise, perform an action according to current gamestate & key input
+     * player stats are
+     *
+     */
 
     // Main game loop
     void runGame() {
         // TODO(James): Implementation
+        gamestate = GameState::InLevel;
+
+        while (true) {
+            if (gamestate == GameState::InLevel) {
+                Level level = Level(0, Vector2D(0, 0), 0);
+                Display::drawLevel(level);
+            }
+        }
     }
 };
 
 // DRIVER CODE //
 int main() {
     // TODO(James):Implementation
+    Main game = Main();
+    game.runGame();
+    return 0;
 }
