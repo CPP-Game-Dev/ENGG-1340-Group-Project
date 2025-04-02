@@ -34,14 +34,14 @@ void Player::addItem(std::unique_ptr<IItem> item) {
     this->inventory.push_back(std::move(item));
 }
 
-void preUpdate() {
+void Player::preUpdate() {
     /*
     * TODO(Jenna): set all current stats to their corrosponding base stats 
     *              (don't touch the ones without a base stat)
     *              And set all mults to 1
     */
 }
-void update() { 
+void Player::update() { 
     /*
     * TODO(James): loop through player inventory and call update() of each item (if hasCustomBehavior == true)
     *              Add the flat stat bonuses to the player's current stats respectively
@@ -49,7 +49,7 @@ void update() {
     *              after all that, multiply each of the player's current stat with their respective mult
     */ 
 }
-void postUpdate() {
+void Player::postUpdate() {
     // TODO(Arthur): come up with something to put here or delete the whole function
 }
 

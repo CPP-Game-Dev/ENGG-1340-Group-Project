@@ -70,11 +70,10 @@ class Player {
     }
     #pragma endregion
 
-    /*
+
     void preUpdate();   // Prepares the player instance for update()
     void update();      // Updates statz & shitz
     void postUpdate();  // Cleans up
-    */
 
     #pragma region Getters
     // TOD(Jenna):Declare getters for all base stats

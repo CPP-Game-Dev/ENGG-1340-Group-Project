@@ -15,7 +15,7 @@ template <typename ItemType> std::unique_ptr<IItem> createItem() {
 }
 #pragma endregion
 
-// This class serves as an example & framework as to how items should be implemented
+// This class serves as an example & base framework as to how items should be implemented
 class ExampleItem : public IItem
 {
   private:
