@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils.h"
 #include "iitem.h"
 #include "player.h"
 #include <memory>
@@ -8,10 +9,11 @@
 * Note that each item has it's own class
 */
 
+
 #pragma region Generator Function
 // Function to generate an item instance based on input item class name
 template <typename ItemType> std::unique_ptr<IItem> createItem() {
-    return std::make_unique<ItemType>();
+    return utils::make_unique<ItemType>();
 }
 #pragma endregion
 

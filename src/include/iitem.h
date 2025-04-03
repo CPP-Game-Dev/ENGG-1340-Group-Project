@@ -46,7 +46,7 @@ class IItem
     * Sets all class variables to a default value 
     * Inherited class can call this and only change whatever they want
     */
-    inline void setDefaults()
+    inline virtual void setDefaults()
     {
         // Set 
         this->sprite = "  ";

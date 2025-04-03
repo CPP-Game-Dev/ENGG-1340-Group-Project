@@ -11,7 +11,7 @@
 Level::Level(int size, Vector2D startPos, int itemCount) {
     this->size = size;
     this->maze = std::vector<std::vector<TileObject>>(
-        size, std::vector<TileObject>(size, Wall));
+        size, std::vector<TileObject>(size, TileObject::Wall));
     this->wallList = std::vector<Vector2D>();
     this->startPos = startPos;
     this->itemCount = itemCount;
@@ -27,7 +27,7 @@ Level::Level(int size, Vector2D startPos, int itemCount) {
  */
 void Level::generateMaze(Vector2D pos) {
 #pragma region Starting Cell
-    this->maze[pos.y][pos.x] = None;
+    this->maze[pos.y][pos.x] = TileObject::None;
     getAdjWalls(pos);
 #pragma endregion
 
@@ -40,7 +40,7 @@ void Level::generateMaze(Vector2D pos) {
         // Check if chosen wall is connected to too many empty tiles
         if (verifyWall(pos)) {
             // Remove wall
-            this->maze[pos.y][pos.x] = None;
+            this->maze[pos.y][pos.x] = TileObject::None;
             getAdjWalls(pos);
         }
 
@@ -49,7 +49,7 @@ void Level::generateMaze(Vector2D pos) {
     }
 
     // Set starting position to player
-    this->maze[startPos.y][startPos.x] = Player;
+    this->maze[startPos.y][startPos.x] = TileObject::Player;
 }
 
 /*
@@ -61,19 +61,19 @@ void Level::generateMaze(Vector2D pos) {
  */
 void Level::getAdjWalls(Vector2D pos) {
     // Check above
-    if (pos.y > 0 && this->maze[pos.y - 1][pos.x] == Wall)
+    if (pos.y > 0 && this->maze[pos.y - 1][pos.x] == TileObject::Wall)
         this->wallList.push_back(Vector2D(pos.y - 1, pos.x));
 
     // Check left
-    if (pos.x > 0 && this->maze[pos.y][pos.x - 1] == Wall)
+    if (pos.x > 0 && this->maze[pos.y][pos.x - 1] == TileObject::Wall)
         this->wallList.push_back(Vector2D(pos.y, pos.x - 1));
 
     // Check below
-    if (pos.y < this->size - 1 && this->maze[pos.y + 1][pos.x] == Wall)
+    if (pos.y < this->size - 1 && this->maze[pos.y + 1][pos.x] == TileObject::Wall)
         this->wallList.push_back(Vector2D(pos.y + 1, pos.x));
 
     // Check right
-    if (pos.x < this->size - 1 && this->maze[pos.y][pos.x + 1] == Wall)
+    if (pos.x < this->size - 1 && this->maze[pos.y][pos.x + 1] == TileObject::Wall)
         this->wallList.push_back(Vector2D(pos.y, pos.x + 1));
 }
 
@@ -91,21 +91,21 @@ void Level::getAdjWalls(Vector2D pos) {
 bool Level::verifyWall(Vector2D wallPos) {
     int count = 0;
     // Check up
-    if (wallPos.y > 0 && this->maze[wallPos.y - 1][wallPos.x] == None)
+    if (wallPos.y > 0 && this->maze[wallPos.y - 1][wallPos.x] == TileObject::None)
         count++;
 
     // Check left
-    if (wallPos.x > 0 && this->maze[wallPos.y][wallPos.x - 1] == None)
+    if (wallPos.x > 0 && this->maze[wallPos.y][wallPos.x - 1] == TileObject::None)
         count++;
 
     // Check down
     if (wallPos.y < this->size - 1 &&
-        this->maze[wallPos.y + 1][wallPos.x] == None)
+        this->maze[wallPos.y + 1][wallPos.x] == TileObject::None)
         count++;
 
     // Check right
     if (wallPos.x < this->size - 1 &&
-        this->maze[wallPos.y][wallPos.x + 1] == None)
+        this->maze[wallPos.y][wallPos.x + 1] == TileObject::None)
         count++;
 
     return count == 1;
@@ -122,7 +122,7 @@ void Level::placeItems(int itemCount) {
         std::vector<Vector2D>(this->size * this->size);
     for (int i = 0; i < this->size; i++)
         for (int j = 0; j < this->size; j++)
-            if (this->maze[i][j] == None)
+            if (this->maze[i][j] == TileObject::None)
                 tileList.push_back(Vector2D(i, j));
 
 #pragma region Weighted Randomization
@@ -157,7 +157,7 @@ void Level::placeItems(int itemCount) {
 void Level::setEndpoint() {
     for (int i = this->size - 1; i >= 0; i--) {
         for (int j = this->size - 1; j >= 0; j--) {
-            if (this->maze[i][j] != Wall && this->maze[i][j] != Player) {
+            if (this->maze[i][j] != TileObject::Wall && this->maze[i][j] != TileObject::Player) {
                 this->endPos = Vector2D(i, j);
                 return;
             }

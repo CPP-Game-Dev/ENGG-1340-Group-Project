@@ -20,7 +20,7 @@ class Player {
     int basePickaxeCapacity; // The number of pickaxes that can be carried
 #pragma endregion
 
-    // std::vector<std::unique_ptr<IItem> > inventory; // Inventory storage
+    std::vector<std::unique_ptr<IItem> > inventory; // Inventory storage
 
   public:
 #pragma region Current Stats
