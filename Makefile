@@ -1,6 +1,6 @@
 # Compiler and flags
 CC = g++
-CFLAGS = -Wall -Wextra -std=c++11 -Wno-unknown-pragmas
+CFLAGS = -Wall -Wextra -std=c++11 -Wno-unknown-pragmas -Wno-unused-parameter
 INCLUDE = -Isrc/include
 LIBS = -lncurses
 
