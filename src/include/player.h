@@ -48,9 +48,7 @@ class Player {
                inventory); // Set player base stats, pos & inventory to given
                            // values
 
-
-
-    #pragma region Inventory Management
+#pragma region Inventory Management
     void addItem(std::unique_ptr<IItem>);
 
     template <typename ItemType>
@@ -68,17 +66,16 @@ class Player {
                 return true;
         return false;
     }
-    #pragma endregion
+#pragma endregion
 
+    void preUpdate();  // Prepares the player instance for update()
+    void update();     // Updates statz & shitz
+    void postUpdate(); // Cleans up
 
-    void preUpdate();   // Prepares the player instance for update()
-    void update();      // Updates statz & shitz
-    void postUpdate();  // Cleans up
-
-    #pragma region Getters
-    // TOD(Jenna):Declare getters for all base stats
-    #pragma endregion
-    #pragma region Setters
-    // TODO(Jenna):Declare setters for all base stats
-    #pragma endregion
+#pragma region Getters
+// TOD(Jenna):Declare getters for all base stats
+#pragma endregion
+#pragma region Setters
+// TODO(Jenna):Declare setters for all base stats
+#pragma endregion
 };
