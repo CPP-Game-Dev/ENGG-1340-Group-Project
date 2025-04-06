@@ -21,16 +21,12 @@ Player::Player() {
     this-> baseFov = 0;
     this-> baseRationCapacity = 0;
     this-> basePickaxeCapacity = 0;
-
     this-> staminaMultiplier = 1;
     this-> rationRegenMultiplier = 1;
     this-> fovMultiplier = 1;
     this-> rationCapacityMultiplier = 1;
     this-> pickaxeCapacityMultiplier = 1;
-
     this-> position = Vector2D(0, 0);
-
-    
 }
 
 Player::Player( int baseStamina, int baseStaminaMax, int baseRationRegen,
@@ -45,41 +41,39 @@ Player::Player( int baseStamina, int baseStaminaMax, int baseRationRegen,
     * Set each class variable to the input value
     * Do not touch any class variable that doesn't have an input
     */
-    
 }
 
 #pragma region Getters
 //TODO(Jenna): Implement getters according to their declarations in player.h 
-int Player::getBaseStamina() const { return baseStamina; }
-int Player::getBaseStaminaMax() const { return baseStaminaMax; }
-int Player::getBaseRationRegen() const { return baseRationRegen; }
-int Player::getBaseFov() const { return baseFov; }
-int Player::getBaseRationCapacity() const { return baseRationCapacity; }
-int Player::getBasePickaxeCapacity() const { return basePickaxeCapacity; }
+int Player::getBaseStamina() const { return this-> baseStamina; }
+int Player::getBaseStaminaMax() const { return this-> baseStaminaMax; }
+int Player::getBaseRationRegen() const { return this-> baseRationRegen; }
+int Player::getBaseFov() const { return this-> baseFov; }
+int Player::getBaseRationCapacity() const { return this->baseRationCapacity; }
+int Player::getBasePickaxeCapacity() const { return this-> basePickaxeCapacity; }
 
-float Player::getStaminaMultiplier() const { return staminaMultiplier; }
-float Player::getRationRegenMultiplier() const { return rationRegenMultiplier; }
-float Player::getFovMultiplier() const { return fovMultiplier; }
-float Player::getRationCapacityMultiplier() const { return rationCapacityMultiplier; }
-float Player::getPickaxeCapacityMultiplier() const { return pickaxeCapacityMultiplier; }
-
+float Player::getStaminaMultiplier() const { return this->staminaMultiplier; }
+float Player::getRationRegenMultiplier() const { return this->rationRegenMultiplier; }
+float Player::getFovMultiplier() const { return this->fovMultiplier; }
+float Player::getRationCapacityMultiplier() const { return this-> rationCapacityMultiplier; }
+float Player::getPickaxeCapacityMultiplier() const { return this-> pickaxeCapacityMultiplier; }
 #pragma endregion
 #pragma region Setters
 //TODO(Jenna): Implement setters according to their declarations in player.h
 
-void Player::setBaseStamina(int value) { baseStamina = value; }
-void Player::setBaseStaminaMax(int value) { baseStaminaMax = value; }
-void Player::setBaseRationRegen(int value) { baseRationRegen = value; }
-void Player::setBaseFov(int value) { baseFov = value; }
-void Player::setBaseRationCapacity(int value) { baseRationCapacity = value; }
-void Player::setBasePickaxeCapacity(int value) { basePickaxeCapacity = value; }
+void Player::setBaseStamina(int value) { this-> baseStamina = value; }
+void Player::setBaseStaminaMax(int value) { this-> baseStaminaMax = value; }
+void Player::setBaseRationRegen(int value) { this-> baseRationRegen = value; }
+void Player::setBaseFov(int value) { this-> baseFov = value; }
+void Player::setBaseRationCapacity(int value) { this-> baseRationCapacity = value; }
+void Player::setBasePickaxeCapacity(int value) { this-> basePickaxeCapacity = value; }
 
-void Player::setStaminaMultiplier(float value) { staminaMultiplier = value; }
-void Player::setRationRegenMultiplier(float value) { rationRegenMultiplier = value; }
-void Player::setFovMultiplier(float value) { fovMultiplier = value; }
-void Player::setRationCapacityMultiplier(float value) { rationCapacityMultiplier = value; }
-void Player::setPickaxeCapacityMultiplier(float value) { pickaxeCapacityMultiplier = value; }
+void Player::setStaminaMultiplier(float value) { this-> staminaMultiplier = value; }
+void Player::setRationRegenMultiplier(float value) { this-> rationRegenMultiplier = value; }
+void Player::setFovMultiplier(float value) { this-> fovMultiplier = value; }
+void Player::setRationCapacityMultiplier(float value) { this-> rationCapacityMultiplier = value; }
+void Player::setPickaxeCapacityMultiplier(float value) { this-> pickaxeCapacityMultiplier = value; }
 
-void Player::setPosition(const Vector2D& pos) { position = pos; }
+void Player::setPosition(const Vector2D& pos) { this-> position = pos; }
 
 #pragma endregion
