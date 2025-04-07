@@ -20,7 +20,7 @@ class Level {
     void getAdjWalls(Vector2D pos);
     bool verifyWall(Vector2D wallPos);
     void placeItems(int itemCount);
-    void setEndpoint();
+    void setExit();
 
     void print();
 

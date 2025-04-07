@@ -4,6 +4,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
+#include <algorithm>
+#include <random>
 #include <unistd.h>
 #include <utility>
 #include <vector>
@@ -15,7 +17,11 @@ Level::Level(int size, Vector2D startPos, int itemCount) {
     this->wallList = std::vector<Vector2D>();
     this->startPos = startPos;
     this->itemCount = itemCount;
+    // Run the generation algorithm
     generateMaze(startPos);
+    // Set starting position to player
+    this->maze[startPos.y][startPos.x] = TileObject::Player;
+
     placeItems(itemCount);
 }
 
@@ -48,8 +54,7 @@ void Level::generateMaze(Vector2D pos) {
         wallList.erase(wallList.begin() + index);
     }
 
-    // Set starting position to player
-    this->maze[startPos.y][startPos.x] = TileObject::Player;
+    
 }
 
 /*
@@ -111,59 +116,60 @@ bool Level::verifyWall(Vector2D wallPos) {
     return count == 1;
 }
 
+void Level::setExit() {
+    std::vector<Vector2D> tileList = std::vector<Vector2D>();
+    Vector2D pos;
+    for (int i = 0; i < this->size; i++) {
+        for (int j = 0; j < this->size; j++) {
+            pos = Vector2D(i, j);
+            if (this->maze[i][j] == TileObject::None) {
+                if (std::abs(startPos.y - i) + std::abs(startPos.x - j) <
+                    this->size)
+                    continue;
+                tileList.push_back(pos);
+            }
+        }
+    }
+    pos = tileList[int(rand() % tileList.size())];
+    this->maze[pos.y][pos.x] = TileObject::Exit;
+    this->endPos = pos;
+}
+
 /*
  * Function to put a given amount of random items in random spots of the maze
  *
  * Args: number of items to put
  */
-void Level::placeItems(int itemCount) {
-    // Make temporary variable to store a list of useful
-    std::vector<Vector2D> tileList =
-        std::vector<Vector2D>(this->size * this->size);
+void Level::placeItems(int count) {
+    TileObject items[] = {TileObject::Ration, TileObject::EnergyDrink,
+                          TileObject::Battery, TileObject::Chest};
+    int weights[] = {66, 22, 2, 10};
+
+    std::vector<Vector2D> pathList = std::vector<Vector2D>();
     for (int i = 0; i < this->size; i++)
         for (int j = 0; j < this->size; j++)
             if (this->maze[i][j] == TileObject::None)
-                tileList.push_back(Vector2D(i, j));
+                pathList.push_back(Vector2D(i, j));
 
-#pragma region Weighted Randomization
-    // Hard-coded weights & respective items
-    int weights[6] = { 45, 20, 5, 10, 15, 5};
-    TileObject items[6] = {TileObject::Ration,  TileObject::EnergyDrink,
-                           TileObject::Battery, TileObject::Pickaxe,
-                           TileObject::Chest,  TileObject::Mimic};
-
-    // Calculate sum of weights
-    int weightSum = 0;
-    for (int i = 0; i < 6; i++)
-        weightSum += weights[i];
-
-    // Place a given amount of items
-    for (int i = 0; i < itemCount; i++) {
-        int rnd = int(std::rand() % weightSum);
-        for (int j = 0; j < 6; j++) {
-            if (rnd < weights[j]) {
-                // Get random empty tile
-                Vector2D tilePos =
-                    tileList.at(int(std::rand() % tileList.size()));
-                this->maze[tilePos.y][tilePos.x] = items[j];
-                continue;
-            }
-            rnd -= weights[j];
-        }
-    }
-#pragma endregion
-}
-
-void Level::setEndpoint() {
-    for (int i = this->size - 1; i >= 0; i--) {
-        for (int j = this->size - 1; j >= 0; j--) {
-            if (this->maze[i][j] != TileObject::Wall && this->maze[i][j] != TileObject::Player) {
-                this->endPos = Vector2D(i, j);
-                return;
+    std::random_device rng;
+    std::mt19937 eng(rng());
+    std::shuffle(pathList.begin(), pathList.end(), eng);
+    std::vector<Vector2D> selectedTiles =
+        std::vector<Vector2D>(pathList.begin(), pathList.begin() + count);
+    for (auto pos : selectedTiles) {
+        TileObject item = TileObject::None;
+        int rnd = rand() % 100;
+        for (int i = 0; i < 4; i++) {
+            rnd -= weights[i];
+            if (rnd <= 0) {
+                item = items[i];
+                break;
             }
         }
+        this->maze[pos.y][pos.x] = item;
     }
 }
+
 int Level::getSize() const { return this->size; }
 
 std::vector<std::vector<TileObject>> Level::getMaze() const { return this->maze; }

@@ -27,6 +27,7 @@ enum class TileObject {
     Player,         // Player
     Wall,           // Maze Wall
     None,           // Path
+    Exit,           // Exit
     Ration,         // Collectable Ration
     EnergyDrink,    // Max Stamina Boost (temporary) (also regenerates stamina)
     Battery,        // FOV boost (temporary)
@@ -43,7 +44,7 @@ enum Difficulty {
 };
 
 // Enum to store meaningful keyboard inputs
-enum KeyInput {
+enum class KeyInput {
     Up,
     Down,
     Left,
@@ -54,5 +55,5 @@ enum KeyInput {
     UseAbility,
     UsePickaxe,
     UseRation,
-    Nothing
+    None
 };

@@ -57,7 +57,7 @@ class Main {
      */
     KeyInput getInput() {
         char inp = getch();
-
+        
         switch (inp) {
         case 'w':
             return KeyInput::Up;
@@ -68,7 +68,7 @@ class Main {
         case 'd':
             return KeyInput::Right;
         default:
-            return KeyInput::Nothing;
+            return KeyInput::None;
         }
     }
 
@@ -116,9 +116,15 @@ class Main {
         gamestate = GameState::InLevel;
 
         while (true) {
+            KeyInput key = getInput();
+
             if (gamestate == GameState::InLevel) {
                 Level level = Level(0, Vector2D(0, 0), 0);
                 Display::drawLevel(level);
+                if(key == KeyInput::Down)
+                {
+                    return;
+                }
             }
         }
     }
