@@ -113,16 +113,17 @@ class Main {
     // Main game loop
     void runGame() {
         // TODO(James): Implementation
+        Display::initCurses();
         gamestate = GameState::InLevel;
-
+        Level currentLevel = Level(9, Vector2D(0, 0), 3);
         while (true) {
+            Display::flush();
             KeyInput key = getInput();
-
             if (gamestate == GameState::InLevel) {
-                Level level = Level(0, Vector2D(0, 0), 0);
-                Display::drawLevel(level);
+                Display::drawLevel(currentLevel);
                 if(key == KeyInput::Down)
-                {
+                {   
+                    Display::terminate();
                     return;
                 }
             }

@@ -1,7 +1,9 @@
 #include "include/display.h"
 #include "include/level.h"
 #include "include/vector2d.h"
+#include <assert.h>
 #include <ncurses.h>
+
 
 #define MEGAPIXEL "##"
 
@@ -14,10 +16,11 @@
  */
 void Display::initCurses() {
     initscr();
+    cbreak();
     start_color(); // Enable color functionality
     noecho();
     raw();
-    keypad(stdscr, true);
+    //keypad(stdscr, true);
 
     // Define color pairs
     init_pair(1, COLOR_BLACK, COLOR_YELLOW); // Player
@@ -41,31 +44,38 @@ void Display::drawLevel(Level level) {
 
     // Initialize an anchor point (topleft of the maze)
     Vector2D maxSize;
+    
     getmaxyx(stdscr, maxSize.y, maxSize.x);
     Vector2D anchor = Vector2D(int((maxSize.y - level.getSize()) / 2),
                                int((maxSize.x - level.getSize()) / 2));
     std::vector<std::vector<TileObject> > maze = level.getMaze();
 
-    auto getColors = [](TileObject tile) {
-        switch (tile) {
-        case TileObject::Player:
-            return 1;
-        case TileObject::Wall:
-            return 2;
-        case TileObject::None:
-            return 3;
-        default:
-            return 4;
-        }
-    };
-
     for (int i = 0; i < level.getSize(); i++) {
         move(anchor.y + i, anchor.x);
         for (int j = 0; j < level.getSize(); j++) {
-            int colors = getColors(maze[i][j]);
+            int colors = 0;
+            switch (maze[i][j]) {
+                case TileObject::Player:
+                    colors = 1;
+                    break;
+                case TileObject::Wall:
+                    colors = 2;
+                    break;
+                case TileObject::None:
+                    colors = 3;
+                    break;
+                default:
+                    break;
+                }
             attron(COLOR_PAIR(colors));
             addstr(MEGAPIXEL);
             attroff(COLOR_PAIR(colors));
         }
     }
 }
+
+
+void Display::terminate() {
+    endwin();
+}
+
