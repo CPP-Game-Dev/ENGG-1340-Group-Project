@@ -1,11 +1,10 @@
-#include "../src/include/level.h" //enum included
 #include "../src/include/vector2d.h"
 #include "../src/include/enums.h"
 #include <cmath> // For distance calculation
 #include <iostream>
 #include <ncurses.h>
 #include <vector>
-
+#define MEGAPIXEL "  "
 char getTileChar(TileObject tile) {
     switch (tile) {
     case TileObject::Player:
@@ -40,9 +39,11 @@ int getTileColor(TileObject tile) {
     case TileObject::Wall:
         return 2; // Wall as White
     case TileObject::None:
-        return 3; // None as Green
+        return 3; // None as Black
+    case TileObject::Exit:
+        return 4; // Exit as Red
     default:
-        return 4; // Other tiles as Green
+        return 5; // Other tiles as Green
     }
 }
 int mapfov(int fov) {
@@ -69,23 +70,23 @@ void printMap(const std::vector<std::vector<TileObject> > &map, int playerX,
                 j >= playerX - fov && j <= playerX + fov) {
                 // Tile is within the field of view
                 int tile_color = getTileColor(map[i][j]);
-                attron(COLOR_PAIR(tile_color));
 
+                attron(COLOR_PAIR(tile_color));
+                
                 if (map[i][j] == TileObject::Wall || map[i][j] == TileObject::Player ||
-                    map[i][j] == TileObject::None) {
-                    printw("  "); // Print two spaces as a "block"
+                    map[i][j] == TileObject::None || map[i][j] == TileObject::Exit) {
+                    addstr(MEGAPIXEL);; // Print two spaces as a "block"
                 } else {
                     char t = getTileChar(map[i][j]);
                     printw("%c ", t);
-                    
                 }
 
                 attroff(COLOR_PAIR(tile_color));
             } else {
                 // Tile Outside Field of view
-                attron(COLOR_PAIR(5));
-                printw("  ");
-                attroff(COLOR_PAIR(5));
+                attron(COLOR_PAIR(6));
+                addstr(MEGAPIXEL);
+                attroff(COLOR_PAIR(6));
             }
         }
         printw("\n");
@@ -104,7 +105,7 @@ void TesterProgram() {
 
     int playerX = 2; // Player's X position in the map
     int playerY = 2; // Player's Y position in the map
-    int fieldOfView = 2; // Field of view (player as center, near n blocks displayed)
+    int fieldOfView = 5; // Field of view (player as center, near n blocks displayed)
 
     // Initialize ncurses
     initscr();
@@ -112,11 +113,11 @@ void TesterProgram() {
 
     // Define color pairs
     init_pair(1, COLOR_BLACK, COLOR_YELLOW); // Player
-    init_pair(2, COLOR_BLACK, COLOR_WHITE);  // Wall
+    init_pair(2, COLOR_WHITE, COLOR_WHITE);  // Wall
     init_pair(3, COLOR_BLACK, COLOR_BLACK);  // None
-    init_pair(4, COLOR_GREEN, COLOR_BLACK);  // Extras
-    init_pair(5, COLOR_BLACK, COLOR_CYAN);   // Hidden
-
+    init_pair(4, COLOR_BLACK, COLOR_RED);    // Exit
+    init_pair(5, COLOR_GREEN, COLOR_BLACK);  // Extras
+    init_pair(6, COLOR_BLACK, COLOR_CYAN);   // Hidden
     // Print the map with the player's field of view
     printMap(map, playerX, playerY, mapfov(fieldOfView));
 
