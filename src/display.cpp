@@ -6,6 +6,7 @@
 
 
 #define MEGAPIXEL "##"
+#define BLANKSPACE "  "
 
 // Display::Display() {
 //     // TODO:Implementation
@@ -26,8 +27,9 @@ void Display::initCurses() {
     init_pair(1, COLOR_BLACK, COLOR_YELLOW); // Player
     init_pair(2, COLOR_WHITE, COLOR_WHITE);  // Wall
     init_pair(3, COLOR_BLACK, COLOR_BLACK);  // None
-    init_pair(4, COLOR_GREEN, COLOR_BLACK);  // Extras
-    init_pair(5, COLOR_BLACK, COLOR_CYAN);   // Hidden
+    init_pair(4, COLOR_BLACK, COLOR_RED);    // Exit
+    init_pair(5, COLOR_GREEN, COLOR_BLACK);  // Extras
+    init_pair(6, COLOR_BLACK, COLOR_CYAN);   // Hidden
 }
 
 /*
@@ -54,6 +56,7 @@ void Display::drawLevel(Level level) {
         move(anchor.y + i, anchor.x);
         for (int j = 0; j < level.getSize(); j++) {
             int colors = 0;
+            bool is_items = false;
             switch (maze[i][j]) {
                 case TileObject::Player:
                     colors = 1;
@@ -64,16 +67,38 @@ void Display::drawLevel(Level level) {
                 case TileObject::None:
                     colors = 3;
                     break;
+                case TileObject::Exit:
+                    colors = 4;
+                    break;
                 default:
+                    colors = 5;
+                    is_items = true;
                     break;
                 }
+            
             attron(COLOR_PAIR(colors));
-            addstr(MEGAPIXEL);
+            if(!is_items){
+                addstr(BLANKSPACE);
+            }else{
+                switch(maze[i][j]){
+                    case TileObject::Chest:
+                        addstr("[]");
+                        break;
+                    case TileObject::Ration:
+                        addstr("8");
+                        break;
+                    case TileObject::EnergyDrink:
+                        addstr("E");
+                        break;
+                    case TileObject::Battery:
+                        addstr("B");
+                        break;
+                }
+            }
             attroff(COLOR_PAIR(colors));
         }
     }
 }
-
 
 void Display::terminate() {
     endwin();
