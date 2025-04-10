@@ -1,5 +1,6 @@
 #include "../src/include/level.h" //enum included
 #include "../src/include/vector2d.h"
+#include "../src/include/enums.h"
 #include <cmath> // For distance calculation
 #include <iostream>
 #include <ncurses.h>
@@ -7,39 +8,38 @@
 
 char getTileChar(TileObject tile) {
     switch (tile) {
-    case Player:
+    case TileObject::Player:
         return 'P';
-    case Wall:
+    case TileObject::Wall:
         return '#';
-    case None:
+    case TileObject::None:
         return '.';
-    case RationSmall:
-        return 'r';
-    case RationMedium:
-    case RationBig:
+    case TileObject::Exit:
+        return 'E';
+    case TileObject::Ration:
         return 'R';
-    case StaminaSmall:
-        return 's';
-    case StaminaMedium:
-    case StaminaBig:
-        return 'S';
-    case VisionSmall:
-        return 'v';
-    case VisionMedium:
-    case VisionBig:
-        return 'V';
+    case TileObject::EnergyDrink:
+        return 'D';
+    case TileObject::Battery:
+        return 'B';
+    case TileObject::Pickaxe:
+        return 'X';
+    case TileObject::Chest:
+        return 'C';
+    case TileObject::Mimic:
+        return 'M';
     default:
-        return '?';
+        return '?'; // Unknown tile
     }
 }
 
 int getTileColor(TileObject tile) {
     switch (tile) {
-    case Player:
+    case TileObject::Player:
         return 1; // Player as Yellow
-    case Wall:
+    case TileObject::Wall:
         return 2; // Wall as White
-    case None:
+    case TileObject::None:
         return 3; // None as Green
     default:
         return 4; // Other tiles as Green
@@ -68,23 +68,16 @@ void printMap(const std::vector<std::vector<TileObject> > &map, int playerX,
             if (i >= playerY - fov && i <= playerY + fov &&
                 j >= playerX - fov && j <= playerX + fov) {
                 // Tile is within the field of view
-
                 int tile_color = getTileColor(map[i][j]);
                 attron(COLOR_PAIR(tile_color));
 
-                if (map[i][j] == Wall || map[i][j] == Player ||
-                    map[i][j] == None) {
+                if (map[i][j] == TileObject::Wall || map[i][j] == TileObject::Player ||
+                    map[i][j] == TileObject::None) {
                     printw("  "); // Print two spaces as a "block"
                 } else {
                     char t = getTileChar(map[i][j]);
-                    if (map[i][j] == RationBig || map[i][j] == StaminaBig ||
-                        map[i][j] == VisionBig) {
-                        attron(A_BOLD);
-                        printw("%c ", t);
-                        attroff(A_BOLD);
-                    } else {
-                        printw("%c ", t);
-                    }
+                    printw("%c ", t);
+                    
                 }
 
                 attroff(COLOR_PAIR(tile_color));
@@ -100,17 +93,18 @@ void printMap(const std::vector<std::vector<TileObject> > &map, int playerX,
 }
 
 void TesterProgram() {
-    std::vector<std::vector<TileObject> > map = {
-        {Wall, Wall, Wall, Wall, Wall, Wall, Wall},
-        {Wall, StaminaBig, VisionSmall, None, None, None, Wall},
-        {Wall, RationMedium, Player, None, None, None, Wall},
-        {Wall, None, None, None, None, None, Wall},
-        {Wall, Wall, Wall, Wall, Wall, Wall, Wall}};
+    std::vector<std::vector<TileObject> > map = 
+    {
+        {TileObject::Wall, TileObject::Wall, TileObject::Wall, TileObject::Wall, TileObject::Wall},
+        {TileObject::Wall, TileObject::None, TileObject::None, TileObject::None, TileObject::Wall},
+        {TileObject::Wall, TileObject::None, TileObject::Player, TileObject::None, TileObject::Wall},
+        {TileObject::Wall, TileObject::None, TileObject::None, TileObject::Exit, TileObject::Wall},
+        {TileObject::Wall, TileObject::Wall, TileObject::Wall, TileObject::Wall, TileObject::Wall}
+    };
 
     int playerX = 2; // Player's X position in the map
     int playerY = 2; // Player's Y position in the map
-    int fieldOfView =
-        2; // Field of view (player as center, near n blocks displayed)
+    int fieldOfView = 2; // Field of view (player as center, near n blocks displayed)
 
     // Initialize ncurses
     initscr();
