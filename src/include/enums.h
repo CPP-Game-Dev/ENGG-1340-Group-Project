@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 /*
 File to store all enums used in other classes
 */
@@ -12,13 +14,22 @@ enum GameState {
     InventoryMenu
 };
 
+enum Rarity
+{
+    Common,
+    Uncommon,
+    Rare,
+    Relic
+};
+
 
 // Enum for different tile objects (anything that appears on the map is a tile
 // object)
-enum TileObject {
+enum class TileObject {
     Player,         // Player
     Wall,           // Maze Wall
     None,           // Path
+    Exit,           // Exit
     Ration,         // Collectable Ration
     EnergyDrink,    // Max Stamina Boost (temporary) (also regenerates stamina)
     Battery,        // FOV boost (temporary)
@@ -26,6 +37,9 @@ enum TileObject {
     Chest,          // Gives random item    
     Mimic           // Doesn't do anything for now
 };
+
+// Declares TileMap to wrap 2d vector of TileObject into a more readable form
+typedef std::vector<std::vector<TileObject> > TileMap;
 
 // Enum for the 3 levels of difficulty (to be implemented after MVP)
 enum Difficulty {
@@ -35,7 +49,7 @@ enum Difficulty {
 };
 
 // Enum to store meaningful keyboard inputs
-enum KeyInput {
+enum class KeyInput {
     Up,
     Down,
     Left,
@@ -46,5 +60,5 @@ enum KeyInput {
     UseAbility,
     UsePickaxe,
     UseRation,
-    Nothing
+    None
 };

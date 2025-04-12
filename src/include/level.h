@@ -9,7 +9,7 @@
  */
 class Level {
   private:
-    std::vector<std::vector<TileObject>> maze;
+    TileMap maze;
     std::vector<Vector2D> wallList;
     Vector2D startPos;
     Vector2D endPos;
@@ -20,14 +20,14 @@ class Level {
     void getAdjWalls(Vector2D pos);
     bool verifyWall(Vector2D wallPos);
     void placeItems(int itemCount);
-    void setEndpoint();
+    void setExit();
 
     void print();
 
   public:
     Level(int size, Vector2D startPos, int itemCount);
     int getSize() const;
-    std::vector<std::vector<TileObject>> getMaze() const;
+    TileMap getMaze() const;
     Vector2D getStart() const;
     Vector2D getEnd() const;
 };

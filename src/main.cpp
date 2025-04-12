@@ -21,9 +21,10 @@
 class Main {
   private:
     GameState gamestate;
+
   public:
     Main() {
-        // TODO(Joe): Implement default constructor
+        // TODO(James): Implement default constructor
     }
 
     /*
@@ -56,7 +57,7 @@ class Main {
      */
     KeyInput getInput() {
         char inp = getch();
-
+        
         switch (inp) {
         case 'w':
             return KeyInput::Up;
@@ -67,55 +68,73 @@ class Main {
         case 'd':
             return KeyInput::Right;
         default:
-            return KeyInput::Nothing;
+            return KeyInput::None;
         }
     }
-    
+
     /*
-    * Function to update player stats at the start of a turn
-    * Set player stats to their respective base stats
-    * Do not touch stats without a respective base stat
-    */
+     * Function to update player stats at the start of a turn
+     * Set player stats to their respective base stats
+     * Do not touch stats without a respective base stat
+     */
     void updatePlayerStats() {
-        // TODO(Joe): Implementation
+        // TODO(James): Implementation
     }
 
     /*
-    * Function to update player inventory items
-    * Calls the update() function of every item in the player's inventory
-    */
+     * Function to update player inventory items
+     * Calls the update() function of every item in the player's inventory
+     */
     void updatePlayerInventory() {
-        // TODO(Joe, after MVP): Implementation
+        // TODO(James, after MVP): Implementation
     }
 
     /*
-    * Function to hold all display related code
-    * Note that game logic does not affect display
-    */
+     * Function to hold all display related code
+     * Note that game logic does not affect display
+     */
     void draw() {
         // TODO(Chris): Implementation
     }
 
     // Function to move the player and handle stamina reduction
     void movePlayer() {
-        // TODO(Joe): Implementation
+        // TODO(James): Implementation
     }
 
     /*
-    * Game Logic:
-    * Game is not updated at all if no valid player input is detected
-    * Otherwise, perform an action according to current gamestate & key input
-    * player stats are
-    * 
-    */
+     * Game Logic:
+     * Game is not updated at all if no valid player input is detected
+     * Otherwise, perform an action according to current gamestate & key input
+     * player stats are
+     *
+     */
 
     // Main game loop
     void runGame() {
         // TODO(James): Implementation
+        Display::initCurses();
+        gamestate = GameState::InLevel;
+        Level currentLevel = Level(9, Vector2D(0, 0), 3);
+        while (true) {
+            Display::flush();
+            KeyInput key = getInput();
+            if (gamestate == GameState::InLevel) {
+                Display::drawLevel(currentLevel);
+                if(key == KeyInput::Down)
+                {   
+                    Display::terminate();
+                    return;
+                }
+            }
+        }
     }
 };
 
 // DRIVER CODE //
 int main() {
     // TODO(James):Implementation
+    Main game = Main();
+    game.runGame();
+    return 0;
 }
