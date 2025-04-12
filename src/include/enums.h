@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 /*
 File to store all enums used in other classes
 */
@@ -35,6 +37,9 @@ enum class TileObject {
     Chest,          // Gives random item    
     Mimic           // Doesn't do anything for now
 };
+
+// Declares TileMap to wrap 2d vector of TileObject into a more readable form
+typedef std::vector<std::vector<TileObject> > TileMap;
 
 // Enum for the 3 levels of difficulty (to be implemented after MVP)
 enum Difficulty {

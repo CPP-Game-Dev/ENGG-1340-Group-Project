@@ -1,18 +1,17 @@
 #include "include/level.h"
 #include "include/enums.h"
 #include "include/vector2d.h"
+#include "include/utils.h"
 #include <iostream>
 #include <stdlib.h>
 #include <string>
-#include <algorithm>
-#include <random>
 #include <unistd.h>
 #include <utility>
 #include <vector>
 
 Level::Level(int size, Vector2D startPos, int itemCount) {
     this->size = size;
-    this->maze = std::vector<std::vector<TileObject>>(
+    this->maze = TileMap(
         size, std::vector<TileObject>(size, TileObject::Wall));
     this->wallList = std::vector<Vector2D>();
     this->startPos = startPos;
@@ -151,9 +150,7 @@ void Level::placeItems(int count) {
             if (this->maze[i][j] == TileObject::None)
                 pathList.push_back(Vector2D(i, j));
 
-    std::random_device rng;
-    std::mt19937 eng(rng());
-    std::shuffle(pathList.begin(), pathList.end(), eng);
+    utils::shuffle<Vector2D>(pathList);
     std::vector<Vector2D> selectedTiles =
         std::vector<Vector2D>(pathList.begin(), pathList.begin() + count);
     for (auto pos : selectedTiles) {
@@ -172,7 +169,7 @@ void Level::placeItems(int count) {
 
 int Level::getSize() const { return this->size; }
 
-std::vector<std::vector<TileObject>> Level::getMaze() const { return this->maze; }
+TileMap Level::getMaze() const { return this->maze; }
 
 Vector2D Level::getStart() const { return this->startPos; }
 

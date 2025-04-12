@@ -322,6 +322,9 @@ void TesterProgram() {
     // Initialize ncurses
     initscr();
     start_color(); // Enable color functionality
+    cbreak();
+    noecho();
+    raw();
 
     // Define color pairs
     init_pair(1, COLOR_BLACK, COLOR_YELLOW); // Player
@@ -331,7 +334,7 @@ void TesterProgram() {
     init_pair(5, COLOR_GREEN, COLOR_BLACK);  // Extras
     init_pair(6, COLOR_BLACK, COLOR_CYAN);   // Hidden
     // Print the map with the player's field of view
-    printMap(map, playerX, playerY, mapfov(fieldOfView));
+    printMap(map2, playerX, playerY, mapfov(fieldOfView));
 
     // Refresh the screen to show the map
     refresh();
@@ -360,6 +363,7 @@ void TesterProgram() {
 }
 
 int main() {
+    srand(time(NULL));
     TesterProgram();
     /*
         Gamemethod: printmap -> getch -> move(modification of tiles) ->get

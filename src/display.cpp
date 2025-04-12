@@ -1,16 +1,13 @@
 #include "include/display.h"
 #include "include/level.h"
 #include "include/vector2d.h"
+#include "include/enums.h"
 #include <assert.h>
 #include <ncurses.h>
 
 
 #define MEGAPIXEL "##"
 #define BLANKSPACE "  "
-
-// Display::Display() {
-//     // TODO:Implementation
-// }
 
 /*
  * Function to initialize nCurses
@@ -50,7 +47,7 @@ void Display::drawLevel(Level level) {
     getmaxyx(stdscr, maxSize.y, maxSize.x);
     Vector2D anchor = Vector2D(int((maxSize.y - level.getSize()) / 2),
                                int((maxSize.x - level.getSize()) / 2));
-    std::vector<std::vector<TileObject> > maze = level.getMaze();
+    TileMap maze = level.getMaze();
 
     for (int i = 0; i < level.getSize(); i++) {
         move(anchor.y + i, anchor.x);
