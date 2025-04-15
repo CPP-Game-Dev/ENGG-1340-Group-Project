@@ -116,7 +116,8 @@ class Main {
         Display::initCurses();
         gamestate = GameState::InLevel;
         player = Player();
-        Level currentLevel = Level(15, Vector2D(0, 0), 4);
+        player.setPos(5, 5);
+        Level currentLevel = Level(15, player.getPos(), 4);
         KeyInput key = KeyInput::None;
         while (true) {
             if (gamestate == GameState::InLevel) {

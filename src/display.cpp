@@ -105,25 +105,22 @@ void Display::drawLevel(const Level &level, const Player &player) {
     //int fov = player.getFov();
     int fov = mapfov(10);
     
-    /*
+    
     auto isPerimeter = [](int y, int x, int size) {
         return (y == -1 || x == -1 || y == size || x == size);
     };
-    */
+    
 
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            if (!isVisible(i, j, playerY, playerX, fov)) {
-                // Tile Outside Field of view
-                attron(COLOR_PAIR(6));
-                addstr(MEGAPIXEL);
-                attroff(COLOR_PAIR(6));
-            /*} else if (isPerimeter(i, j, size)) {
-                // Tile inside FOV but is part of perimeter
-                attron(COLOR_PAIR(2));
-                addstr(MEGAPIXEL);
-                attroff(COLOR_PAIR(2));*/
-            } else {
+    for (int i = -1; i <= size; i++) {
+        for (int j = -1; j <= size; j++) {
+            if (isVisible(i, j, playerY, playerX, fov)) {
+                if (isPerimeter(i, j, size)) {
+                    // Tile inside FOV but is part of perimeter
+                    attron(COLOR_PAIR(2));
+                    addstr(MEGAPIXEL);
+                    attroff(COLOR_PAIR(2));
+                    continue;
+                }
                 // Tile is within the field of view & bounds of maze
                 int tile_color = getTileColor(maze[i][j]);
 
@@ -138,8 +135,12 @@ void Display::drawLevel(const Level &level, const Player &player) {
                 }
 
                 attroff(COLOR_PAIR(tile_color));
+            } else {
+                // Tile Outside Field of view
+                attron(COLOR_PAIR(6));
+                addstr(MEGAPIXEL);
+                attroff(COLOR_PAIR(6));
             }
-            
         }
         printw("\n");
     }
