@@ -21,7 +21,7 @@
 class Main {
   private:
     GameState gamestate;
-
+    Player player;
   public:
     Main() {
         // TODO(James): Implement default constructor
@@ -115,18 +115,19 @@ class Main {
         // TODO(James): Implementation
         Display::initCurses();
         gamestate = GameState::InLevel;
-        Level currentLevel = Level(9, Vector2D(0, 0), 3);
+        player = Player();
+        Level currentLevel = Level(15, Vector2D(0, 0), 4);
+        KeyInput key = KeyInput::None;
         while (true) {
-            Display::flush();
-            KeyInput key = getInput();
             if (gamestate == GameState::InLevel) {
-                Display::drawLevel(currentLevel);
+                Display::drawLevel(currentLevel, player);
                 if(key == KeyInput::Down)
                 {   
                     Display::terminate();
                     return;
                 }
             }
+            key = getInput();
         }
     }
 };

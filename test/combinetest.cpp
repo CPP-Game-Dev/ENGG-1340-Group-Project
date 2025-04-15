@@ -315,16 +315,19 @@ void TesterProgram() {
     };
     std::vector<std::vector<TileObject> > map2 = level1.getMaze();
 
+
+    usleep(1000000 * 3);
+
     int playerX = 2; // Player's X position in the map
     int playerY = 2; // Player's Y position in the map
     int fieldOfView = 10; // Field of view (player as center, near n blocks displayed)
-
     // Initialize ncurses
     initscr();
     start_color(); // Enable color functionality
     cbreak();
     noecho();
     raw();
+    curs_set(0);
 
     // Define color pairs
     init_pair(1, COLOR_BLACK, COLOR_YELLOW); // Player

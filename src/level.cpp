@@ -8,9 +8,11 @@
 #include <unistd.h>
 #include <utility>
 #include <vector>
+#include <algorithm>
+#include <random>
 
 Level::Level(int size, Vector2D startPos, int itemCount) {
-    this->size = size;
+    this->size = size ;
     this->maze = TileMap(
         size, std::vector<TileObject>(size, TileObject::Wall));
     this->wallList = std::vector<Vector2D>();
@@ -134,6 +136,19 @@ void Level::setExit() {
     this->endPos = pos;
 }
 
+#pragma region RNG Helper
+std::vector<Vector2D> getRandPaths(std::vector<Vector2D> &pathList, int count) {
+    std::vector<Vector2D> selectedTiles;
+    int index;
+    for(int i = 0; i < count; i++) {
+        index = rand() % (int)pathList.size();
+        selectedTiles.push_back(pathList[index]);
+        pathList.erase(pathList.begin() + index);
+    }
+    return selectedTiles;
+}
+#pragma endregion
+
 /*
  * Function to put a given amount of random items in random spots of the maze
  *
@@ -149,10 +164,7 @@ void Level::placeItems(int count) {
         for (int j = 0; j < this->size; j++)
             if (this->maze[i][j] == TileObject::None)
                 pathList.push_back(Vector2D(i, j));
-
-    utils::shuffle<Vector2D>(pathList);
-    std::vector<Vector2D> selectedTiles =
-        std::vector<Vector2D>(pathList.begin(), pathList.begin() + count);
+    std::vector<Vector2D> selectedTiles = getRandPaths(pathList, count);
     for (auto pos : selectedTiles) {
         TileObject item = TileObject::None;
         int rnd = rand() % 100;
