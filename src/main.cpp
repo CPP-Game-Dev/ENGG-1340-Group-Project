@@ -22,6 +22,7 @@ class Main {
   private:
     GameState gamestate;
     Player player;
+
   public:
     Main() {
         // TODO(James): Implement default constructor
@@ -57,7 +58,7 @@ class Main {
      */
     KeyInput getInput() {
         char inp = getch();
-        
+
         switch (inp) {
         case 'w':
             return KeyInput::Up;
@@ -122,11 +123,6 @@ class Main {
         while (true) {
             if (gamestate == GameState::InLevel) {
                 Display::drawLevel(currentLevel, player);
-                if(key == KeyInput::Down)
-                {   
-                    Display::terminate();
-                    return;
-                }
             }
             key = getInput();
         }
