@@ -68,6 +68,8 @@ class Main {
             return KeyInput::Down;
         case 'd':
             return KeyInput::Right;
+        case 'q':
+            return KeyInput::Quit;
         default:
             return KeyInput::None;
         }
@@ -99,8 +101,17 @@ class Main {
     }
 
     // Function to move the player and handle stamina reduction
-    void movePlayer() {
+    void movePlayer(KeyInput key) {
         // TODO(James): Implementation
+        if (key == KeyInput::Up) {
+            player.setPos(player.getPos() + UNIT_VECTOR_Y);
+        } else if (key == KeyInput::Down) {
+            player.setPos(player.getPos() - UNIT_VECTOR_Y);
+        } else if (key == KeyInput::Left) {
+            player.setPos(player.getPos() - UNIT_VECTOR_X);
+        } else if (key == KeyInput::Right) {
+            player.setPos(player.getPos() + UNIT_VECTOR_X);
+        }
     }
 
     /*
@@ -124,6 +135,7 @@ class Main {
             if (gamestate == GameState::InLevel) {
                 Display::drawLevel(currentLevel, player);
             }
+
             key = getInput();
         }
     }

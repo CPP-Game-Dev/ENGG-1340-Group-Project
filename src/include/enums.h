@@ -14,28 +14,21 @@ enum GameState {
     InventoryMenu
 };
 
-enum Rarity
-{
-    Common,
-    Uncommon,
-    Rare,
-    Relic
-};
-
+enum Rarity { Common, Uncommon, Rare, Relic };
 
 // Enum for different tile objects (anything that appears on the map is a tile
 // object)
 enum class TileObject {
-    Player,         // Player
-    Wall,           // Maze Wall
-    None,           // Path
-    Exit,           // Exit
-    Ration,         // Collectable Ration
-    EnergyDrink,    // Max Stamina Boost (temporary) (also regenerates stamina)
-    Battery,        // FOV boost (temporary)
-    Pickaxe,        // Doesn't do anything for now
-    Chest,          // Gives random item    
-    Mimic           // Doesn't do anything for now
+    Player,      // Player
+    Wall,        // Maze Wall
+    None,        // Path
+    Exit,        // Exit
+    Ration,      // Collectable Ration
+    EnergyDrink, // Max Stamina Boost (temporary) (also regenerates stamina)
+    Battery,     // FOV boost (temporary)
+    Pickaxe,     // Doesn't do anything for now
+    Chest,       // Gives random item
+    Mimic        // Doesn't do anything for now
 };
 
 // Declares TileMap to wrap 2d vector of TileObject into a more readable form
@@ -43,9 +36,9 @@ typedef std::vector<std::vector<TileObject> > TileMap;
 
 // Enum for the 3 levels of difficulty (to be implemented after MVP)
 enum Difficulty {
-    Catacombs,  // Easy
-    Labyrinth,  // Medium
-    Purgatory   // Hardx
+    Catacombs, // Easy
+    Labyrinth, // Medium
+    Purgatory  // Hardx
 };
 
 // Enum to store meaningful keyboard inputs
@@ -60,5 +53,6 @@ enum class KeyInput {
     UseAbility,
     UsePickaxe,
     UseRation,
+    Quit,
     None
 };
