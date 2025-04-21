@@ -1,8 +1,8 @@
-#include "player.h"
+#include "include/player.h"
 #include "include/iitem.h"
 #include "include/player.h"
 #include "include/vector2d.h"
-#include <iostream>
+// #include <iostream>
 #include <memory>
 #include <vector>
 
@@ -18,13 +18,13 @@ Player::Player() {
     this->fovMult = 1;
     this->rationCapacityMult = 1;
     this->pickaxeCapacityMult = 1;
-  
+
     this->pos = Vector2D(0, 0);
 }
 
-Player::Player( int baseStaminaMax, int baseRationRegen,
-                int baseFov, int baseRationCapacity, int basePickaxeCapacity,
-                Vector2D pos, std::vector<std::unique_ptr<IItem> > &&inventory) {
+Player::Player(int baseStaminaMax, int baseRationRegen, int baseFov,
+               int baseRationCapacity, int basePickaxeCapacity, Vector2D pos,
+               std::vector<std::unique_ptr<IItem> > &&inventory) {
     this->baseStaminaMax = baseStaminaMax;
     this->baseRationRegen = baseRationRegen;
     this->baseFov = baseFov;
@@ -32,7 +32,6 @@ Player::Player( int baseStaminaMax, int baseRationRegen,
     this->basePickaxeCapacity = basePickaxeCapacity;
     this->pos = pos;
     this->inventory = std::move(inventory);
-    
 }
 
 void Player::addItem(std::unique_ptr<IItem> &item) {
@@ -59,3 +58,5 @@ void Player::postUpdate() {
     // TODO(Arthur): come up with something to put here or delete the whole
     // function
 }
+
+// Vector2D Player::getPos() const { return this->pos; }

@@ -104,9 +104,9 @@ class Main {
     void movePlayer(KeyInput key) {
         // TODO(James): Implementation
         if (key == KeyInput::Up) {
-            player.setPos(player.getPos() + UNIT_VECTOR_Y);
-        } else if (key == KeyInput::Down) {
             player.setPos(player.getPos() - UNIT_VECTOR_Y);
+        } else if (key == KeyInput::Down) {
+            player.setPos(player.getPos() + UNIT_VECTOR_Y);
         } else if (key == KeyInput::Left) {
             player.setPos(player.getPos() - UNIT_VECTOR_X);
         } else if (key == KeyInput::Right) {
@@ -137,6 +137,12 @@ class Main {
             }
 
             key = getInput();
+
+            if (key == KeyInput::Quit) {
+                break;
+            }
+
+            movePlayer(key);
         }
     }
 };
