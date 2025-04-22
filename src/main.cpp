@@ -102,7 +102,7 @@ class Main {
 
     // Function to move the player and handle stamina reduction
     void movePlayer(KeyInput key) {
-        // TODO(James): Implementation
+        player.setStamina(player.getStamina() - 1);
         if (key == KeyInput::Up) {
             player.setPos(player.getPos() - UNIT_VECTOR_Y);
         } else if (key == KeyInput::Down) {
@@ -142,6 +142,7 @@ class Main {
                 break;
             }
 
+            player.update();
             movePlayer(key);
         }
     }

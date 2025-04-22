@@ -53,6 +53,8 @@ void Player::update() {
      * mults after all that, multiply each of the player's current stat with
      * their respective mult
      */
+    this->fov *= this->fovMult;
+    this->staminaMax *= this->staminaMaxMult;
 }
 void Player::postUpdate() {
     // TODO(Arthur): come up with something to put here or delete the whole
