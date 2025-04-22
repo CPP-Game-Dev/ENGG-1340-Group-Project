@@ -133,6 +133,7 @@ class Main {
         player.setPos(5, 5);
         Level currentLevel = Level(15, player.getPos(), 4);
         KeyInput key = KeyInput::None;
+
         while (true) {
             if (gamestate == GameState::InLevel) {
                 Display::drawLevel(currentLevel, player);
@@ -145,11 +146,12 @@ class Main {
                 break;
             }
 
+            player.update();
+
             if (player.getStamina() <= 0) {
                 break;
             }
 
-            player.update();
             movePlayer(key);
         }
     }
