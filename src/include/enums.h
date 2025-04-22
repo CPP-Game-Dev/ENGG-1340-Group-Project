@@ -56,3 +56,11 @@ enum class KeyInput {
     Quit,
     None
 };
+
+// Enum to store current game status
+enum class GameStatus {
+    PRE_GAME,
+    IN_GAME,
+    GAME_LOST,
+    GAME_WON,
+};
