@@ -102,7 +102,7 @@ class Main {
 
     // Function to move the player and handle stamina reduction
     void movePlayer(KeyInput key) {
-        player.setStamina(player.getStamina() - 1);
+
         if (key == KeyInput::Up) {
             player.setPos(player.getPos() - UNIT_VECTOR_Y);
         } else if (key == KeyInput::Down) {
@@ -112,6 +112,8 @@ class Main {
         } else if (key == KeyInput::Right) {
             player.setPos(player.getPos() + UNIT_VECTOR_X);
         }
+
+        player.setStamina(player.getStamina() - 1);
     }
 
     /*
@@ -138,7 +140,12 @@ class Main {
 
             key = getInput();
 
-            if (key == KeyInput::Quit) {
+            if (key == KeyInput::Quit) { // TODO: Probably figure out a better
+                                         // way to quit other than this.
+                break;
+            }
+
+            if (player.getStamina() <= 0) {
                 break;
             }
 

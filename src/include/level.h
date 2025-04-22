@@ -31,4 +31,5 @@ class Level {
     TileMap getMaze() const;
     Vector2D getStart() const;
     Vector2D getEnd() const;
+    bool getGameStatus() const;
 };
