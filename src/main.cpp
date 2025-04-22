@@ -148,13 +148,13 @@ class Main {
                 break;
             }
 
-            player.update();
-
             if (player.getStamina() <= 0) {
                 break;
             }
 
             movePlayer(key);
+
+            this->updatePlayerStats();
         }
     }
 };
