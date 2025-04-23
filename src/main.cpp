@@ -81,7 +81,8 @@ class Main {
      * Do not touch stats without a respective base stat
      */
     void updatePlayerStats() {
-        // TODO(James): Implementation
+        player.setFov(player.getFov() * player.getFovMult());
+        player.setStamina(player.getStaminaMax() * player.getStaminaMaxMult());
     }
 
     /*
@@ -102,7 +103,7 @@ class Main {
 
     // Function to move the player and handle stamina reduction
     void movePlayer(KeyInput key) {
-        // TODO(James): Implementation
+
         if (key == KeyInput::Up) {
             player.setPos(player.getPos() - UNIT_VECTOR_Y);
         } else if (key == KeyInput::Down) {
@@ -112,6 +113,8 @@ class Main {
         } else if (key == KeyInput::Right) {
             player.setPos(player.getPos() + UNIT_VECTOR_X);
         }
+
+        player.setStamina(player.getStamina() - 1);
     }
 
     /*
@@ -131,6 +134,7 @@ class Main {
         player.setPos(0, 0);
         Level currentLevel = Level(15, player.getPos(), 4);
         KeyInput key = KeyInput::None;
+
         while (true) {
             if (gamestate == GameState::InLevel) {
                 Display::drawLevel(currentLevel, player);
@@ -138,11 +142,18 @@ class Main {
 
             key = getInput();
 
-            if (key == KeyInput::Quit) {
+            if (key == KeyInput::Quit) { // TODO: Probably figure out a better
+                                         // way to quit other than this.
+                break;
+            }
+
+            if (player.getStamina() <= 0) {
                 break;
             }
 
             movePlayer(key);
+
+            this->updatePlayerStats();
         }
     }
 };

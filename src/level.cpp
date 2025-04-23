@@ -1,20 +1,19 @@
 #include "include/level.h"
 #include "include/enums.h"
-#include "include/vector2d.h"
 #include "include/utils.h"
+#include "include/vector2d.h"
+#include <algorithm>
 #include <iostream>
+#include <random>
 #include <stdlib.h>
 #include <string>
 #include <unistd.h>
 #include <utility>
 #include <vector>
-#include <algorithm>
-#include <random>
 
 Level::Level(int size, Vector2D startPos, int itemCount) {
-    this->size = size ;
-    this->maze = TileMap(
-        size, std::vector<TileObject>(size, TileObject::Wall));
+    this->size = size;
+    this->maze = TileMap(size, std::vector<TileObject>(size, TileObject::Wall));
     this->wallList = std::vector<Vector2D>();
     this->startPos = startPos;
     this->itemCount = itemCount;
@@ -54,8 +53,6 @@ void Level::generateMaze(Vector2D pos) {
         // Remove any checked wall from the list of unchecked walls
         wallList.erase(wallList.begin() + index);
     }
-
-    
 }
 
 /*
@@ -75,11 +72,13 @@ void Level::getAdjWalls(Vector2D pos) {
         this->wallList.push_back(Vector2D(pos.y, pos.x - 1));
 
     // Check below
-    if (pos.y < this->size - 1 && this->maze[pos.y + 1][pos.x] == TileObject::Wall)
+    if (pos.y < this->size - 1 &&
+        this->maze[pos.y + 1][pos.x] == TileObject::Wall)
         this->wallList.push_back(Vector2D(pos.y + 1, pos.x));
 
     // Check right
-    if (pos.x < this->size - 1 && this->maze[pos.y][pos.x + 1] == TileObject::Wall)
+    if (pos.x < this->size - 1 &&
+        this->maze[pos.y][pos.x + 1] == TileObject::Wall)
         this->wallList.push_back(Vector2D(pos.y, pos.x + 1));
 }
 
@@ -97,11 +96,13 @@ void Level::getAdjWalls(Vector2D pos) {
 bool Level::verifyWall(Vector2D wallPos) {
     int count = 0;
     // Check up
-    if (wallPos.y > 0 && this->maze[wallPos.y - 1][wallPos.x] == TileObject::None)
+    if (wallPos.y > 0 &&
+        this->maze[wallPos.y - 1][wallPos.x] == TileObject::None)
         count++;
 
     // Check left
-    if (wallPos.x > 0 && this->maze[wallPos.y][wallPos.x - 1] == TileObject::None)
+    if (wallPos.x > 0 &&
+        this->maze[wallPos.y][wallPos.x - 1] == TileObject::None)
         count++;
 
     // Check down
@@ -140,7 +141,7 @@ void Level::setExit() {
 std::vector<Vector2D> getRandPaths(std::vector<Vector2D> &pathList, int count) {
     std::vector<Vector2D> selectedTiles;
     int index;
-    for(int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         index = rand() % (int)pathList.size();
         selectedTiles.push_back(pathList[index]);
         pathList.erase(pathList.begin() + index);
@@ -186,3 +187,5 @@ TileMap Level::getMaze() const { return this->maze; }
 Vector2D Level::getStart() const { return this->startPos; }
 
 Vector2D Level::getEnd() const { return this->endPos; }
+
+bool Level::getGameStatus() const { return this->gameStatus; }

@@ -54,6 +54,7 @@ void Player::update() {
      * their respective mult
      */
 }
+
 void Player::postUpdate() {
     // TODO(Arthur): come up with something to put here or delete the whole
     // function

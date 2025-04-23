@@ -15,6 +15,7 @@ class Level {
     Vector2D endPos;
     int itemCount;
     int size;
+    bool gameStatus;
 
     void generateMaze(Vector2D pos);
     void getAdjWalls(Vector2D pos);
@@ -30,4 +31,5 @@ class Level {
     TileMap getMaze() const;
     Vector2D getStart() const;
     Vector2D getEnd() const;
+    bool getGameStatus() const;
 };
