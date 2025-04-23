@@ -73,14 +73,25 @@ int main() {
         "Hard",
         "Back"
     };
-    ArrowMenu menu(mainMenuItems, 0, 0);
-    int choice = menu.run();
-
-    // if (choice >= 0 && choice < menuItems.size()) {
-    //     printf("You selected: %s\n", menuItems[choice].c_str());
-    // } else {
-    //     printf("No selection made or menu canceled.\n");
-    // }
+    // std::vector<std::string> pauseMenuItems = {
+    //     "Resume",
+    //     "Save",
+    //     "Quit"
+    // };
+    ArrowMenu mainMenu(mainMenuItems, 0, 0);
+    ArrowMenu difficultyMenu(difficultyMenuItems, 0, 0);
+    int mainChoice = mainMenu.run();
+    if (mainChoice >= 0 && mainChoice <  mainMenuItems.size()) {
+        printf("You selected: %s\n",  mainMenuItems[mainChoice].c_str());
+        if (mainChoice == 0) {
+            int difficultyChoice = difficultyMenu.run();
+            if (difficultyChoice >= 0 && difficultyChoice <  difficultyMenuItems.size()) {
+                printf("You selected: %s\n",  difficultyMenuItems[difficultyChoice].c_str());
+            }
+        }
+    } else {
+        printf("No selection made or menu canceled.\n");
+    }
 
     return 0;
 }
