@@ -148,6 +148,22 @@ void Display::drawLevel(const Level &level, const Player &player) {
     mvprintw(playerY+1, (playerX*2)+2, "%s", str);  // Move to (y, x) and print the string
 }
 
+void Display::drawMainMenu(int highlighted) {
+    std::vector<std::string> mainMenuItems= {
+        "Start",
+        "Load",
+        "Help",
+        "Exit",
+    };
+    std::vector<std::string> difficultyMenuItems = {
+        "Easy",
+        "Medium",
+        "Hard",
+        "Back"
+    };
+    clear();
+}
+
 void Display::terminate() {
     endwin();
 }
