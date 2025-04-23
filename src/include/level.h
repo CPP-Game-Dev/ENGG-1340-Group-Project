@@ -32,5 +32,5 @@ class Level {
     Vector2D getStart() const;
     Vector2D getEnd() const;
     bool getGameStatus() const;
-    bool isValidMove();
+    bool isValidMove(Vector2D playerPos) const;
 };

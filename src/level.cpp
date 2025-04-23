@@ -189,3 +189,14 @@ Vector2D Level::getStart() const { return this->startPos; }
 Vector2D Level::getEnd() const { return this->endPos; }
 
 bool Level::getGameStatus() const { return this->gameStatus; }
+
+bool Level::isValidMove(Vector2D playerPos) const {
+    if (playerPos.x < 0 || playerPos.x >= this->size || playerPos.y < 0 ||
+        playerPos.y >= this->size)
+        return false;
+
+    if (this->maze[playerPos.y][playerPos.x] == TileObject::Wall)
+        return false;
+
+    return true;
+}
