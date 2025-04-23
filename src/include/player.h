@@ -1,6 +1,6 @@
 #pragma once
 
-#include "iitem.h"
+#include "item.h"
 #include "vector2d.h"
 #include <memory>
 #include <vector>
@@ -26,6 +26,7 @@ class Player {
     int fov;             // Current FOV
     int rationCapacity;  // Current ration capacity
     int pickaxeCapacity; // Current pickaxe capacity
+    Vector2D prevPos;    // Previous position
     Vector2D pos;        // Current position
 #pragma region endregion
 #pragma region Stat Multipliers
@@ -35,19 +36,19 @@ class Player {
     float rationCapacityMult;  // Multiplier for ration capacity
     float pickaxeCapacityMult; // Multiplier for pickaxe capacity
 #pragma endregion
-    std::vector<std::unique_ptr<IItem> > inventory; // Inventory storage
+    std::vector<std::unique_ptr<Item> > inventory; // Inventory storage
 
   public:
     Player(); // Initialize a new Player object (used for new game)
     Player(int baseStaminaMax, int baseRationRegen, int baseFov,
            int baseRationCapacity, int basePickaxeCapacity, Vector2D pos,
-           std::vector<std::unique_ptr<IItem> > &&inventory);
+           std::vector<std::unique_ptr<Item> > &&inventory);
 
 #pragma region Inventory Management
-    void addItem(std::unique_ptr<IItem> &item);
+    void addItem(std::unique_ptr<Item> &item);
 
     template <typename ItemType>
-    void removeItem(std::vector<std::unique_ptr<IItem> > itemList) {
+    void removeItem(std::vector<std::unique_ptr<Item> > itemList) {
         for (auto &item : this->inventory) {
             if (dynamic_cast<ItemType *>(item.get()) != nullptr) {
                 itemList.push_back(std::move(item));

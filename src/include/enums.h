@@ -14,7 +14,50 @@ enum GameState {
     InventoryMenu
 };
 
-enum Rarity { Common, Uncommon, Rare, Relic };
+enum class ItemID {
+    // Common
+    CampingBoots,
+    OldBelt,
+    HoardersBackpack,
+    CharredSteak,
+    RottenEgg,
+    OilLamp,
+    ExpiredMilk,
+    WornSneakers,
+    SpinachLeaf,
+    InkBottle,
+    OversizedCookie,
+    MutatedPotato,
+    // Uncommon
+    CampingBackpack,
+    CampingFlashlight,
+    CharmOfSatiation,
+    EmergencyRations,
+    RollerSkates,
+    LitTorch,
+    MRE,
+    MillitaryBackpack,
+    EnchantedBracelet,
+    GUEV1,
+    GUEV2,
+    BundleOfSpinach,
+    // Rare
+    Headlights,
+    TelescopeGlasses,
+    MetalDetector,
+    MagicMushroom,
+    MiningHelmet,
+    SuspiciousPills,
+    InsulinInjection,
+    Wheelchair,
+    HikingStaff,
+    PremiumSportswear,
+    // Relic
+    HermesBoots,
+    QuadEspresso,
+    Auringonsiemen,
+    AlphaStar
+};
 
 // Enum for different tile objects (anything that appears on the map is a tile
 // object)
