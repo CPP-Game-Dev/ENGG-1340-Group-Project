@@ -15,7 +15,6 @@ class DummyItem : public IItem {
 
 void test_default_constructor() {
     Player player;
-    std::cout << player.getBaseStaminaMax() << std::endl;
     assert(player.getBaseStaminaMax() == 0);
     assert(player.getBaseRationRegen() == 0);
     assert(player.getBaseFov() == 3);
@@ -38,6 +37,7 @@ void test_parameterized_constructor() {
     assert(player.getBaseRationRegen() == 5);
     assert(player.getBaseFov() == 7);
     assert(player.getBaseRationCapacity() == 2);
+    assert(player.getFov() == 0);
     assert(player.getBasePickaxeCapacity() == 1);
     assert(player.getPos() == pos);
 }
@@ -83,17 +83,17 @@ void test_setters_and_getters() {
 
 void test_add_and_has_item() {
     Player player;
-    // auto item = std::make_unique<DummyItem>();
-    // auto rawPtr = item.get();
-    // player.addItem(item);
-    // assert(player.hasItem<DummyItem>());
+    auto item = std::make_unique<IItem>();
+    auto rawPtr = item.get();
+    player.addItem(item);
+    assert(player.hasItem<IItem>());
 }
 
 int main() {
     test_default_constructor();
     test_parameterized_constructor();
     test_setters_and_getters();
-    // test_add_and_has_item();
+    test_add_and_has_item();
     std::cout << "All Player tests passed!" << std::endl;
     return 0;
 }
