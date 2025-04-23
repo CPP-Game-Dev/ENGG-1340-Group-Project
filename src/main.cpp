@@ -81,7 +81,6 @@ class Main {
      * Do not touch stats without a respective base stat
      */
     void updatePlayerStats() {
-        // TODO(James): Implementation
         player.setFov(player.getFov() * player.getFovMult());
         player.setStamina(player.getStaminaMax() * player.getStaminaMaxMult());
     }
