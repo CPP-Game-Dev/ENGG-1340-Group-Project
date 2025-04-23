@@ -102,7 +102,7 @@ class Main {
     }
 
     // Function to move the player and handle stamina reduction
-    void movePlayer(KeyInput key) {
+    void movePlayer(KeyInput key, Level level) {
         auto newPos = player.getPos();
 
         if (key == KeyInput::Up) {
@@ -115,6 +115,11 @@ class Main {
             newPos = player.getPos() + UNIT_VECTOR_X;
         }
 
+        if (!level.isValidMove(newPos)) {
+            return;
+        }
+
+        player.setPos(newPos);
         player.setStamina(player.getStamina() - 1);
     }
 
@@ -152,7 +157,7 @@ class Main {
                 break;
             }
 
-            movePlayer(key);
+            movePlayer(key, currentLevel);
 
             this->updatePlayerStats();
         }
