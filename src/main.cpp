@@ -164,12 +164,16 @@ class Main {
             this->updatePlayerStats();
         }
     }
+    void runMenu(){
+        Display::drawMainMenu(0);
+    }
 };
 
 // DRIVER CODE //
 int main() {
     // TODO(James):Implementation
     Main game = Main();
+    game.runMenu();
     game.runGame();
     return 0;
 }

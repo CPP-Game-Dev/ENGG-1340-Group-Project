@@ -151,7 +151,6 @@ void Display::drawLevel(const Level &level, const Player &player) {
 void Display::drawMainMenu(int highlighted) {
     std::vector<std::string> mainMenuItems= {
         "Start",
-        "Load",
         "Help",
         "Exit",
     };
@@ -161,7 +160,20 @@ void Display::drawMainMenu(int highlighted) {
         "Hard",
         "Back"
     };
-    clear();
+    ArrowDisplay mainMenu(mainMenuItems, 0, 0);
+    ArrowDisplay difficultyMenu(difficultyMenuItems, 0, 0);
+    size_t mainChoice = mainMenu.run();
+    if (mainChoice >= 0 && mainChoice <  mainMenuItems.size()) {
+        printf("You selected: %s\n",  mainMenuItems[mainChoice].c_str());
+        if (mainChoice == 0) {
+            size_t difficultyChoice = difficultyMenu.run();
+            if (difficultyChoice >= 0 && difficultyChoice <  difficultyMenuItems.size()) {
+                printf("You selected: %s\n",  difficultyMenuItems[difficultyChoice].c_str());
+            }
+        }
+    } else {
+        printf("No selection made or menu canceled.\n");
+    }
 }
 
 void Display::terminate() {
@@ -170,3 +182,53 @@ void Display::terminate() {
 
 
 
+
+
+void ArrowDisplay::display(){
+    for (int i = 0; i < options.size(); ++i) {
+        move(y + i, x);
+        if (i == selected) {
+            attron(A_REVERSE); // Highlight selected option
+            printw("> %s", options[i].c_str());
+            attroff(A_REVERSE);
+        } else {
+            printw("  %s", options[i].c_str());
+        }
+    }
+    refresh();
+}
+
+int ArrowDisplay::run(){
+    initscr();
+    clear();
+    noecho();
+    cbreak(); // Line buffering disabled
+    keypad(stdscr, TRUE); // Enable special keys
+    curs_set(0); // Hide cursor
+
+    display();
+
+    while (true) {
+        int ch = getch();
+        switch (ch) {
+            case KEY_UP:
+                if (selected > 0) {
+                    selected--;
+                    display();
+                }
+                break;
+            case KEY_DOWN:
+                if (selected < options.size() - 1) {
+                    selected++;
+                    display();
+                }
+                break;
+            case '\n': // Enter key
+                endwin();
+                return selected;
+            case 27: // ESC key
+                endwin();
+                return -1;
+        }
+    }
+}

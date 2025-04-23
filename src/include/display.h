@@ -16,3 +16,16 @@ class Display {
     static void drawInventory(int highlighted); 
     static void terminate();
 };
+class ArrowDisplay{
+  private:
+    std::vector<std::string> options;
+    size_t selected = 0;
+    int x, y; // Position of the menu
+
+  public:
+    ArrowDisplay(const std::vector<std::string>& opts, int pos_x = 0, int pos_y = 0) 
+        : options(opts), x(pos_x), y(pos_y) {}
+
+    void display();
+    int run();
+};
