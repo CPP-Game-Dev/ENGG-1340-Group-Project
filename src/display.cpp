@@ -110,7 +110,7 @@ void Display::drawLevel(const Level &level, const Player &player) {
         return (y == -1 || x == -1 || y == size || x == size);
     };
     
-
+    
     for (int i = -1; i <= size; i++) {
         for (int j = -1; j <= size; j++) {
             if (isVisible(i, j, playerY, playerX, fov)) {
@@ -144,6 +144,8 @@ void Display::drawLevel(const Level &level, const Player &player) {
         }
         printw("\n");
     }
+    const char* str = "P1";  // The string to display
+    mvprintw(playerY+1, (playerX*2)+2, "%s", str);  // Move to (y, x) and print the string
 }
 
 void Display::terminate() {
