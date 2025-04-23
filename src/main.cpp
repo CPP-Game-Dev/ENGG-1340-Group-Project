@@ -150,10 +150,12 @@ class Main {
 
             if (key == KeyInput::Quit) { // TODO: Probably figure out a better
                                          // way to quit other than this.
+                Display::terminate();
                 break;
             }
 
             if (player.getStamina() <= 0) {
+                Display::terminate();
                 break;
             }
 
