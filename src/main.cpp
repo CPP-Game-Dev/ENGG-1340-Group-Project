@@ -128,9 +128,7 @@ class Main {
 
         player.setPos(newPos);
 
-        auto maze = level.getMaze();
-
-        if (maze[newPos.y][newPos.x] == TileObject::Exit) {
+        if (level.getTile(newPos) == TileObject::Exit) {
             return;
         }
 

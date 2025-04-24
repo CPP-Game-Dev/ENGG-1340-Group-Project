@@ -31,6 +31,7 @@ class Level {
     TileMap getMaze() const;
     Vector2D getStart() const;
     Vector2D getEnd() const;
+    TileObject getTile(Vector2D pos) const;
     bool getGameStatus() const;
     bool isValidMove(Vector2D playerPos) const;
 };

@@ -200,3 +200,10 @@ bool Level::isValidMove(Vector2D playerPos) const {
 
     return true;
 }
+
+TileObject Level::getTile(Vector2D pos) const {
+    if (pos.x < 0 || pos.x >= this->size || pos.y < 0 || pos.y >= this->size)
+        return TileObject::None;
+
+    return this->maze[pos.y][pos.x];
+}
