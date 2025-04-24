@@ -28,6 +28,8 @@ enum class ItemID {
     InkBottle,
     OversizedCookie,
     MutatedPotato,
+    BlueCheese,
+    SleepingBag,
     // Uncommon
     CampingBackpack,
     CampingFlashlight,
@@ -55,8 +57,8 @@ enum class ItemID {
     // Relic
     HermesBoots,
     QuadEspresso,
-    Auringonsiemen,
-    AlphaStar
+    SunSeed,
+    AStar
 };
 
 // Enum for different tile objects (anything that appears on the map is a tile
