@@ -1,12 +1,11 @@
 #include "include/display.h"
+#include "include/enums.h"
 #include "include/level.h"
 #include "include/vector2d.h"
-#include "include/enums.h"
 #include <assert.h>
-#include <string>
-#include <ncurses.h>
 #include <cmath>
-
+#include <ncurses.h>
+#include <string>
 
 #define MEGAPIXEL "  "
 
@@ -25,7 +24,7 @@ void Display::initCurses() {
     init_pair(1, COLOR_YELLOW, COLOR_BLACK); // Player
     init_pair(2, COLOR_WHITE, COLOR_WHITE);  // Wall
     init_pair(3, COLOR_BLACK, COLOR_BLACK);  // None
-    init_pair(4, COLOR_RED, COLOR_RED);    // Exit
+    init_pair(4, COLOR_RED, COLOR_RED);      // Exit
     init_pair(5, COLOR_GREEN, COLOR_BLACK);  // Extras
     init_pair(6, COLOR_BLACK, COLOR_CYAN);   // Hidden
 }
@@ -90,8 +89,8 @@ int mapfov(int fov) {
 }
 
 bool isVisible(int y1, int x1, int y2, int x2, int fov) {
-    double dy = std::abs(y1-y2), dx = std::abs(x1-x2);
-    return std::round(std::sqrt(dy*dy + dx*dx)) < fov;
+    double dy = std::abs(y1 - y2), dx = std::abs(x1 - x2);
+    return std::round(std::sqrt(dy * dy + dx * dx)) < fov;
 }
 #pragma endregion
 
@@ -102,15 +101,13 @@ void Display::drawLevel(const Level &level, const Player &player) {
     TileMap maze = level.getMaze();
     int size = level.getSize();
     int playerY = player.getPos().y, playerX = player.getPos().x;
-    //int fov = player.getFov();
+    // int fov = player.getFov();
     int fov = mapfov(10);
-    
-    
+
     auto isPerimeter = [](int y, int x, int size) {
         return (y == -1 || x == -1 || y == size || x == size);
     };
-    
-    
+
     for (int i = -1; i <= size; i++) {
         for (int j = -1; j <= size; j++) {
             if (isVisible(i, j, playerY, playerX, fov)) {
@@ -126,8 +123,10 @@ void Display::drawLevel(const Level &level, const Player &player) {
 
                 attron(COLOR_PAIR(tile_color));
 
-                if (maze[i][j] == TileObject::Wall || maze[i][j] == TileObject::Wall ||
-                    maze[i][j] == TileObject::None || maze[i][j] == TileObject::Exit) {
+                if (maze[i][j] == TileObject::Wall ||
+                    maze[i][j] == TileObject::Wall ||
+                    maze[i][j] == TileObject::None ||
+                    maze[i][j] == TileObject::Exit) {
                     addstr(MEGAPIXEL); // Print two spaces as a "block"
                 } else {
                     std::string t = getTileChar(maze[i][j]);
@@ -144,31 +143,30 @@ void Display::drawLevel(const Level &level, const Player &player) {
         }
         printw("\n");
     }
-    const char* str = "P1";  // The string to display
-    mvprintw(playerY+1, (playerX*2)+2, "%s", str);  // Move to (y, x) and print the string
+    const char *str = "P1"; // The string to display
+    mvprintw(playerY + 1, (playerX * 2) + 2, "%s",
+             str); // Move to (y, x) and print the string
 }
 
 void Display::drawMainMenu(int highlighted) {
-    std::vector<std::string> mainMenuItems= {
+    std::vector<std::string> mainMenuItems = {
         "Start",
         "Help",
         "Exit",
     };
-    std::vector<std::string> difficultyMenuItems = {
-        "Easy",
-        "Medium",
-        "Hard",
-        "Back"
-    };
+    std::vector<std::string> difficultyMenuItems = {"Easy", "Medium", "Hard",
+                                                    "Back"};
     ArrowDisplay mainMenu(mainMenuItems, 0, 0);
     ArrowDisplay difficultyMenu(difficultyMenuItems, 0, 0);
     size_t mainChoice = mainMenu.run();
-    if (mainChoice >= 0 && mainChoice <  mainMenuItems.size()) {
-        printf("You selected: %s\n",  mainMenuItems[mainChoice].c_str());
+    if (mainChoice >= 0 && mainChoice < mainMenuItems.size()) {
+        printf("You selected: %s\n", mainMenuItems[mainChoice].c_str());
         if (mainChoice == 0) {
             size_t difficultyChoice = difficultyMenu.run();
-            if (difficultyChoice >= 0 && difficultyChoice <  difficultyMenuItems.size()) {
-                printf("You selected: %s\n",  difficultyMenuItems[difficultyChoice].c_str());
+            if (difficultyChoice >= 0 &&
+                difficultyChoice < difficultyMenuItems.size()) {
+                printf("You selected: %s\n",
+                       difficultyMenuItems[difficultyChoice].c_str());
             }
         }
     } else {
@@ -176,15 +174,9 @@ void Display::drawMainMenu(int highlighted) {
     }
 }
 
-void Display::terminate() {
-    endwin();
-}
+void Display::terminate() { endwin(); }
 
-
-
-
-
-void ArrowDisplay::display(){
+void ArrowDisplay::display() {
     for (int i = 0; i < options.size(); ++i) {
         move(y + i, x);
         if (i == selected) {
@@ -198,37 +190,37 @@ void ArrowDisplay::display(){
     refresh();
 }
 
-int ArrowDisplay::run(){
+int ArrowDisplay::run() {
     initscr();
     clear();
     noecho();
-    cbreak(); // Line buffering disabled
+    cbreak();             // Line buffering disabled
     keypad(stdscr, TRUE); // Enable special keys
-    curs_set(0); // Hide cursor
+    curs_set(0);          // Hide cursor
 
     display();
 
     while (true) {
         int ch = getch();
         switch (ch) {
-            case KEY_UP:
-                if (selected > 0) {
-                    selected--;
-                    display();
-                }
-                break;
-            case KEY_DOWN:
-                if (selected < options.size() - 1) {
-                    selected++;
-                    display();
-                }
-                break;
-            case '\n': // Enter key
-                endwin();
-                return selected;
-            case 27: // ESC key
-                endwin();
-                return -1;
+        case KEY_UP:
+            if (selected > 0) {
+                selected--;
+                display();
+            }
+            break;
+        case KEY_DOWN:
+            if (selected < options.size() - 1) {
+                selected++;
+                display();
+            }
+            break;
+        case '\n': // Enter key
+            endwin();
+            return selected;
+        case 27: // ESC key
+            endwin();
+            return -1;
         }
     }
 }
