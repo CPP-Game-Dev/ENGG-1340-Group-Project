@@ -127,6 +127,13 @@ class Main {
         }
 
         player.setPos(newPos);
+
+        auto maze = level.getMaze();
+
+        if (maze[newPos.y][newPos.x] == TileObject::Exit) {
+            return;
+        }
+
         player.setStamina(player.getStamina() - 1);
     }
 
