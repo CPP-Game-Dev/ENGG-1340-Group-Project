@@ -6,13 +6,13 @@
 #include <vector>
 
 // Dummy IItem implementation for testing
-class DummyItem : public IItem {
-  public:
-    DummyItem() { setDefaults(); }
-    void setDefaults() override { IItem::setDefaults(); }
-    // void update(Player) override {}
-};
-
+// class DummyItem : public Item { // FIXME: DummyItem initialization
+//   public:
+//     // DummyItem() { setDefaults(); }
+//     void setDefaults() override { Item::setDefaults(); }
+//     // void update(Player) override {}
+// };
+//
 void test_default_constructor() {
     Player player;
     std::cout << player.getBaseStaminaMax() << std::endl;
@@ -30,7 +30,7 @@ void test_default_constructor() {
 }
 
 void test_parameterized_constructor() {
-    std::vector<std::unique_ptr<IItem> > inv;
+    std::vector<std::unique_ptr<Item> > inv;
     // inv.push_back(std::make_unique<DummyItem>());
     Vector2D pos(2, 3);
     Player player(10, 5, 7, 2, 1, pos, std::move(inv));
