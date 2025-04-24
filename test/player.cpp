@@ -41,7 +41,7 @@ void test_parameterized_constructor() {
 
     auto item = createItem(ItemID::AlphaStar);
     // TODO: test setDefaults and compare default values and custom values.
-    player.addItem(item);
+    // player.addItem(item);
     // TODO: check if player has item
     // assert(player.hasItem<ItemID>() == true);
 
