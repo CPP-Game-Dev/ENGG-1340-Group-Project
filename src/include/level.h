@@ -33,4 +33,5 @@ class Level {
     Vector2D getEnd() const;
     bool getGameStatus() const;
     bool isValidMove(Vector2D playerPos) const;
+    void setTile(Vector2D pos, TileObject target);
 };
