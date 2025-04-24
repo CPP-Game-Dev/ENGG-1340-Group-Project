@@ -5,6 +5,7 @@
 #include "include/vector2d.h"
 #include <assert.h>
 #include <chrono>
+#include <cstdlib>
 #include <ctime>
 #include <fstream>
 #include <ncurses.h>
@@ -83,6 +84,12 @@ class Main {
     void updatePlayerStats() {
         player.setFov(player.getFov() * player.getFovMult());
         player.setStamina(player.getStaminaMax() * player.getStaminaMaxMult());
+        player.setRationRegen(player.getRationRegen() *
+                              player.getRationRegenMult());
+        player.setRationCapacity(player.getRationCapacity() *
+                                 player.getRationCapacityMult());
+        player.setPickaxeCapacity(player.getPickaxeCapacity() *
+                                  player.getPickaxeCapacityMult());
     }
 
     /*
@@ -138,7 +145,7 @@ class Main {
         gamestate = GameState::InLevel;
         player = Player();
         player.setPos(0, 0);
-        Level currentLevel = Level(15, player.getPos(), 4);
+        Level currentLevel = Level(60, player.getPos(), 4);
         KeyInput key = KeyInput::None;
 
         while (true) {
@@ -164,14 +171,13 @@ class Main {
             this->updatePlayerStats();
         }
     }
-    void runMenu(){
-        Display::drawMainMenu(0);
-    }
+    void runMenu() { Display::drawMainMenu(0); }
 };
 
 // DRIVER CODE //
 int main() {
-    // TODO(James):Implementation
+    srand(time(NULL));
+
     Main game = Main();
     game.runMenu();
     game.runGame();
