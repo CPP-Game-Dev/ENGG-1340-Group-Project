@@ -6,13 +6,13 @@
 #include <vector>
 
 Player::Player() {
-    this->baseStaminaMax = 0;
+    this->baseStaminaMax = 100;
     this->baseRationRegen = 0;
     this->baseFov = 3;
     this->baseRationCapacity = 0;
     this->basePickaxeCapacity = 0;
 
-    this->stamina = 20;
+    this->stamina = 100;
     this->staminaMaxMult = 1;
     this->rationRegenMult = 1;
     this->fovMult = 1;
