@@ -124,10 +124,10 @@ class Main {
 
             break;
         case (Difficulty::Labyrinth):
-            currentMapSize += 1;
+            currentMapSize += 2;
             break;
         case (Difficulty::Purgatory):
-            currentMapSize += 2;
+            currentMapSize += 3;
             break;
         }
 
@@ -165,13 +165,14 @@ class Main {
             newPos = player.getPos() + UNIT_VECTOR_X;
         }
 
-        if (!currentLevel.isValidMove(newPos)) {
+        if (!currentLevel.isValidMove(newPos)) { // Checks if it hits a wall
             return;
         }
 
         player.setPos(newPos);
 
-        if (currentLevel.getTile(newPos) == TileObject::Exit) {
+        if (currentLevel.getTile(newPos) ==
+            TileObject::Exit) { // User completes the level
             onLevelComplete();
             return;
         }
