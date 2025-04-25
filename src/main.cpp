@@ -22,6 +22,8 @@ class Main {
     GameState gamestate;
     Player player;
     int currentMapSize = 5;
+    int completedLevels = 0;
+    Difficulty difficulty;
     Level currentLevel;
 
   public:
@@ -112,7 +114,23 @@ class Main {
      */
     void onLevelComplete() {
         player.setPos(Vector2D(0, 0));
-        currentMapSize += 5;
+        completedLevels++;
+
+        switch (difficulty) {
+        case (Difficulty::Catacombs):
+            if (completedLevels % 2 == 0) {
+                currentMapSize += 2;
+            }
+
+            break;
+        case (Difficulty::Labyrinth):
+            currentMapSize += 1;
+            break;
+        case (Difficulty::Purgatory):
+            currentMapSize += 2;
+            break;
+        }
+
         currentLevel = Level(currentMapSize, player.getPos(), 4);
         resetPlayerStats();
     }
@@ -198,7 +216,7 @@ class Main {
             this->updatePlayerStats();
         }
     }
-    void runMenu() { Display::drawMainMenu(0); }
+    void runMenu() { Display::drawMainMenu(0, &difficulty); }
 };
 
 // DRIVER CODE //

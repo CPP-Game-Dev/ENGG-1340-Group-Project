@@ -148,7 +148,7 @@ void Display::drawLevel(const Level &level, const Player &player) {
              str); // Move to (y, x) and print the string
 }
 
-void Display::drawMainMenu(int highlighted) {
+void Display::drawMainMenu(int highlighted, Difficulty *difficulty) {
     std::vector<std::string> mainMenuItems = {
         "Start",
         "Help",
@@ -167,6 +167,21 @@ void Display::drawMainMenu(int highlighted) {
                 difficultyChoice < difficultyMenuItems.size()) {
                 printf("You selected: %s\n",
                        difficultyMenuItems[difficultyChoice].c_str());
+
+                switch (difficultyChoice) {
+                case 0:
+                    *difficulty = Difficulty::Catacombs;
+                    break;
+                case 1:
+                    *difficulty = Difficulty::Labyrinth;
+                    break;
+                case 2:
+                    *difficulty = Difficulty::Purgatory;
+                    break;
+                default:
+                    printf("Invalid choice.\n");
+                    break;
+                }
             }
         }
     } else {
