@@ -23,6 +23,7 @@ class Main {
   private:
     GameState gamestate;
     Player player;
+    int currentMapSize;
 
   public:
     Main() {
@@ -93,6 +94,35 @@ class Main {
     }
 
     /*
+     * Function to reset player stats at the start of a new level
+     *
+     */
+    void resetPlayerStats() {
+        player.setStamina(player.getBaseStaminaMax() *
+                          player.getStaminaMaxMult());
+        player.setRationRegen(player.getBaseRationRegen() *
+                              player.getRationRegenMult());
+        player.setFov(player.getBaseFov() * player.getFovMult());
+        player.setRationCapacity(player.getBaseRationCapacity() *
+                                 player.getRationCapacityMult());
+        player.setRationRegen(player.getBaseRationRegen() *
+                              player.getRationRegenMult());
+        player.setPickaxeCapacity(player.getBasePickaxeCapacity() *
+                                  player.getPickaxeCapacityMult());
+    }
+
+    /*
+     * Function to run when the user completes the current level
+     *
+     */
+    void onLevelComplete(Level *level) {
+        player.setPos(Vector2D(0, 0));
+        currentMapSize += 5;
+        *level = Level(currentMapSize, player.getPos(), 4);
+        resetPlayerStats();
+    }
+
+    /*
      * Function to update player inventory items
      * Calls the update() function of every item in the player's inventory
      */
@@ -109,7 +139,7 @@ class Main {
     }
 
     // Function to move the player and handle stamina reduction
-    void movePlayer(KeyInput key, Level level) {
+    void movePlayer(KeyInput key, Level *level) {
         auto newPos = player.getPos();
 
         if (key == KeyInput::Up) {
@@ -122,13 +152,14 @@ class Main {
             newPos = player.getPos() + UNIT_VECTOR_X;
         }
 
-        if (!level.isValidMove(newPos)) {
+        if (!level->isValidMove(newPos)) {
             return;
         }
 
         player.setPos(newPos);
 
-        if (level.getTile(newPos) == TileObject::Exit) {
+        if (level->getTile(newPos) == TileObject::Exit) {
+            onLevelComplete(level);
             return;
         }
 
@@ -150,11 +181,8 @@ class Main {
         gamestate = GameState::InLevel;
         player = Player();
         player.setPos(0, 0);
-<<<<<<< HEAD
-        Level currentLevel = Level(5, player.getPos(), 4);
-=======
-        Level currentLevel = Level(18, player.getPos(), 4);
->>>>>>> master
+        currentMapSize = 5;
+        Level currentLevel = Level(currentMapSize, player.getPos(), 4);
         KeyInput key = KeyInput::None;
 
         while (true) {
@@ -175,7 +203,7 @@ class Main {
                 break;
             }
 
-            movePlayer(key, currentLevel);
+            movePlayer(key, &currentLevel);
 
             this->updatePlayerStats();
         }
