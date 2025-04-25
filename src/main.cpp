@@ -117,16 +117,16 @@ class Main {
         completedLevels++;
 
         switch (difficulty) {
-        case (Difficulty::Catacombs):
+        case (Difficulty::Catacombs): // Easy mode
             if (completedLevels % 2 == 0) {
                 currentMapSize += 2;
             }
 
             break;
-        case (Difficulty::Labyrinth):
+        case (Difficulty::Labyrinth): // Medium mode
             currentMapSize += 2;
             break;
-        case (Difficulty::Purgatory):
+        case (Difficulty::Purgatory): // Hard mode
             currentMapSize += 3;
             break;
         }
