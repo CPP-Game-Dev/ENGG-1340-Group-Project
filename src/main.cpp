@@ -4,10 +4,8 @@
 #include "include/player.h"
 #include "include/vector2d.h"
 #include <assert.h>
-#include <chrono>
 #include <cstdlib>
 #include <ctime>
-#include <fstream>
 #include <ncurses.h>
 
 #define UNIT_VECTOR_Y Vector2D(1, 0)
@@ -23,11 +21,14 @@ class Main {
   private:
     GameState gamestate;
     Player player;
-    int currentMapSize;
+    int currentMapSize = 5;
+    Level currentLevel;
 
   public:
-    Main() {
-        // TODO(James): Implement default constructor
+    Main() : currentLevel(currentMapSize, Vector2D(0, 0), 4) {
+        gamestate = GameState::InLevel;
+        player = Player();
+        player.setPos(0, 0);
     }
 
     /*
@@ -85,8 +86,6 @@ class Main {
     void updatePlayerStats() {
         player.setFov(player.getFov() * player.getFovMult());
         player.setStamina(player.getStaminaMax() * player.getStaminaMaxMult());
-        player.setRationRegen(player.getRationRegen() *
-                              player.getRationRegenMult());
         player.setRationCapacity(player.getRationCapacity() *
                                  player.getRationCapacityMult());
         player.setPickaxeCapacity(player.getPickaxeCapacity() *
@@ -100,13 +99,9 @@ class Main {
     void resetPlayerStats() {
         player.setStamina(player.getBaseStaminaMax() *
                           player.getStaminaMaxMult());
-        player.setRationRegen(player.getBaseRationRegen() *
-                              player.getRationRegenMult());
         player.setFov(player.getBaseFov() * player.getFovMult());
         player.setRationCapacity(player.getBaseRationCapacity() *
                                  player.getRationCapacityMult());
-        player.setRationRegen(player.getBaseRationRegen() *
-                              player.getRationRegenMult());
         player.setPickaxeCapacity(player.getBasePickaxeCapacity() *
                                   player.getPickaxeCapacityMult());
     }
@@ -115,10 +110,10 @@ class Main {
      * Function to run when the user completes the current level
      *
      */
-    void onLevelComplete(Level *level) {
+    void onLevelComplete() {
         player.setPos(Vector2D(0, 0));
         currentMapSize += 5;
-        *level = Level(currentMapSize, player.getPos(), 4);
+        currentLevel = Level(currentMapSize, player.getPos(), 4);
         resetPlayerStats();
     }
 
@@ -139,7 +134,7 @@ class Main {
     }
 
     // Function to move the player and handle stamina reduction
-    void movePlayer(KeyInput key, Level *level) {
+    void movePlayer(KeyInput key) {
         auto newPos = player.getPos();
 
         if (key == KeyInput::Up) {
@@ -152,14 +147,14 @@ class Main {
             newPos = player.getPos() + UNIT_VECTOR_X;
         }
 
-        if (!level->isValidMove(newPos)) {
+        if (!currentLevel.isValidMove(newPos)) {
             return;
         }
 
         player.setPos(newPos);
 
-        if (level->getTile(newPos) == TileObject::Exit) {
-            onLevelComplete(level);
+        if (currentLevel.getTile(newPos) == TileObject::Exit) {
+            onLevelComplete();
             return;
         }
 
@@ -178,11 +173,6 @@ class Main {
     void runGame() {
         // TODO(James): Implementation
         Display::initCurses();
-        gamestate = GameState::InLevel;
-        player = Player();
-        player.setPos(0, 0);
-        currentMapSize = 5;
-        Level currentLevel = Level(currentMapSize, player.getPos(), 4);
         KeyInput key = KeyInput::None;
 
         while (true) {
@@ -203,7 +193,7 @@ class Main {
                 break;
             }
 
-            movePlayer(key, &currentLevel);
+            movePlayer(key);
 
             this->updatePlayerStats();
         }
