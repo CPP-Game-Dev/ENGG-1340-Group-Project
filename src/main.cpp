@@ -4,6 +4,7 @@
 #include "include/player.h"
 #include "include/vector2d.h"
 #include <assert.h>
+#include <cmath>
 #include <cstdlib>
 #include <ctime>
 #include <ncurses.h>
@@ -25,6 +26,7 @@ class Main {
     int completedLevels = 0;
     Difficulty difficulty;
     Level currentLevel;
+    KeyInput lastDirectionalInput;
 
   public:
     Main() : currentLevel(currentMapSize, Vector2D(0, 0), 4) {
@@ -87,7 +89,8 @@ class Main {
      */
     void updatePlayerStats() {
         player.setFov(player.getFov() * player.getFovMult());
-        player.setStamina(player.getStaminaMax() * player.getStaminaMaxMult());
+        // player.setStamina(player.getStaminaMax() *
+        // player.getStaminaMaxMult());
         player.setRationCapacity(player.getRationCapacity() *
                                  player.getRationCapacityMult());
         player.setPickaxeCapacity(player.getPickaxeCapacity() *
@@ -116,23 +119,33 @@ class Main {
         player.setPos(Vector2D(0, 0));
         completedLevels++;
 
+        double energyMult = 0;
         switch (difficulty) {
         case (Difficulty::Catacombs): // Easy mode
             if (completedLevels % 2 == 0) {
                 currentMapSize += 2;
             }
 
+            energyMult = 0.7;
             break;
         case (Difficulty::Labyrinth): // Medium mode
             currentMapSize += 2;
+            energyMult = 0.5;
             break;
         case (Difficulty::Purgatory): // Hard mode
             currentMapSize += 3;
+            energyMult = 0.3;
             break;
         }
 
         currentLevel = Level(currentMapSize, player.getPos(), 4);
         resetPlayerStats();
+        auto newStamina =
+            std::min((int)(player.getStamina() +
+                           std::floor(player.getStamina() * energyMult)),
+                     player.getStaminaMax());
+
+        player.setStamina(newStamina);
     }
 
     /*
@@ -157,12 +170,16 @@ class Main {
 
         if (key == KeyInput::Up) {
             newPos = player.getPos() - UNIT_VECTOR_Y;
+            lastDirectionalInput = KeyInput::Up;
         } else if (key == KeyInput::Down) {
             newPos = player.getPos() + UNIT_VECTOR_Y;
+            lastDirectionalInput = KeyInput::Down;
         } else if (key == KeyInput::Left) {
             newPos = player.getPos() - UNIT_VECTOR_X;
+            lastDirectionalInput = KeyInput::Left;
         } else if (key == KeyInput::Right) {
             newPos = player.getPos() + UNIT_VECTOR_X;
+            lastDirectionalInput = KeyInput::Right;
         }
 
         if (!currentLevel.isValidMove(newPos)) { // Checks if it hits a wall
@@ -190,7 +207,6 @@ class Main {
 
     // Main game loop
     void runGame() {
-        // TODO(James): Implementation
         Display::initCurses();
         KeyInput key = KeyInput::None;
 
@@ -207,7 +223,7 @@ class Main {
                 break;
             }
 
-            if (player.getStamina() <= 0) {
+            if (player.getStamina() <= 0) { // TODO: Lost game screen
                 Display::terminate();
                 break;
             }

@@ -12,6 +12,7 @@ Player::Player() {
     this->baseRationCapacity = 0;
     this->basePickaxeCapacity = 0;
 
+    this->stamina = 20;
     this->staminaMaxMult = 1;
     this->rationRegenMult = 1;
     this->fovMult = 1;
