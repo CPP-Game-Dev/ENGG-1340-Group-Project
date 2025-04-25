@@ -7,13 +7,13 @@
 
 // Dummy IItem implementation for testing
 void test_create_item() {
-    auto item = createItem(ItemID::AlphaStar);
+    auto item = createItem(ItemID::CampingBoots);
     // item->setDefaults(); // FIXME: setDefaults is unimplmented
     // Using manual edit for now,
     item->name = "Alpha Star";
     item->description = "A mysterious star that grants wishes.";
 
-    assert(item->id == ItemID::AlphaStar);
+    assert(item->id == ItemID::CampingBoots);
     assert(item->description == "A mysterious star that grants wishes.");
 }
 
