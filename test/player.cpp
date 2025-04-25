@@ -6,16 +6,19 @@
 #include <vector>
 
 // Dummy IItem implementation for testing
-class DummyItem : public IItem {
-  public:
-    DummyItem() { setDefaults(); }
-    void setDefaults() override { IItem::setDefaults(); }
-    // void update(Player) override {}
-};
+void test_create_item() {
+    auto item = createItem(ItemID::CampingBoots);
+    // item->setDefaults(); // FIXME: setDefaults is unimplmented
+    // Using manual edit for now,
+    item->name = "Alpha Star";
+    item->description = "A mysterious star that grants wishes.";
+
+    assert(item->id == ItemID::CampingBoots);
+    assert(item->description == "A mysterious star that grants wishes.");
+}
 
 void test_default_constructor() {
     Player player;
-    std::cout << player.getBaseStaminaMax() << std::endl;
     assert(player.getBaseStaminaMax() == 0);
     assert(player.getBaseRationRegen() == 0);
     assert(player.getBaseFov() == 3);
@@ -30,10 +33,19 @@ void test_default_constructor() {
 }
 
 void test_parameterized_constructor() {
-    std::vector<std::unique_ptr<IItem> > inv;
-    // inv.push_back(std::make_unique<DummyItem>());
+    // Test inventory vector and item generation
+
+    std::vector<std::unique_ptr<Item> > inv;
     Vector2D pos(2, 3);
     Player player(10, 5, 7, 2, 1, pos, std::move(inv));
+
+    auto item = createItem(ItemID::CampingBoots);
+    // TODO: test setDefaults and compare default values and custom values.
+    // player.addItem(item);
+    // TODO: check if player has item
+    // assert(player.hasItem<ItemID>() == true);
+
+    assert(item->id == ItemID::CampingBoots);
     assert(player.getBaseStaminaMax() == 10);
     assert(player.getBaseRationRegen() == 5);
     assert(player.getBaseFov() == 7);
@@ -93,6 +105,7 @@ int main() {
     test_default_constructor();
     test_parameterized_constructor();
     test_setters_and_getters();
+    test_create_item();
     // test_add_and_has_item();
     std::cout << "All Player tests passed!" << std::endl;
     return 0;

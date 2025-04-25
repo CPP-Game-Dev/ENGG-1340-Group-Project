@@ -21,7 +21,7 @@ Level::Level(int size, Vector2D startPos, int itemCount) {
     generateMaze(startPos);
     // Set starting position to player
     this->maze[startPos.y][startPos.x] = TileObject::Player;
-
+    setExit();
     placeItems(itemCount);
 }
 
@@ -201,9 +201,6 @@ bool Level::isValidMove(Vector2D playerPos) const {
     return true;
 }
 
-TileObject Level::getTile(Vector2D pos) const {
-    if (pos.x < 0 || pos.x >= this->size || pos.y < 0 || pos.y >= this->size)
-        return TileObject::None;
-
-    return this->maze[pos.y][pos.x];
+void Level::setTile(Vector2D pos, TileObject target) {
+    this->maze[pos.y][pos.x] = target;
 }

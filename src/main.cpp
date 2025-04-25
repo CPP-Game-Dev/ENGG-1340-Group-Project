@@ -150,7 +150,11 @@ class Main {
         gamestate = GameState::InLevel;
         player = Player();
         player.setPos(0, 0);
+<<<<<<< HEAD
         Level currentLevel = Level(5, player.getPos(), 4);
+=======
+        Level currentLevel = Level(18, player.getPos(), 4);
+>>>>>>> master
         KeyInput key = KeyInput::None;
 
         while (true) {
