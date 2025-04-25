@@ -6,18 +6,18 @@
 #include <vector>
 
 Player::Player() {
-    this->baseStaminaMax = 100;
-    this->baseRationRegen = 0;
-    this->baseFov = 3;
-    this->baseRationCapacity = 0;
-    this->basePickaxeCapacity = 0;
+    this->baseStaminaMax = DEFAULT_STAMINA;
+    this->baseRationRegen = DEFAULT_RATION_REGEN;
+    this->baseFov = DEFAULT_FOV;
+    this->baseRationCapacity = DEFAULT_RATION_CAPACITY;
+    this->basePickaxeCapacity = DEFAULT_PICKAXE_CAPACITY;
 
-    this->stamina = 100;
-    this->staminaMaxMult = 1;
-    this->rationRegenMult = 1;
-    this->fovMult = 1;
-    this->rationCapacityMult = 1;
-    this->pickaxeCapacityMult = 1;
+    this->stamina = DEFAULT_STAMINA;
+    this->staminaMaxMult = DEFAULT_STAMINA_MULT;
+    this->rationRegenMult = DEFAULT_RATION_REGEN_MULT;
+    this->fovMult = DEFAULT_FOV_MULT;
+    this->rationCapacityMult = DEFAULT_RATION_CAPACITY_MULT;
+    this->pickaxeCapacityMult = DEFAULT_PICKAXE_CAPACITY_MULT;
 
     this->prevPos = Vector2D(0, 0);
     this->pos = Vector2D(0, 0);

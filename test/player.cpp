@@ -19,16 +19,16 @@
 //
 void test_default_constructor() {
     Player player;
-    assert(player.getBaseStaminaMax() == 0);
-    assert(player.getBaseRationRegen() == 0);
-    assert(player.getBaseFov() == 3);
-    assert(player.getBaseRationCapacity() == 0);
-    assert(player.getBasePickaxeCapacity() == 0);
-    assert(player.getStaminaMaxMult() == 1);
-    assert(player.getRationRegenMult() == 1);
-    assert(player.getFovMult() == 1);
-    assert(player.getRationCapacityMult() == 1);
-    assert(player.getPickaxeCapacityMult() == 1);
+    assert(player.getBaseStaminaMax() == DEFAULT_STAMINA);
+    assert(player.getBaseRationRegen() == DEFAULT_RATION_REGEN);
+    assert(player.getBaseFov() == DEFAULT_FOV);
+    assert(player.getBaseRationCapacity() == DEFAULT_RATION_CAPACITY);
+    assert(player.getBasePickaxeCapacity() == DEFAULT_PICKAXE_CAPACITY);
+    assert(player.getStaminaMaxMult() == DEFAULT_STAMINA_MULT);
+    assert(player.getRationRegenMult() == DEFAULT_RATION_REGEN_MULT);
+    assert(player.getFovMult() == DEFAULT_FOV_MULT);
+    assert(player.getRationCapacityMult() == DEFAULT_RATION_CAPACITY_MULT);
+    assert(player.getPickaxeCapacityMult() == DEFAULT_PICKAXE_CAPACITY_MULT);
     assert(player.getPos() == Vector2D(0, 0));
 }
 

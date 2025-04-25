@@ -5,6 +5,17 @@
 #include <memory>
 #include <vector>
 
+const int DEFAULT_STAMINA = 100;
+const int DEFAULT_STAMINA_MULT = 100;
+const int DEFAULT_RATION_REGEN = 0;
+const int DEFAULT_RATION_REGEN_MULT = 0;
+const int DEFAULT_FOV = 3;
+const int DEFAULT_FOV_MULT = 1;
+const int DEFAULT_RATION_CAPACITY = 0;
+const int DEFAULT_PICKAXE_CAPACITY = 0;
+const int DEFAULT_RATION_CAPACITY_MULT = 1;
+const int DEFAULT_PICKAXE_CAPACITY_MULT = 1;
+
 /*
  * Class to store player-related functions & player data
  */
