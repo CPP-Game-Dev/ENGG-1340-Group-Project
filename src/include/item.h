@@ -26,7 +26,5 @@ class Item {
     float bonusPickaxeCapacityMult;
     
     Item(ItemID id);
-    void setDefaults();
 };
 
-std::unique_ptr<Item> createItem(ItemID itemID);
