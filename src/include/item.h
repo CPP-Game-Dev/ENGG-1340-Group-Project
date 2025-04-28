@@ -29,7 +29,7 @@ class Item {
   //constructors
   // default constructor
   //setting all the bonuses and counters to 0.
-    Item(ItemID id);
+    Item(ItemID id);
 //overloaded constructor:
     Item(ItemID id, const std::string& name,
     const std::string& description, int property);
