@@ -107,10 +107,6 @@ class Main {
         player.setStamina(player.getBaseStaminaMax() *
                           player.getStaminaMaxMult());
         player.setFov(player.getBaseFov() * player.getFovMult());
-        player.setRationCapacity(player.getBaseRationCapacity() *
-                                 player.getRationCapacityMult());
-        player.setPickaxeCapacity(player.getBasePickaxeCapacity() *
-                                  player.getPickaxeCapacityMult());
     }
 
     /*
@@ -246,9 +242,6 @@ class Main {
         if (player.getRationCapacity() <= 0) {
             return;
         }
-
-        int adjustedStamina =
-            std::round(player.getStamina() * player.getRationRegen());
 
         auto newStamina =
             std::min(player.getStamina() + player.getRationRegen(),
