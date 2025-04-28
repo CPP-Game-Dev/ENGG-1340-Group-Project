@@ -5,12 +5,21 @@
 #include "include/utils.h"
 
 
+
 // Default constructor for item
 //Initializes an Item with default placeholder values.
 // This constructor sets the name to "Item", description to "Description",
 // rarity to 0, and initializes all bonus attributes to zero.
 // It is primarily used when creating a generic Item without specific data.
 Item::Item(ItemID id) {
+
+//implementation of the item class default constructor
+
+//implementation of the item class overloaded constructor
+//in the order of (id, name, description, property)
+
+
+
     this->id = id;
 
     this->name = "Item";
