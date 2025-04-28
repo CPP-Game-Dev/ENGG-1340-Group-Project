@@ -5,6 +5,7 @@
 #include <memory>
 #include "enums.h"
 
+
 class Item {
   public:
     ItemID id;
@@ -24,7 +25,16 @@ class Item {
     float bonusFovMult;
     float bonusRationCapacityMult;
     float bonusPickaxeCapacityMult;
-    
+
+  //constructors
+  // default constructor
+  //setting all the bonuses and counters to 0.
     Item(ItemID id);
+//overloaded constructor:
+    Item(ItemID id, const std::string& name,
+    const std::string& description, int property);
+//initialises an item with specific values.
+//used in loading items data 
+  
 };
 
