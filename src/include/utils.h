@@ -43,7 +43,7 @@ namespace utils {
     // This version is particularly useful when data is sourced externally, such as
     // from a CSV file or user input, and allows for more meaningful Item objects.
 
-    inline std::unique_ptr<Item> createItem(ItemID id, const std::string& name, const std::string& descrription, int property) {
+    inline std::unique_ptr<Item> createItem(ItemID id, const std::string& name, const std::string& description, int property) {
         return utils::make_unique<Item>(id, name, description, property);
     }
 }
