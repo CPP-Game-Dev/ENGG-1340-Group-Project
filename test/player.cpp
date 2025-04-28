@@ -5,19 +5,10 @@
 #include <memory>
 #include <vector>
 
-// Dummy IItem implementation for testing
-// void test_create_item() {
-//     // auto item = createItem(ItemID::CampingBoots);
-//     // item->setDefaults(); // FIXME: setDefaults is unimplmented
-//     // Using manual edit for now,
-//     item->name = "Alpha Star";
-//     item->description = "A mysterious star that grants wishes.";
-//
-//     assert(item->id == ItemID::CampingBoots);
-//     assert(item->description == "A mysterious star that grants wishes.");
-// }
-//
-void test_default_constructor() {
+namespace player_tests {
+
+// Using Item for tests since that's what the codebase uses
+void testDefaultConstructor() {
     Player player;
     assert(player.getBaseStaminaMax() == DEFAULT_STAMINA);
     assert(player.getBaseRationRegen() == DEFAULT_RATION_REGEN);
@@ -30,31 +21,23 @@ void test_default_constructor() {
     assert(player.getRationCapacityMult() == DEFAULT_RATION_CAPACITY_MULT);
     assert(player.getPickaxeCapacityMult() == DEFAULT_PICKAXE_CAPACITY_MULT);
     assert(player.getPos() == Vector2D(0, 0));
+    std::cout << "Default constructor test passed!" << std::endl;
 }
 
-void test_parameterized_constructor() {
-    // Test inventory vector and item generation
-
-    std::vector<std::unique_ptr<Item> > inv;
+void testParameterizedConstructor() {
+    std::vector<std::unique_ptr<Item>> inv;
     Vector2D pos(2, 3);
     Player player(10, 5, 7, 2, 1, pos, std::move(inv));
-
-    // auto item = createItem(ItemID::CampingBoots);
-    // TODO: test setDefaults and compare default values and custom values.
-    // player.addItem(item);
-    // TODO: check if player has item
-    // assert(player.hasItem<ItemID>() == true);
-
-    // assert(item->id == ItemID::CampingBoots);
     assert(player.getBaseStaminaMax() == 10);
     assert(player.getBaseRationRegen() == 5);
     assert(player.getBaseFov() == 7);
     assert(player.getBaseRationCapacity() == 2);
     assert(player.getBasePickaxeCapacity() == 1);
     assert(player.getPos() == pos);
+    std::cout << "Parameterized constructor test passed!" << std::endl;
 }
 
-void test_setters_and_getters() {
+void testSettersAndGetters() {
     Player player;
     player.setBaseStaminaMax(15);
     player.setBaseRationRegen(4);
@@ -82,7 +65,7 @@ void test_setters_and_getters() {
     assert(player.getStamina() == 10);
     assert(player.getStaminaMax() == 20);
     assert(player.getRationRegen() == 5);
-    // assert(player.getFov() == 6); // FIXME: getFov still broken
+    // assert(player.getFov() == 6); // Commented out due to bug in setFov()
     assert(player.getRationCapacity() == 7);
     assert(player.getPickaxeCapacity() == 8);
     assert(player.getPos() == Vector2D(1, 2));
@@ -91,22 +74,21 @@ void test_setters_and_getters() {
     assert(player.getFovMult() == 1.2f);
     assert(player.getRationCapacityMult() == 1.3f);
     assert(player.getPickaxeCapacityMult() == 1.1f);
+    std::cout << "Setters and getters test passed!" << std::endl;
 }
 
-void test_add_and_has_item() {
-    Player player;
-    // auto item = std::make_unique<DummyItem>();
-    // auto rawPtr = item.get();
-    // player.addItem(item);
-    // assert(player.hasItem<DummyItem>());
+void testAddAndHasItem() {
+    // Placeholder for future implementation when Item class is ready
+    std::cout << "Item tests skipped (need implementation)" << std::endl;
 }
 
-int main() {
-    test_default_constructor();
-    test_parameterized_constructor();
-    test_setters_and_getters();
-    // test_create_item();
-    // test_add_and_has_item();
+void runAll() {
+    std::cout << "Running Player tests..." << std::endl;
+    testDefaultConstructor();
+    testParameterizedConstructor();
+    testSettersAndGetters();
+    testAddAndHasItem();
     std::cout << "All Player tests passed!" << std::endl;
-    return 0;
 }
+
+} // namespace player_tests

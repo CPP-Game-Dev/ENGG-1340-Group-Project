@@ -45,6 +45,9 @@ $(TARGET): $(OBJECTS) | $(BIN_DIR)
 	$(CC) $(CFLAGS) $(OBJECTS) -o $@ $(LIBS)
 
 # Build test executable
+# test: $(TEST_OBJECTS) $(filter-out $(OBJ_DIR)/main.o, $(OBJECTS)) | $(BIN_DIR)
+	$(CC) $(CFLAGS) $^ -o $(TEST_TARGET) $(LIBS)
+
 test: $(TEST_OBJECTS) $(filter-out $(OBJ_DIR)/main.o, $(OBJECTS)) | $(BIN_DIR)
 	$(CC) $(CFLAGS) $^ -o $(TEST_TARGET) $(LIBS)
 

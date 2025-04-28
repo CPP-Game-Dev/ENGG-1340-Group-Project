@@ -89,8 +89,6 @@ class Main {
      */
     void updatePlayerStats() {
         player.setFov(player.getFov() * player.getFovMult());
-        // player.setStamina(player.getStaminaMax() *
-        // player.getStaminaMaxMult());
         player.setRationCapacity(player.getRationCapacity() *
                                  player.getRationCapacityMult());
         player.setPickaxeCapacity(player.getPickaxeCapacity() *
