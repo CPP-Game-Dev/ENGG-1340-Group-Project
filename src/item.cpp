@@ -5,8 +5,13 @@
 #include "include/utils.h"
 
 
+//implementation of the item class default constructor
 
-Item::Item(ItemID id) {
+//implementation of the item class overloaded constructor
+//in the order of (id, name, description, property)
+
+
+Item::Item(ItemID id, const std::string& name, const std::string& description, int property) {
     this->id = id;
 
     this->name = "Item";
