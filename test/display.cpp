@@ -14,7 +14,7 @@ extern bool isVisible(int y1, int x1, int y2, int x2, int fov);
 
 namespace display_tests {
 
-void test_getTileChar() {
+void testGetTileChar() {
     // Test each tile type returns the expected character representation
     assert(getTileChar(TileObject::Player) == "P1");
     assert(getTileChar(TileObject::Wall) == "##");
@@ -31,7 +31,7 @@ void test_getTileChar() {
     std::cout << "getTileChar test passed!" << std::endl;
 }
 
-void test_getTileColor() {
+void testGetTileColor() {
     // Test each tile type returns the expected color code
     assert(getTileColor(TileObject::Player) == 1); // Yellow
     assert(getTileColor(TileObject::Wall) == 2);   // White
@@ -47,7 +47,7 @@ void test_getTileColor() {
     std::cout << "getTileColor test passed!" << std::endl;
 }
 
-void test_mapfov() {
+void testMapFov() {
     // Test the FOV mapping function
     assert(mapfov(0) == 0);
     assert(mapfov(1) == 0);
@@ -60,7 +60,7 @@ void test_mapfov() {
     std::cout << "mapfov test passed!" << std::endl;
 }
 
-void test_isVisible() {
+void testIsVisible() {
     // Test visibility function with various points and FOV values
     
     // Same point should always be visible
@@ -82,7 +82,7 @@ void test_isVisible() {
     std::cout << "isVisible test passed!" << std::endl;
 }
 
-void test_ArrowDisplay() {
+void testArrowDisplay() {
     // Basic test for ArrowDisplay construction (without running the UI)
     std::vector<std::string> options = {"Option 1", "Option 2", "Option 3"};
     ArrowDisplay display(options, 1, 2);
@@ -95,11 +95,11 @@ void test_ArrowDisplay() {
 
 void runAll() {
     std::cout << "Running Display tests..." << std::endl;
-    test_getTileChar();
-    test_getTileColor();
-    test_mapfov();
-    test_isVisible();
-    test_ArrowDisplay();
+    testGetTileChar();
+    testGetTileColor();
+    testMapFov();
+    testIsVisible();
+    testArrowDisplay();
     std::cout << "All Display tests passed!" << std::endl;
 }
 
