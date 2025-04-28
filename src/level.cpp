@@ -20,7 +20,7 @@ Level::Level(int size, Vector2D startPos, int itemCount) {
     // Run the generation algorithm
     generateMaze(startPos);
     // Set starting position to player
-    //this->maze[startPos.y][startPos.x] = TileObject::Player;
+    // this->maze[startPos.y][startPos.x] = TileObject::Player;
     setExit();
     placeItems(itemCount);
 }
