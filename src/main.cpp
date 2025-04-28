@@ -63,7 +63,7 @@ class Main {
      * Also handles screen resizing
      * Returns: the key pressed as a KeyInput
      */
-    KeyInput getInput() {
+    KeyInput getInput() { // TODO: Make it modular and configurable
         char inp = getch();
 
         switch (inp) {
@@ -77,6 +77,8 @@ class Main {
             return KeyInput::Right;
         case 'q':
             return KeyInput::Quit;
+        case 'e':
+            return KeyInput::UsePickaxe;
         default:
             return KeyInput::None;
         }
@@ -180,6 +182,8 @@ class Main {
             lastDirectionalInput = KeyInput::Right;
         }
 
+        lastDirectionalInput = key;
+
         if (!currentLevel.isValidMove(newPos)) { // Checks if it hits a wall
             return;
         }
@@ -193,6 +197,33 @@ class Main {
         }
 
         player.setStamina(player.getStamina() - 1);
+    }
+
+    void breakWall() {
+        // Check if the player has a pickaxe, and pickaxe capacity > 0
+        // Right now since there are no inventory checks yet, we will assume the
+        // player has it
+        // TODO: Add inventory checks later
+        if (player.getPickaxeCapacity() > 0) {
+            // Check if the player is facing a wall
+            Vector2D newPos = player.getPos();
+            if (lastDirectionalInput == KeyInput::Up) {
+                newPos = player.getPos() - UNIT_VECTOR_Y;
+            } else if (lastDirectionalInput == KeyInput::Down) {
+                newPos = player.getPos() + UNIT_VECTOR_Y;
+            } else if (lastDirectionalInput == KeyInput::Left) {
+                newPos = player.getPos() - UNIT_VECTOR_X;
+            } else if (lastDirectionalInput == KeyInput::Right) {
+                newPos = player.getPos() + UNIT_VECTOR_X;
+            }
+
+            auto tile = currentLevel.getTile(newPos);
+
+            if (tile == TileObject::Wall) {
+                currentLevel.setTile(newPos, TileObject::None);
+                player.setPickaxeCapacity(player.getPickaxeCapacity() - 1);
+            }
+        }
     }
 
     /*
@@ -226,7 +257,15 @@ class Main {
                 break;
             }
 
-            movePlayer(key);
+            // Check for key type
+            if (key == KeyInput::Up || key == KeyInput::Down ||
+                key == KeyInput::Left || key == KeyInput::Right) {
+                movePlayer(key);
+            } else if (key == KeyInput::UsePickaxe) {
+                breakWall();
+            } else if (key == KeyInput::UseRation) {
+                // TODO: Use ration
+            }
 
             this->updatePlayerStats();
         }
