@@ -79,6 +79,8 @@ class Main {
             return KeyInput::Quit;
         case 'e':
             return KeyInput::UsePickaxe;
+        case 'r':
+            return KeyInput::UseRation;
         default:
             return KeyInput::None;
         }
@@ -199,6 +201,14 @@ class Main {
         player.setStamina(player.getStamina() - 1);
     }
 
+    /*
+     * Function to break a wall
+     * Checks if the player has a pickaxe and if the pickaxe capacity > 0
+     * If so, check if the player is facing a wall,
+     * the wall is removed (TileType set to None) and the pickaxe capacity is
+     * reduced by 1
+     *
+     */
     void breakWall() {
         // Check if the player has a pickaxe, and pickaxe capacity > 0
         // Right now since there are no inventory checks yet, we will assume the
@@ -224,6 +234,27 @@ class Main {
                 player.setPickaxeCapacity(player.getPickaxeCapacity() - 1);
             }
         }
+    }
+
+    /*
+     * Function to use a ration
+     * Checks if the ration capacity > 0
+     * If so, it will heal the player's stamina by the ration regen amount
+     *
+     */
+    void useRation() {
+        if (player.getRationCapacity() <= 0) {
+            return;
+        }
+
+        int adjustedStamina =
+            std::round(player.getStamina() * player.getRationRegen());
+
+        auto newStamina =
+            std::min(player.getStamina() + player.getRationRegen(),
+                     player.getStaminaMax());
+
+        player.setStamina(newStamina);
     }
 
     /*
@@ -265,6 +296,7 @@ class Main {
                 breakWall();
             } else if (key == KeyInput::UseRation) {
                 // TODO: Use ration
+                useRation();
             }
 
             this->updatePlayerStats();
