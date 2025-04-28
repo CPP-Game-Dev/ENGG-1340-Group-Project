@@ -1,4 +1,5 @@
-﻿#include "include/display.h"
+﻿#include "include/config.h"
+#include "include/display.h"
 #include "include/enums.h"
 #include "include/level.h"
 #include "include/player.h"
@@ -27,12 +28,15 @@ class Main {
     Difficulty difficulty;
     Level currentLevel;
     KeyInput lastDirectionalInput;
+    Config config;
 
   public:
     Main() : currentLevel(currentMapSize, Vector2D(0, 0), 4) {
         gamestate = GameState::InLevel;
         player = Player();
         player.setPos(0, 0);
+
+        config = Config();
     }
 
     /*
@@ -66,23 +70,20 @@ class Main {
     KeyInput getInput() { // TODO: Make it modular and configurable
         char inp = getch();
 
-        switch (inp) {
-        case 'w':
+        if (inp == config.getConfig(Config::KB_UP)[0]) {
             return KeyInput::Up;
-        case 'a':
-            return KeyInput::Left;
-        case 's':
+        } else if (inp == config.getConfig(Config::KB_DOWN)[0]) {
             return KeyInput::Down;
-        case 'd':
+        } else if (inp == config.getConfig(Config::KB_LEFT)[0]) {
+            return KeyInput::Left;
+        } else if (inp == config.getConfig(Config::KB_RIGHT)[0]) {
             return KeyInput::Right;
-        case 'q':
-            return KeyInput::Quit;
-        case 'e':
+        } else if (inp == config.getConfig(Config::KB_USE_PICKAXE)[0]) {
             return KeyInput::UsePickaxe;
-        case 'r':
+        } else if (inp == config.getConfig(Config::KB_USE_RATION)[0]) {
             return KeyInput::UseRation;
-        default:
-            return KeyInput::None;
+        } else if (inp == config.getConfig(Config::KB_QUIT)[0]) {
+            return KeyInput::Quit;
         }
     }
 

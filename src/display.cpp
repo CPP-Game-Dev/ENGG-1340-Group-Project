@@ -107,17 +107,15 @@ void Display::drawLevel(const Level &level, const Player &player) {
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
     // Initialize top left anchor to center
-    Vector2D anchor = Vector2D(int(maxY/2), int(maxX/2));
+    Vector2D anchor = Vector2D(int(maxY / 2), int(maxX / 2));
 
     auto isPerimeter = [](int y, int x, int size) {
         return (y == -1 || x == -1 || y == size || x == size);
     };
-    
-
 
     for (int i = -1; i <= size; i++) {
         // Move cursor to 1 mp left of anchor point
-        move(anchor.y + i - playerY, anchor.x - 2 - playerX*2);
+        move(anchor.y + i - playerY, anchor.x - 2 - playerX * 2);
         for (int j = -1; j <= size; j++) {
             if (isVisible(i, j, playerY, playerX, fov)) {
                 if (isPerimeter(i, j, size)) {
@@ -152,8 +150,8 @@ void Display::drawLevel(const Level &level, const Player &player) {
         printw("\n");
     }
 
-    const char *str = "P1"; 
-    mvprintw(anchor.y, anchor.x, "%s", str); 
+    const char *str = "P1";
+    mvprintw(anchor.y, anchor.x, "%s", str);
 }
 
 void Display::drawMainMenu(int highlighted, Difficulty *difficulty) {
