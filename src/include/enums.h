@@ -73,7 +73,8 @@ enum class TileObject {
     Battery,     // FOV boost (temporary)
     Pickaxe,     // Doesn't do anything for now
     Chest,       // Gives random item
-    Mimic        // Doesn't do anything for now
+    Mimic,        // Doesn't do anything for now
+    Item         // Item that can be picked up
 };
 
 // Declares TileMap to wrap 2d vector of TileObject into a more readable form
