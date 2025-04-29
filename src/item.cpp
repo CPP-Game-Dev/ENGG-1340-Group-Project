@@ -66,3 +66,19 @@ Item::Item(ItemID id, const std::string &name, const std::string &description,
     this->bonusRationCapacityMult = 0.0;
     this->bonusPickaxeCapacityMult = 0.0;
 }
+
+void Item::update(Player& player) {
+
+    player.staminaMax += bonusStaminaMax;
+    player.rationRegen += bonusRationRegen;
+    player.fov += bonusFov;
+    player.rationCapacity += bonusRationCapacity;
+    player.pickaxeCapacity += bonusPickaxeCapacity;
+
+    player.staminaMax *= bonusStaminaMaxMult;
+    player.rationRegen *= bonusRationRegenMult;
+    player.fov *= bonusFovMult;
+    player.rationCapacity *= bonusRationCapacityMult;
+    player.pickaxeCapacity *= bonusPickaxeCapacityMult;
+}
+
