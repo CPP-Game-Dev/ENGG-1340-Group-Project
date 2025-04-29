@@ -19,6 +19,7 @@ class Item {
     bool hasCustomBehavior = false;
 
     virtual void update(Player& player);
+    virtual ~Item();
 
     int bonusStaminaMax;
     int bonusRationRegen;
