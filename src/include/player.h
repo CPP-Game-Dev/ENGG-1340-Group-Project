@@ -73,6 +73,31 @@ class Player {
                 return true;
         return false;
     }
+
+void addItem(std::unique_ptr<Item> item);
+
+const std::vector<std::unique_ptr<Item>>& getInventory() const;
+
+
+template <typename ItemType>
+void removeItemTo(std::vector<std::unique_ptr<Item>>& itemList) {
+  
+  auto it = inventory.begin();
+  
+        while (it != inventory.end()) {
+          
+            if (dynamic_cast<ItemType*>(it->get()) != nullptr) {
+              
+                itemList.push_back(std::move(*it));
+                it = inventory.erase(it);
+            } 
+            else {
+                ++it;
+            }
+        }
+    }
+
+  
 #pragma endregion
 
     void preUpdate();  // Prepares the player instance for update()
