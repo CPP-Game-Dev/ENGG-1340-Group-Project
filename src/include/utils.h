@@ -3,6 +3,9 @@
 #include <memory>
 #include <assert.h>
 #include <string>
+#include <fstream>
+#include <sstream>
+#include <vector>
 #include "item.h"
 #include "enums.h"
 
@@ -46,6 +49,41 @@ namespace utils {
     inline std::unique_ptr<Item> createItem(ItemID id, const std::string& name, const std::string& description, int property) {
         return utils::make_unique<Item>(id, name, description, property);
     }
+
+    inline std::vector<std::unique_ptr<Item>> parseItemsFromCSV(const std::string& filename) {
+
+        // Vector to hold all items created from CSV
+        std::vector<std::unique_ptr<Item>> items;
+        std::ifstream file(filename);
+        
+        // Temporary variable to store each line
+        std::string line;
+        
+
+    while (std::getline(file, line)) {
+
+        // Use a stringstream to parse the CSV line
+        std::stringstream ss(line);
+        
+        std::string idStr, name, description, propertyStr;
+
+        std::getline(ss, idStr, ',');
+        std::getline(ss, name, ',');
+        std::getline(ss, description, ',');
+        std::getline(ss, propertyStr, ',');
+
+        
+        ItemID id = static_cast<ItemID>(std::stoi(idStr));
+        
+        int property = std::stoi(propertyStr);
+
+        items.push_back(utils::createItem(id, name, description, property));
+    }
+
+        
+    return items;
+    }
+
 
 // std::vector<std::unique_ptr<Item> parseItemsFromCSV(const std::string& filename);
 }
