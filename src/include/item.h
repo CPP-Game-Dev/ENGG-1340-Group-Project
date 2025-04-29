@@ -5,6 +5,8 @@
 #include <memory>
 #include "enums.h"
 
+class Player;
+
 
 class Item {
   public:
@@ -35,6 +37,7 @@ class Item {
 //initialises an item with specific values.
 //used in loading items data 
 //implementation
+    void update(Player& player);
   
 };
 
