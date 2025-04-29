@@ -126,7 +126,7 @@ void Player::postUpdate() {
     // TODO(Arthur): come up with something to put here or delete the whole
     // function
 
-    void Player::postUpdate() {
+    void player::postUpdate() {
     // Clamp stats to valid ranges
     if (stamina > staminaMax) stamina = staminaMax;
     if (stamina < 0) stamina = 0;
