@@ -14,6 +14,8 @@
 #include <ncurses.h>
 
 #include "include/utils.h"
+#include "include/item.h"
+
 
 #define UNIT_VECTOR_Y Vector2D(1, 0)
 #define UNIT_VECTOR_X Vector2D(0, 1)
@@ -212,7 +214,17 @@ class Main {
      * Calls the update() function of every item in the player's inventory
      */
     void updatePlayerInventory() {
+      
         // TODO(James, after MVP): Implementation
+
+       const auto& inventory = player.getInventory();
+
+      for (const auto& item : inventory) {
+          if (item) {
+              item->update(player);
+          }
+      }
+        
     }
 
     /*
@@ -365,7 +377,7 @@ class Main {
                 std::unique_ptr<Item> pickedItem = std::move(items.back());
                 items.pop_back();
 
-                player.addItem(std::move(pickedItem));  // <- 네가 만든 함수 호출
+                player.addItem(std::move(pickedItem));
 
                 currentLevel.setTile(pos, TileObject::None);
 
