@@ -79,6 +79,47 @@ void Player::update() {
      * mults after all that, multiply each of the player's current stat with
      * their respective mult
      */
+    staminaMax         = baseStaminaMax;
+    rationRegen        = baseRationRegen;
+    fov                = baseFov;
+    rationCapacity     = baseRationCapacity;
+    pickaxeCapacity    = basePickaxeCapacity;
+
+    staminaMaxMult         = 1.0f;
+    rationRegenMult        = 1.0f;
+    fovMult                = 1.0f;
+    rationCapacityMult     = 1.0f;
+    pickaxeCapacityMult    = 1.0f;
+
+    // 1. 인벤토리를 순회하며 update 호출 & 보너스 적용
+    for (const auto& item : inventory) {
+        if (!item) continue;
+
+        if (item->hasCustomBehavior) {
+            item->update(*this);
+        }
+
+        // Flat bonuses
+        staminaMax         += item->bonusStaminaMax;
+        rationRegen        += item->bonusRationRegen;
+        fov                += item->bonusFov;
+        rationCapacity     += item->bonusRationCapacity;
+        pickaxeCapacity    += item->bonusPickaxeCapacity;
+
+        // Multipliers
+        staminaMaxMult         *= item->bonusStaminaMaxMult;
+        rationRegenMult        *= item->bonusRationRegenMult;
+        fovMult                *= item->bonusFovMult;
+        rationCapacityMult     *= item->bonusRationCapacityMult;
+        pickaxeCapacityMult    *= item->bonusPickaxeCapacityMult;
+    }
+
+    // 2. 멀티플라이어 적용
+    staminaMax         = static_cast<int>(staminaMax * staminaMaxMult);
+    rationRegen        = static_cast<int>(rationRegen * rationRegenMult);
+    fov                = static_cast<int>(fov * fovMult);
+    rationCapacity     = static_cast<int>(rationCapacity * rationCapacityMult);
+    pickaxeCapacity    = static_cast<int>(pickaxeCapacity * pickaxeCapacityMult);
 }
 
 void Player::postUpdate() {
