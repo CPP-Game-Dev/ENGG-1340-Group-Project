@@ -91,7 +91,7 @@ void Player::update() {
     rationCapacityMult     = 1.0f;
     pickaxeCapacityMult    = 1.0f;
 
-    // 1. 인벤토리를 순회하며 update 호출 & 보너스 적용
+
     for (const auto& item : inventory) {
         if (!item) continue;
 
@@ -114,7 +114,6 @@ void Player::update() {
         pickaxeCapacityMult    *= item->bonusPickaxeCapacityMult;
     }
 
-    // 2. 멀티플라이어 적용
     staminaMax         = static_cast<int>(staminaMax * staminaMaxMult);
     rationRegen        = static_cast<int>(rationRegen * rationRegenMult);
     fov                = static_cast<int>(fov * fovMult);
@@ -123,8 +122,36 @@ void Player::update() {
 }
 
 void Player::postUpdate() {
+    if (stamina > staminaMax) {
+        stamina = staminaMax;
+    }
+    if (stamina < 0) {
+        stamina = 0;
+    }
+
+    if (rationCapacity < 0) {
+        rationCapacity = 0;
+    }
+
+    if (pickaxeCapacity < 0) {
+        pickaxeCapacity = 0;
+    }
+
+    if (fov < 1) {
+        fov = 1;
+    }
+
+    // Optional: Snap multipliers to zero if they became NaN or negative
+    if (staminaMaxMult < 0.0f) staminaMaxMult = 1.0f;
+    if (rationRegenMult < 0.0f) rationRegenMult = 1.0f;
+    if (fovMult < 0.0f) fovMult = 1.0f;
+    if (rationCapacityMult < 0.0f) rationCapacityMult = 1.0f;
+    if (pickaxeCapacityMult < 0.0f) pickaxeCapacityMult = 1.0f;
+
     // TODO(Arthur): come up with something to put here or delete the whole
     // function
+
+    
 }
 
 // Vector2D Player::getPos() const { return this->pos; }
