@@ -12,6 +12,8 @@
 #include <fstream>
 
 
+#include "include/utils.h"
+
 #define UNIT_VECTOR_Y Vector2D(1, 0)
 #define UNIT_VECTOR_X Vector2D(0, 1)
 
@@ -32,6 +34,15 @@ class Main {
     KeyInput lastDirectionalInput;
     Config config;
 
+    std::vector<std::unique_ptr<Item>> items;
+
+void initialiseItems() {
+
+  items = utils::parseItemsFromCSV("data/items.csv");
+
+}
+
+
   public:
     Main() : currentLevel(currentMapSize, Vector2D(0, 0), 4) {
         gamestate = GameState::InLevel;
@@ -39,6 +50,9 @@ class Main {
         player.setPos(0, 0);
 
         config = Config();
+
+        initialiseItems();
+      
     }
 
     /*
