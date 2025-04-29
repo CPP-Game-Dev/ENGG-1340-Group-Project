@@ -18,6 +18,8 @@ class Item {
 
     bool hasCustomBehavior = false;
 
+    virtual void update(Player& player);
+
     int bonusStaminaMax;
     int bonusRationRegen;
     int bonusFov;
