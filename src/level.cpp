@@ -11,6 +11,16 @@
 #include <utility>
 #include <vector>
 
+
+/*
+ * Constructor for the Level class
+ * Generates a maze using Prim's algorithm, places the exit, and spawns items.
+ *
+ * @param size       Size of the square maze (size x size)
+ * @param startPos   Starting position for the maze generation and player
+ * @param itemCount  Number of items to randomly place in the maze
+ * @return none
+ */
 Level::Level(int size, Vector2D startPos, int itemCount) {
     this->size = size;
     this->maze = TileMap(size, std::vector<TileObject>(size, TileObject::Wall));
@@ -118,6 +128,13 @@ bool Level::verifyWall(Vector2D wallPos) {
     return count == 1;
 }
 
+/*
+ * Selects and marks an exit point in the maze
+ * Filters out tiles that are too close to the start, then randomly chooses
+ * one of the remaining path tiles to serve as the exit.
+ *
+ * @return void
+ */
 void Level::setExit() {
     std::vector<Vector2D> tileList = std::vector<Vector2D>();
     Vector2D pos;
@@ -180,16 +197,49 @@ void Level::placeItems(int count) {
     }
 }
 
+/*
+ * Gets the current size of the level
+ *
+ * @return int The size of the square maze
+ */
 int Level::getSize() const { return this->size; }
 
+/*
+ * Gets the current state of the maze
+ *
+ * @return TileMap 2D vector representing maze tiles
+ */
 TileMap Level::getMaze() const { return this->maze; }
 
+/*
+ * Gets the player's starting position in the maze
+ *
+ * @return Vector2D Starting coordinates
+ */
 Vector2D Level::getStart() const { return this->startPos; }
 
+
+/*
+ * Gets the exit position of the maze
+ *
+ * @return Vector2D Exit coordinates
+ */
 Vector2D Level::getEnd() const { return this->endPos; }
 
+/*
+ * Gets the current game status from the level
+ *
+ * @return bool Whether the game is ongoing or not
+ */
 bool Level::getGameStatus() const { return this->gameStatus; }
 
+
+/*
+ * Checks if a given move is valid (not out of bounds or a wall)
+ *
+ * @param playerPos The new position the player wants to move to
+ * @return bool True if move is valid, false otherwise
+ */
 bool Level::isValidMove(Vector2D playerPos) const {
     if (playerPos.x < 0 || playerPos.x >= this->size || playerPos.y < 0 ||
         playerPos.y >= this->size)
@@ -201,10 +251,24 @@ bool Level::isValidMove(Vector2D playerPos) const {
     return true;
 }
 
+
+/*
+ * Sets the tile at a specific position to the given tile object
+ *
+ * @param pos    Position of the tile
+ * @param target TileObject to place at the position
+ * @return void
+ */
 void Level::setTile(Vector2D pos, TileObject target) {
     this->maze[pos.y][pos.x] = target;
 }
 
+/*
+ * Gets the tile object at a specific position in the maze
+ *
+ * @param pos Position of the tile to retrieve
+ * @return TileObject The tile object at the specified position
+ */
 TileObject Level::getTile(Vector2D pos) const {
     if (pos.x < 0 || pos.x >= this->size || pos.y < 0 || pos.y >= this->size)
         return TileObject::None;
