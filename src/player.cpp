@@ -40,11 +40,36 @@ void Player::addItem(std::unique_ptr<Item> &item) {
 }
 
 void Player::preUpdate() {
+    
+
+    // Prepares the player stats for update by resetting them to their base values.
+    // Also resets all stat multipliers to their default value (1.0).
     /*
      * TODO(Jenna): set all current stats to their corrosponding base stats
      *              (don't touch the ones without a base stat)
      *              And set all mults to 1
      */
+    
+    this->staminaMax = this->baseStaminaMax;
+    
+    this->rationRegen = this->baseRationRegen;
+
+    this->fov = this->baseFov;
+
+    this->rationCapacity = this->baseRationCapacity;
+
+    this->pickaxeCapacity = this->basePickaxeCapacity;
+
+    this->staminaMaxMult = 1.0f;
+    this->rationRegenMult = 1.0f;
+    this->fovMult = 1.0f;
+    this->rationCapacityMult = 1.0f;
+    this->pickaxeCapacityMult = 1.0f;
+
+ // Note: Stamina itself is NOT reset here; it depends on gameplay logic elsewhere.
+
+
+    
 }
 void Player::update() {
     /*
