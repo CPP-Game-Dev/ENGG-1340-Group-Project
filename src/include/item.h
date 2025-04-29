@@ -35,6 +35,8 @@ class Item {
 //initialises an item with specific values.
 //used in loading items data 
 //implementation
+    virtual void update(class Player& player);
+
   
 };
 
