@@ -35,7 +35,7 @@ Player::Player(int baseStaminaMax, int baseRationRegen, int baseFov,
     this->inventory = std::move(inventory);
 }
 
-void Player::addItem(std::unique_ptr<Item> &item) {
+void Player::addItem(std::unique_ptr<Item> item) {
     this->inventory.push_back(std::move(item));
 }
 

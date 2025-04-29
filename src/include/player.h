@@ -56,6 +56,8 @@ class Player {
            std::vector<std::unique_ptr<Item> > &&inventory);
 
 #pragma region Inventory Management
+  
+    void addItem(std::unique_ptr<Item> item);
 
     template <typename ItemType>
     void removeItem(std::vector<std::unique_ptr<Item> > itemList) {
@@ -72,8 +74,6 @@ class Player {
                 return true;
         return false;
     }
-
-void addItem(std::unique_ptr<Item> item);
 
 const std::vector<std::unique_ptr<Item>>& getInventory() const;
 
@@ -147,7 +147,7 @@ void removeItemTo(std::vector<std::unique_ptr<Item>>& itemList) {
     inline void setStamina(int value) { this->stamina = value; }
     inline void setStaminaMax(int value) { this->staminaMax = value; }
     inline void setRationRegen(int value) { this->rationRegen = value; }
-    inline void setFov(int value) { this->fov; }
+    inline void setFov(int value) { this->fov = value; }
     inline void setRationCapacity(int value) { this->rationCapacity = value; }
     inline void setPickaxeCapacity(int value) { this->pickaxeCapacity = value; }
 
