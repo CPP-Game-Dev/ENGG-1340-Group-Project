@@ -224,58 +224,44 @@ class Main {
     }
 
     // Function to move the player and handle stamina reduction
-    void movePlayer(KeyInput key) {
-        auto newPos = player.getPos();
+  void movePlayer(KeyInput key) {
+    auto newPos = player.getPos();
 
-        if (key == KeyInput::Up) {
-            newPos = player.getPos() - UNIT_VECTOR_Y;
-            lastDirectionalInput = KeyInput::Up;
-        } else if (key == KeyInput::Down) {
-            newPos = player.getPos() + UNIT_VECTOR_Y;
-            lastDirectionalInput = KeyInput::Down;
-        } else if (key == KeyInput::Left) {
-            newPos = player.getPos() - UNIT_VECTOR_X;
-            lastDirectionalInput = KeyInput::Left;
-        } else if (key == KeyInput::Right) {
-            newPos = player.getPos() + UNIT_VECTOR_X;
-            lastDirectionalInput = KeyInput::Right;
-        }
-
-        lastDirectionalInput = key;
-
-        if (!currentLevel.isValidMove(newPos)) { // Checks if it hits a wall
-            return;
-        }
-
-        player.setPos(newPos);
-
-        handleItemPickupAt(newPos);
-      
-        if (currentLevel.getTile(newPos) == TileObject::Item) {
-          if(!items.empty()) {
-            std::unique_ptr<Item> pickedItem = std::move(items.back());
-            items.pop_back();
-
-            player.addItem(std::move(pickedItem));
-
-            currentLevel.setTile(newPos, TileObject::None);
-
-            std::cout <<"[Pickup] Player picked up an item at ("
-              << newPos.x <<", " <<newPos.y <<")"<< std::endl;
-          } else {
-            std::cout <<"[Warning] No more items available to pick up." <<std::endl;
-          }
-        }
-          
-
-        if (currentLevel.getTile(newPos) ==
-            TileObject::Exit) { // User completes the level
-            onLevelComplete();
-            return;
-        }
-
-        player.setStamina(player.getStamina() - 1);
+    if (key == KeyInput::Up) {
+        newPos = player.getPos() - UNIT_VECTOR_Y;
+        lastDirectionalInput = KeyInput::Up;
+    } else if (key == KeyInput::Down) {
+        newPos = player.getPos() + UNIT_VECTOR_Y;
+        lastDirectionalInput = KeyInput::Down;
+    } else if (key == KeyInput::Left) {
+        newPos = player.getPos() - UNIT_VECTOR_X;
+        lastDirectionalInput = KeyInput::Left;
+    } else if (key == KeyInput::Right) {
+        newPos = player.getPos() + UNIT_VECTOR_X;
+        lastDirectionalInput = KeyInput::Right;
     }
+
+    lastDirectionalInput = key;
+
+    if (!currentLevel.isValidMove(newPos)) { // Checks if it hits a wall
+        return;
+    }
+
+    player.setPos(newPos);
+
+
+    handleItemPickupAt(newPos);
+
+
+    
+    if (currentLevel.getTile(newPos) == TileObject::Exit) {
+        onLevelComplete();
+        return;
+    }
+
+    player.setStamina(player.getStamina() - 1);
+}
+
 
     /*
      * Function to break a wall
