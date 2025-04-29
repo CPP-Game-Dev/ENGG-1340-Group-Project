@@ -7,10 +7,10 @@
 
 class Player;
 
-
 class Item {
-  public:
+public:
     virtual ~Item();
+
     ItemID id;
     std::string name;
     std::string description;
@@ -31,17 +31,8 @@ class Item {
     float bonusRationCapacityMult;
     float bonusPickaxeCapacityMult;
 
-  //constructors
-  // default constructor
-  //setting all the bonuses and counters to 0.
     Item(ItemID id);
-//overloaded constructor:
     Item(ItemID id, const std::string& name, const std::string& description, int property);
-//initialises an item with specific values.
-//used in loading items data 
-//implementation
+
     virtual void update(Player& player);
-
-  
 };
-
