@@ -10,6 +10,8 @@
 #include <ctime>
 #include <ncurses.h>
 
+#include "include/utils.h"
+
 #define UNIT_VECTOR_Y Vector2D(1, 0)
 #define UNIT_VECTOR_X Vector2D(0, 1)
 
@@ -97,6 +99,9 @@ void initialiseItems() {
         } else if (inp == config.getConfig(Config::KB_QUIT)[0]) {
             return KeyInput::Quit;
         }
+
+      return KeyInput::None;
+      
     }
 
     /*
