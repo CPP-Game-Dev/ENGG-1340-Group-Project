@@ -107,6 +107,10 @@ void Config::createDefaultConfig() {
  *
  * Returns a string which contains the value of the key value pair
  *
+ * Usage:
+ * Config config;
+ * std::string value = config.getConfig(Config::KB_UP); // value = "w"
+ *
  * @param key
  * @return std::string
  */

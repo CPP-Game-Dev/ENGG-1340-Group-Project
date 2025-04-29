@@ -8,9 +8,8 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
-#include <ncurses.h>
 #include <fstream>
-
+#include <ncurses.h>
 
 #include "include/utils.h"
 
@@ -34,14 +33,12 @@ class Main {
     KeyInput lastDirectionalInput;
     Config config;
 
-    std::vector<std::unique_ptr<Item>> items;
+    std::vector<std::unique_ptr<Item> > items;
 
-void initialiseItems() {
+    void initialiseItems() {
 
-  items = utils::parseItemsFromCSV("data/items.csv");
-
-}
-
+        items = utils::parseItemsFromCSV("data/items.csv");
+    }
 
   public:
     Main() : currentLevel(currentMapSize, Vector2D(0, 0), 4) {
@@ -52,7 +49,6 @@ void initialiseItems() {
         config = Config();
 
         initialiseItems();
-      
     }
 
     /*
@@ -60,26 +56,26 @@ void initialiseItems() {
      * Throws error when there isn't one
      */
     void loadSave() {
-      
+
         // TODO(Jenna, after MVP): Implementation
 
-      std::ifstream in("save.dat");
+        std::ifstream in("save.dat");
 
-      if(!in.is_open()) {
-        throw std::runtime_error("Save file not found. Make sure to creae one using newSave().");
-      }
+        if (!in.is_open()) {
+            throw std::runtime_error(
+                "Save file not found. Make sure to creae one using newSave().");
+        }
 
-      int x, y;
-      int stamina;
+        int x, y;
+        int stamina;
 
-      in>>x>>y>>stamina;
+        in >> x >> y >> stamina;
 
-        //applied loaded values to the player object
-      player.setPos(x, y);
-      player.setStamina(stamina);
+        // applied loaded values to the player object
+        player.setPos(x, y);
+        player.setStamina(stamina);
 
-      in.close();
-      
+        in.close();
     }
 
     /*
@@ -89,19 +85,19 @@ void initialiseItems() {
     void updateSave() {
         // TODO(Jenna, after MVP): Implementation
 
-      std::ofstream out("save.dat");
+        std::ofstream out("save.dat");
 
-      if(!out.is_open()) {
-        throw std::runtime_error("Failed to open save file for writing.");
-      }
+        if (!out.is_open()) {
+            throw std::runtime_error("Failed to open save file for writing.");
+        }
 
-      Vector2D pos = player.getPos();
-      int stamina = player.getStamina();
+        Vector2D pos = player.getPos();
+        int stamina = player.getStamina();
 
-      //format: pos.x pos.y stamina 
-      out <<pos.x << " " << pos.y << " " << stamina <<std::endl;
+        // format: pos.x pos.y stamina
+        out << pos.x << " " << pos.y << " " << stamina << std::endl;
 
-      out.close();
+        out.close();
     }
 
     /*
@@ -110,20 +106,22 @@ void initialiseItems() {
     void newSave() {
         // TODO(Jenna, after MVP): Implementation
 
-      player.setPos(0, 0);
+        player.setPos(0, 0);
 
-      //set default stamina based on and multiplier
-      int initialStamina = player.getBaseStaminaMax() * player.getStaminaMaxMult();
+        // set default stamina based on and multiplier
+        int initialStamina =
+            player.getBaseStaminaMax() * player.getStaminaMaxMult();
 
-      player.setStamina(initialStamina);
+        player.setStamina(initialStamina);
 
-      updateSave();
+        updateSave();
     }
 
     /*
      * Handles all inputs and interpret them
      * Also handles screen resizing
-     * Returns: the key pressed as a KeyInput
+     *
+     * @return KeyInput
      */
     KeyInput getInput() { // TODO: Make it modular and configurable
         char inp = getch();
@@ -144,8 +142,7 @@ void initialiseItems() {
             return KeyInput::Quit;
         }
 
-      return KeyInput::None;
-      
+        return KeyInput::None;
     }
 
     /*
@@ -332,13 +329,12 @@ void initialiseItems() {
 
             key = getInput();
 
-            if (key == KeyInput::Quit) { // TODO: Probably figure out a better
-                                         // way to quit other than this.
+            if (key == KeyInput::Quit) {
                 Display::terminate();
                 break;
             }
 
-            if (player.getStamina() <= 0) { // TODO: Lost game screen
+            if (player.getStamina() <= 0) {
                 Display::terminate();
                 break;
             }
@@ -350,7 +346,6 @@ void initialiseItems() {
             } else if (key == KeyInput::UsePickaxe) {
                 breakWall();
             } else if (key == KeyInput::UseRation) {
-                // TODO: Use ration
                 useRation();
             }
 
