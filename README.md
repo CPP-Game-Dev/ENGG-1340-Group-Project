@@ -9,7 +9,7 @@ To build and run this project, you'll need:
 - C++ compiler (C++11 or higher)
 - ncurses library
 - Make build system
-## Installation
+### Installation
 Clone the repository:
 ```bash
 git clone https://github.com/CPP-Game-Dev/ENGG-1340-Group-Project.git
