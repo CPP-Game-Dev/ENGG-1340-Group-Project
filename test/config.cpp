@@ -1,6 +1,7 @@
 #include "../src/include/config.h"
 #include <cassert>
 #include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <sys/stat.h>
