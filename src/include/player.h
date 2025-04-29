@@ -146,7 +146,7 @@ void removeItemTo(std::vector<std::unique_ptr<Item>>& itemList) {
     inline void setStamina(int value) { this->stamina = value; }
     inline void setStaminaMax(int value) { this->staminaMax = value; }
     inline void setRationRegen(int value) { this->rationRegen = value; }
-    inline void setFov(int value) { this->fov; }
+    inline void setFov(int value) { this->fov = value; }
     inline void setRationCapacity(int value) { this->rationCapacity = value; }
     inline void setPickaxeCapacity(int value) { this->pickaxeCapacity = value; }
 
