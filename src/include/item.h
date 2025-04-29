@@ -10,6 +10,9 @@ class Player;
 
 class Item {
   public:
+
+    virtual ~Item();
+
     ItemID id;
     std::string name;
     std::string description;
