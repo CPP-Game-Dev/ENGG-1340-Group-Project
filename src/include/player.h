@@ -1,10 +1,11 @@
 #pragma once
 
-#include "item.h"
+class Item;
+
 #include "vector2d.h"
 #include <memory>
 #include <vector>
-
+그러
 const int DEFAULT_STAMINA = 100;
 const int DEFAULT_STAMINA_MULT = 100;
 const int DEFAULT_RATION_REGEN = 0;
