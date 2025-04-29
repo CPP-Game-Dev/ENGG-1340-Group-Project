@@ -79,7 +79,7 @@ The keybindings can be configured in the game's configuration file, which are lo
 
 #### 4. File Input/Output
 - **Configuration System**: Reads and writes settings to configuration files
-- **XDG-Compliant Paths**: Follows XDG Base Directory Specification for config locations
+- **XDG-Compliant Paths**: Follows [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/latest/) for config locations
 - **Persistent Settings**: User controls and preferences are saved between game sessions
 - **Directory Management**: Creates necessary directories if they don't exist
 
