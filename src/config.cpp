@@ -89,8 +89,26 @@ std::string Config::getPair(std::string key) {
 }
 
 /*
- * Function to create default config file if it doesn't exist
+ * Function to create the default configuration
  *
+ * Initializes default key bindings for core actions (movement, tools, quit).
+ * This is used when there is no existing config file and we need to set up
+ * the game with a standard control scheme.
+ *
+ * Usage:
+ * Config config;
+ * config.createDefaultConfig(); // Sets keys like w/a/s/d, e, r, q
+ *
+ * Default bindings:
+ * - Move Up       -> "w"
+ * - Move Down     -> "s"
+ * - Move Left     -> "a"
+ * - Move Right    -> "d"
+ * - Use Pickaxe   -> "e"
+ * - Use Ration    -> "r"
+ * - Quit Game     -> "q"
+ *
+ * @return void
  */
 void Config::createDefaultConfig() {
     addPair(getConfigKeys.at(CONFIG_KEYS::KB_DOWN), "s");
