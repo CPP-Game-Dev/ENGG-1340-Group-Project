@@ -7,11 +7,18 @@
 
 #include <string>
 
-// Default constructor for item
-// Initializes an Item with default placeholder values.
-// This constructor sets the name to "Item", description to "Description",
-// rarity to 0, and initializes all bonus attributes to zero.
-// It is primarily used when creating a generic Item without specific data.
+/*
+ * Default constructor for Item
+ *
+ * Initializes an Item with placeholder values such as:
+ * - name: "Item"
+ * - description: "Description"
+ * - rarity: 0
+ * - all bonuses and multipliers: 0
+ *
+ * @param id Unique identifier for the item
+ * @return none
+ */
 Item::Item(ItemID id) {
 
     // implementation of the item class default constructor
@@ -40,11 +47,18 @@ Item::Item(ItemID id) {
     this->bonusPickaxeCapacityMult = 0.0;
 }
 
-// Overloaded constructor for Item
-// Initializes an Item using the provided name, description, and property.
-// The 'property' parameter is used to set the item's rarity.
-// This constructor allows direct initialization of meaningful Item data,
-// typically used when creating Items based on external input like a CSV file.
+/*
+ * Overloaded constructor for Item
+ *
+ * Initializes an Item with specific values provided by parameters.
+ * All bonus stats are initialized to zero. Typically used when reading from file.
+ *
+ * @param id          Unique identifier for the item
+ * @param name        Name of the item
+ * @param description Short description of the item
+ * @param property    Integer representing item rarity or other property
+ * @return none
+ */
 Item::Item(ItemID id, const std::string &name, const std::string &description,
            int property) {
     this->id = id;
@@ -66,7 +80,16 @@ Item::Item(ItemID id, const std::string &name, const std::string &description,
     this->bonusRationCapacityMult = 0.0;
     this->bonusPickaxeCapacityMult = 0.0;
 }
-
+/*
+ * Custom item behavior override
+ *
+ * Defines logic for items that have dynamic effects on the player.
+ * Only executed if hasCustomBehavior is set to true.
+ * Empty by default — override in derived classes if needed.
+ *
+ * @param player Reference to the Player object affected by the item
+ * @return void
+ */
 void Item::update(Player& player) {
 
 }
