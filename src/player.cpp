@@ -72,26 +72,30 @@ void Player::preUpdate() {
     
 }
 
-    /*
+
+void Player::update() {
+     /*
      * TODO(James): loop through player inventory and call update() of each item
      * (if hasCustomBehavior == true) Add the flat stat bonuses to the player's
      * current stats respectively Add the stat mults to the player's respective
      * mults after all that, multiply each of the player's current stat with
      * their respective mult
      */
-void Player::update() {
+
     for (auto& item : inventory) {
+        // (if hasCustomBehavior == true)
         if (item->hasCustomBehavior) {
             item->update(*this);
         }
 
+        // Add the flat stat bonuses to the player's current stats respectively
         staminaMax        += item->bonusStaminaMax;
         rationRegen       += item->bonusRationRegen;
         fov               += item->bonusFov;
         rationCapacity    += item->bonusRationCapacity;
         pickaxeCapacity   += item->bonusPickaxeCapacity;
 
-        
+        // Add the stat mults to the player's respective mults
         staminaMaxMult      *= item->bonusStaminaMaxMult;
         rationRegenMult     *= item->bonusRationRegenMult;
         fovMult             *= item->bonusFovMult;
@@ -99,7 +103,7 @@ void Player::update() {
         pickaxeCapacityMult *= item->bonusPickaxeCapacityMult;
     }
 
-
+    // after all that, multiply each of the player's current stat with their respective mult
     staminaMax        = static_cast<int>(staminaMax * staminaMaxMult);
     rationRegen       = static_cast<int>(rationRegen * rationRegenMult);
     fov               = static_cast<int>(fov * fovMult);
