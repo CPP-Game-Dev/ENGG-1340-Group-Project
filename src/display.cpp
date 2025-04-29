@@ -9,8 +9,11 @@
 
 #define MEGAPIXEL "  "
 
+
 /*
- * Function to initialize nCurses
+ * Initializes the ncurses library and sets up color pairs for display
+ *
+ * @return void
  */
 void Display::initCurses() {
     initscr();
@@ -29,14 +32,23 @@ void Display::initCurses() {
     init_pair(6, COLOR_BLACK, COLOR_CYAN);   // Hidden
 }
 
+
 /*
- * Function to flush(clear) the screen
+ * Clears and refreshes the screen
+ *
+ * @return void
  */
 void Display::flush() {
     clear();
     refresh();
 }
 
+/*
+ * Maps a TileObject to a string representation
+ *
+ * @param tile TileObject enum
+ * @return std::string representation for display
+ */
 #pragma region Helper Functions for drawLevel
 std::string getTileChar(TileObject tile) {
     switch (tile) {
@@ -61,6 +73,12 @@ std::string getTileChar(TileObject tile) {
     }
 }
 
+/*
+ * Maps a TileObject to its color pair ID
+ *
+ * @param tile TileObject enum
+ * @return int representing ncurses color pair
+ */
 int getTileColor(TileObject tile) {
     switch (tile) {
     case TileObject::Player:
@@ -76,6 +94,12 @@ int getTileColor(TileObject tile) {
     }
 }
 
+/*
+ * Normalizes field of view value for consistent rendering
+ *
+ * @param fov raw field of view
+ * @return int adjusted field of view for calculations
+ */
 int mapfov(int fov) {
     if (fov == 0 || fov == 1) {
         return 0;
@@ -88,12 +112,26 @@ int mapfov(int fov) {
     }
 }
 
+/*
+ * Determines if a tile is within the player's visible radius
+ * @param y1,y2,x1,x2 tile and player positions
+ * @param fov player's field of view
+ * @return bool true if visible, false otherwise
+ */
 bool isVisible(int y1, int x1, int y2, int x2, int fov) {
     double dy = std::abs(y1 - y2), dx = std::abs(x1 - x2);
     return std::round(std::sqrt(dy * dy + dx * dx)) <= fov;
 }
 #pragma endregion
 
+/*
+ * Draws the current state of the maze, centered around the player
+ * Applies FOV logic and colors based on tile type
+ *
+ * @param level Level object representing the current map
+ * @param player Player object used for position and FOV
+ * @return void
+ */
 void Display::drawLevel(const Level &level, const Player &player) {
     // TODO(Chris): Implement Manhatton distance based radius calculation
     //              & related drawing calculations
@@ -154,6 +192,13 @@ void Display::drawLevel(const Level &level, const Player &player) {
     mvprintw(anchor.y, anchor.x, "%s", str);
 }
 
+/*
+ * Draws the main menu and handles difficulty selection
+ *
+ * @param highlighted Index of the highlighted option (unused)
+ * @param difficulty Pointer to store selected difficulty
+ * @return void
+ */
 void Display::drawMainMenu(int highlighted, Difficulty *difficulty) {
     std::vector<std::string> mainMenuItems = {
         "Start",
@@ -195,8 +240,20 @@ void Display::drawMainMenu(int highlighted, Difficulty *difficulty) {
     }
 }
 
+/*
+ * Terminates ncurses session and restores terminal
+ *
+ * @return void
+ */
 void Display::terminate() { endwin(); }
 
+/*
+ * Displays a list of options with arrow key navigation
+ *
+ * Highlights the currently selected option
+ *
+ * @return void
+ */
 void ArrowDisplay::display() {
     for (int i = 0; i < options.size(); ++i) {
         move(y + i, x);
@@ -211,6 +268,11 @@ void ArrowDisplay::display() {
     refresh();
 }
 
+/*
+ * Handles user input for navigating the menu with arrow keys
+ *
+ * @return int index of selected option, or -1 if cancelled
+ */
 int ArrowDisplay::run() {
     initscr();
     clear();
