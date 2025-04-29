@@ -4,6 +4,8 @@
 #include "include/level.h"
 #include "include/player.h"
 #include "include/vector2d.h"
+
+#include <iostream>
 #include <assert.h>
 #include <cmath>
 #include <cstdlib>
@@ -246,6 +248,22 @@ class Main {
         }
 
         player.setPos(newPos);
+        if (currentLevel.getTile(newPos) == TileObject::Item) {
+          if(!items.empty()) {
+            std::unique_ptr<Item> pickedItem = std::move(items.back());
+            items.pop_back();
+
+            player.addItem(std::move(pickedItem));
+
+            currentLevel.setTile(newPos, TileObject::None);
+
+            std::cout <<"[Pickup] Player picked up an item at ("
+              << newPos.x <<", " <<newPos.y <<")"<< std::endl;
+          } else {
+            std::cout <<"[Warning] No more items available to pick up." <<std::endl;
+          }
+        }
+          
 
         if (currentLevel.getTile(newPos) ==
             TileObject::Exit) { // User completes the level
