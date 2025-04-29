@@ -38,13 +38,25 @@ class Main {
     Config config;
 
     std::vector<std::unique_ptr<Item> > items;
-
+    
+    /*
+     * Initializes the item list from CSV data
+     * Called in constructor
+     *
+     * @return void
+     */
     void initialiseItems() {
 
         items = utils::parseItemsFromCSV("data/items.csv");
     }
 
   public:
+     /*
+     * Default constructor for Main class
+     * Sets up initial game state, level, player, and loads config & items
+     *
+     * @return none
+     */
     Main() : currentLevel(currentMapSize, Vector2D(0, 0), 4) {
         gamestate = GameState::InLevel;
         player = Player();
@@ -55,13 +67,13 @@ class Main {
         initialiseItems();
     }
 
-    /*
-     * Loads save data into the game
-     * Throws error when there isn't one
+     /*
+     * Loads save data from file into game state
+     * Throws an error if file not found
+     *
+     * @return void
      */
     void loadSave() {
-
-        // TODO(Jenna, after MVP): Implementation
 
         std::ifstream in("save.dat");
 
@@ -82,12 +94,13 @@ class Main {
         in.close();
     }
 
-    /*
-     * Updates an existing save with new data
-     * If there isn't an existing save, throw an error
+     /*
+     * Updates existing save file with current game state
+     * Throws an error if file cannot be written
+     *
+     * @return void
      */
     void updateSave() {
-        // TODO(Jenna, after MVP): Implementation
 
         std::ofstream out("save.dat");
 
@@ -104,11 +117,12 @@ class Main {
         out.close();
     }
 
-    /*
-     * Create a new save with default values
+     /*
+     * Creates a new save file with default values
+     * Used when starting a new game
+     * @return void
      */
     void newSave() {
-        // TODO(Jenna, after MVP): Implementation
 
         player.setPos(0, 0);
 
@@ -174,7 +188,8 @@ class Main {
 
     /*
      * Function to run when the user completes the current level
-     *
+     * Adjusts level size and stamina based on difficulty
+     * @return void
      */
     void onLevelComplete() {
         player.setPos(Vector2D(0, 0));
@@ -256,7 +271,13 @@ class Main {
         // TODO(Chris): Implementation
     }
 
-    // Function to move the player and handle stamina reduction
+    /*
+     * Moves player in the specified direction
+     * Handles stamina cost and tile interaction
+     *
+     * @param key Direction input from player
+     * @return void
+     */
   void movePlayer(KeyInput key) {
     auto newPos = player.getPos();
 
@@ -392,6 +413,12 @@ class Main {
             this->updatePlayerStats();
         }
     }
+    /*
+     * Handles item pickup at a specific pos
+     * Adds item to inventory and clears tile
+     * @param pos Tile position where item was picked up
+     * @return void
+     */
     void handleItemPickupAt(Vector2D pos) {
       if (currentLevel.getTile(pos) == TileObject::Item) {
             if (!items.empty()) {
@@ -410,7 +437,10 @@ class Main {
         }
     }
 
-      
+    /*
+     * Draws the main menu and handles difficulty selection
+     * @return void
+     */
     void runMenu() { Display::drawMainMenu(0, &difficulty); }
 };
 
