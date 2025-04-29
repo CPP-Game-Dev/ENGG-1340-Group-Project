@@ -248,6 +248,9 @@ class Main {
         }
 
         player.setPos(newPos);
+
+        handleItemPickupAt(newPos);
+      
         if (currentLevel.getTile(newPos) == TileObject::Item) {
           if(!items.empty()) {
             std::unique_ptr<Item> pickedItem = std::move(items.back());
@@ -370,6 +373,25 @@ class Main {
             this->updatePlayerStats();
         }
     }
+    void handleItemPickupAt(Vector2D pos) {
+      if (currentLevel.getTile(pos) == TileObject::Item) {
+            if (!items.empty()) {
+                std::unique_ptr<Item> pickedItem = std::move(items.back());
+                items.pop_back();
+
+                player.addItem(std::move(pickedItem));  // <- 네가 만든 함수 호출
+
+                currentLevel.setTile(pos, TileObject::None);
+
+                std::cout << "[Pickup] Player picked up an item at ("
+                          << pos.x << ", " << pos.y << ")" << std::endl;
+            } else {
+                std::cout << "[Warning] No more items available to pick up." << std::endl;
+            }
+        }
+    }
+
+      
     void runMenu() { Display::drawMainMenu(0, &difficulty); }
 };
 
