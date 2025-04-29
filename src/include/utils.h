@@ -46,4 +46,6 @@ namespace utils {
     inline std::unique_ptr<Item> createItem(ItemID id, const std::string& name, const std::string& description, int property) {
         return utils::make_unique<Item>(id, name, description, property);
     }
+
+// std::vector<std::unique_ptr<Item> parseItemsFromCSV(const std::string& filename);
 }
