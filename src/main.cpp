@@ -4,6 +4,8 @@
 #include "include/level.h"
 #include "include/player.h"
 #include "include/vector2d.h"
+
+#include <iostream>
 #include <assert.h>
 #include <cmath>
 #include <cstdlib>
