@@ -5,6 +5,17 @@
 #include <memory>
 #include <vector>
 
+/*
+ * Constructor for default player
+ *
+ * Initializes player with default base stats, multipliers,
+ * and starting position (0, 0).
+ *
+ * Usage:
+ * Player player;
+ *
+ * @return none
+ */
 Player::Player() {
     this->baseStaminaMax = DEFAULT_STAMINA;
     this->baseRationRegen = DEFAULT_RATION_REGEN;
@@ -22,7 +33,23 @@ Player::Player() {
     this->prevPos = Vector2D(0, 0);
     this->pos = Vector2D(0, 0);
 }
-
+/*
+ * Constructor with custom base stats and inventory
+ *
+ * Initializes player with provided stats, position, and item list.
+ *
+ * Usage:
+ * Player player(100, 5, 3, 10, 2, Vector2D(1, 1), std::move(items));
+ *
+ * @param baseStaminaMax      Initial base stamina max
+ * @param baseRationRegen     Initial base ration regen
+ * @param baseFov             Initial field of view
+ * @param baseRationCapacity  Initial base ration capacity
+ * @param basePickaxeCapacity Initial base pickaxe capacity
+ * @param pos                 Starting position
+ * @param inventory           Initial inventory (moved)
+ * @return none
+ */
 Player::Player(int baseStaminaMax, int baseRationRegen, int baseFov,
                int baseRationCapacity, int basePickaxeCapacity, Vector2D pos,
                std::vector<std::unique_ptr<Item> > &&inventory) {
@@ -34,11 +61,32 @@ Player::Player(int baseStaminaMax, int baseRationRegen, int baseFov,
     this->pos = pos;
     this->inventory = std::move(inventory);
 }
-
+/*
+ * Adds an item to the player's inventory
+ *
+ * Transfers ownership of the given item to the inventory.
+ *
+ * Usage:
+ * player.addItem(std::make_unique<Item>());
+ *
+ * @param item Item to add (unique pointer)
+ * @return void
+ */
 void Player::addItem(std::unique_ptr<Item> item) {
     this->inventory.push_back(std::move(item));
 }
 
+/*
+ * Resets player stats before applying bonuses
+ *
+ * Sets all stats and multipliers back to base values,
+ * preparing for an update pass.
+ *
+ * Usage:
+ * player.preUpdate();
+ *
+ * @return void
+ */
 void Player::preUpdate() {
     
 
@@ -71,6 +119,18 @@ void Player::preUpdate() {
 
     
 }
+
+/*
+ * Applies item effects to player stats
+ *
+ * Loops through inventory, applies flat bonuses and multipliers,
+ * and recalculates all final stat values.
+ *
+ * Usage:
+ * player.update();
+ *
+ * @return void
+ */
 void Player::update() {
     /*
      * TODO(James): loop through player inventory and call update() of each item
@@ -121,6 +181,17 @@ void Player::update() {
     pickaxeCapacity    = static_cast<int>(pickaxeCapacity * pickaxeCapacityMult);
 }
 
+/*
+ * Post-update stat validation
+ *
+ * Ensures values like stamina and capacity remain in valid ranges.
+ * Resets negative multipliers back to 1.0f.
+ *
+ * Usage:
+ * player.postUpdate();
+ *
+ * @return void
+ */
 void Player::postUpdate() {
     if (stamina > staminaMax) {
         stamina = staminaMax;
