@@ -5,6 +5,8 @@
 #include <memory>
 #include "enums.h"
 
+class Player;
+
 
 class Item {
   public:
