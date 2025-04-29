@@ -45,7 +45,7 @@ void Player::preUpdate() {
     // Prepares the player stats for update by resetting them to their base values.
     // Also resets all stat multipliers to their default value (1.0).
     /*
-     * TODO(Jenna): set all current stats to their corrosponding base stats
+     * set all current stats to their corrosponding base stats
      *              (don't touch the ones without a base stat)
      *              And set all mults to 1
      */
@@ -71,7 +71,7 @@ void Player::preUpdate() {
 
     
 }
-void Player::update() {
+
     /*
      * TODO(James): loop through player inventory and call update() of each item
      * (if hasCustomBehavior == true) Add the flat stat bonuses to the player's
@@ -79,7 +79,34 @@ void Player::update() {
      * mults after all that, multiply each of the player's current stat with
      * their respective mult
      */
+void Player::update() {
+    for (auto& item : inventory) {
+        if (item->hasCustomBehavior) {
+            item->update(*this);
+        }
+
+        staminaMax        += item->bonusStaminaMax;
+        rationRegen       += item->bonusRationRegen;
+        fov               += item->bonusFov;
+        rationCapacity    += item->bonusRationCapacity;
+        pickaxeCapacity   += item->bonusPickaxeCapacity;
+
+        
+        staminaMaxMult      *= item->bonusStaminaMaxMult;
+        rationRegenMult     *= item->bonusRationRegenMult;
+        fovMult             *= item->bonusFovMult;
+        rationCapacityMult  *= item->bonusRationCapacityMult;
+        pickaxeCapacityMult *= item->bonusPickaxeCapacityMult;
+    }
+
+
+    staminaMax        = static_cast<int>(staminaMax * staminaMaxMult);
+    rationRegen       = static_cast<int>(rationRegen * rationRegenMult);
+    fov               = static_cast<int>(fov * fovMult);
+    rationCapacity    = static_cast<int>(rationCapacity * rationCapacityMult);
+    pickaxeCapacity   = static_cast<int>(pickaxeCapacity * pickaxeCapacityMult);
 }
+
 
 void Player::postUpdate() {
     // TODO(Arthur): come up with something to put here or delete the whole
