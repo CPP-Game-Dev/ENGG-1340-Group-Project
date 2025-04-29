@@ -56,7 +56,6 @@ class Player {
            std::vector<std::unique_ptr<Item> > &&inventory);
 
 #pragma region Inventory Management
-    void addItem(std::unique_ptr<Item> &item);
 
     template <typename ItemType>
     void removeItem(std::vector<std::unique_ptr<Item> > itemList) {
