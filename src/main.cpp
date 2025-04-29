@@ -14,6 +14,8 @@
 #include <ncurses.h>
 
 #include "include/utils.h"
+#include "include/item.h"
+
 
 #define UNIT_VECTOR_Y Vector2D(1, 0)
 #define UNIT_VECTOR_X Vector2D(0, 1)
