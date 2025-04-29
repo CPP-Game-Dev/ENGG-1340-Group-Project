@@ -214,16 +214,37 @@ class Main {
      * Calls the update() function of every item in the player's inventory
      */
     void updatePlayerInventory() {
+
+       player.preUpdate();
+
+    // Loop through player's inventory
+    const auto& inventory = player.getInventory();
+
+    for (const auto& item : inventory) {
+        if (!item) continue;
+
+        // If item defines custom logic, call it
+        if (item->hasCustomBehavior) {
+            item->update(player);
+        }
+
+        // Apply flat bonuses
+        player.setStaminaMax(player.getStaminaMax() + item->bonusStaminaMax);
+        player.setRationRegen(player.getRationRegen() + item->bonusRationRegen);
+        player.setFov(player.getFov() + item->bonusFov);
+        player.setRationCapacity(player.getRationCapacity() + item->bonusRationCapacity);
+        player.setPickaxeCapacity(player.getPickaxeCapacity() + item->bonusPickaxeCapacity);
+
+        // Apply stat multipliers
+        player.setStaminaMaxMult(player.getStaminaMaxMult() * item->bonusStaminaMaxMult);
+        player.setRationRegenMult(player.getRationRegenMult() * item->bonusRationRegenMult);
+        player.setFovMult(player.getFovMult() * item->bonusFovMult);
+        player.setRationCapacityMult(player.getRationCapacityMult() * item->bonusRationCapacityMult);
+        player.setPickaxeCapacityMult(player.getPickaxeCapacityMult() * item->bonusPickaxeCapacityMult);
+    }
+
       
-        // TODO(James, after MVP): Implementation
-
-       const auto& inventory = player.getInventory();
-
-      for (const auto& item : inventory) {
-          if (item) {
-              item->update(player);
-          }
-      }
+    player.update();
         
     }
 
