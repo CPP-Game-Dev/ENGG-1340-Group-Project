@@ -16,6 +16,8 @@ class Item {
     int rarity;
     int counter;
 
+    bool hasCustomBehavior = false;
+
     int bonusStaminaMax;
     int bonusRationRegen;
     int bonusFov;
