@@ -125,6 +125,22 @@ void Player::update() {
 void Player::postUpdate() {
     // TODO(Arthur): come up with something to put here or delete the whole
     // function
+
+    void Player::postUpdate() {
+    // Clamp stats to valid ranges
+    if (stamina > staminaMax) stamina = staminaMax;
+    if (stamina < 0) stamina = 0;
+
+    if (rationCapacity < 0) rationCapacity = 0;
+    if (pickaxeCapacity < 0) pickaxeCapacity = 0;
+
+    // Clamp FOV to minimum of 1
+    if (fov < 1) fov = 1;
+
+    // Optional: Log for debugging
+    // std::cout << "[PostUpdate] Final stats - Stamina: " << stamina << ", FOV: " << fov << std::endl;
+}
+
 }
 
 // Vector2D Player::getPos() const { return this->pos; }
