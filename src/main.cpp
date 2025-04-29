@@ -9,6 +9,8 @@
 #include <cstdlib>
 #include <ctime>
 #include <ncurses.h>
+#include <fstream>
+
 
 #define UNIT_VECTOR_Y Vector2D(1, 0)
 #define UNIT_VECTOR_X Vector2D(0, 1)
@@ -44,7 +46,26 @@ class Main {
      * Throws error when there isn't one
      */
     void loadSave() {
+      
         // TODO(Jenna, after MVP): Implementation
+
+      std::ifstream in("save.dat");
+
+      if(!in.is_open()) {
+        throw std::runtime_error("Save file not found. Make sure to creae one using newSave().");
+      }
+
+      int x, y;
+      int stamina;
+
+      in>>x>>y>>stamina;
+
+        //applied loaded values to the player object
+      player.setPos(x, y);
+      player.setStamina(stamina);
+
+      in.close();
+      
     }
 
     /*
@@ -53,6 +74,20 @@ class Main {
      */
     void updateSave() {
         // TODO(Jenna, after MVP): Implementation
+
+      std::ofstream out("save.dat");
+
+      if(!out.is_open()) {
+        throw std::runtime_error("Failed to open save file for writing.");
+      }
+
+      Vector2D pos = player.getPos();
+      int stamina = player.getStamina();
+
+      //format: pos.x pos.y stamina 
+      out <<pos.x << " " << pos.y << " " << stamina <<std::endl;
+
+      out.close();
     }
 
     /*
@@ -60,6 +95,15 @@ class Main {
      */
     void newSave() {
         // TODO(Jenna, after MVP): Implementation
+
+      player.setPos(0, 0);
+
+      //set default stamina based on and multiplier
+      int initialStamina = player.getBaseStaminaMax() * player.getStaminaMaxMult();
+
+      player.setStamina(initialStamina);
+
+      updateSave();
     }
 
     /*
@@ -85,6 +129,9 @@ class Main {
         } else if (inp == config.getConfig(Config::KB_QUIT)[0]) {
             return KeyInput::Quit;
         }
+
+      return KeyInput::None;
+      
     }
 
     /*
