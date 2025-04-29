@@ -70,3 +70,5 @@ Item::Item(ItemID id, const std::string &name, const std::string &description,
 void Item::update(Player& player) {
 
 }
+
+Item::~Item() = default;
