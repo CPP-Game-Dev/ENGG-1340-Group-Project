@@ -16,14 +16,11 @@ Config::Config() {
 
     if (cConfigDir != NULL) {
         configDir = cConfigDir;
-        return;
+    } else {
+        char *cHomePath = getenv("HOME");
+        std::string homePath = cHomePath;
+        configDir = homePath + "/.config/" + GAME_FOLDER + "/";
     }
-
-    char *cHomePath = getenv("HOME");
-    std::string homePath = cHomePath;
-
-    // Constructing base directory
-    configDir = homePath + "/.config/" + GAME_FOLDER + "/";
 
     // Check if the directory exists
     struct stat info;
