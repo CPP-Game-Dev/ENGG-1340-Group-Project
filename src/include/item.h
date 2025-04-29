@@ -10,6 +10,7 @@ class Player;
 
 class Item {
   public:
+    virtual ~Item();
     ItemID id;
     std::string name;
     std::string description;
@@ -39,7 +40,8 @@ class Item {
 //initialises an item with specific values.
 //used in loading items data 
 //implementation
-    void update(Player& player);
+    virtual void update(Player& player);
+
   
 };
 
