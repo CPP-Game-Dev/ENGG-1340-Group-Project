@@ -66,3 +66,8 @@ Item::Item(ItemID id, const std::string &name, const std::string &description,
     this->bonusRationCapacityMult = 0.0;
     this->bonusPickaxeCapacityMult = 0.0;
 }
+
+
+void Item::update(Player& player) {
+
+}
