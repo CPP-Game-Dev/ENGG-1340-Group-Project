@@ -104,10 +104,12 @@ std::string Config::getPair(std::string key) {
  * - Move Down     -> "s"
  * - Move Left     -> "a"
  * - Move Right    -> "d"
+ * - Confirm       -> " "
+ * - Cancel        -> "x"
  * - Use Pickaxe   -> "e"
  * - Use Ration    -> "r"
- * - Quit Game     -> "q"
- *
+ * - Exit Game     -> "q"
+ * 
  * @return void
  */
 void Config::createDefaultConfig() {
@@ -115,9 +117,11 @@ void Config::createDefaultConfig() {
     addPair(getConfigKeys.at(CONFIG_KEYS::KB_UP), "w");
     addPair(getConfigKeys.at(CONFIG_KEYS::KB_LEFT), "a");
     addPair(getConfigKeys.at(CONFIG_KEYS::KB_RIGHT), "d");
+    addPair(getConfigKeys.at(CONFIG_KEYS::KB_CONFIRM), " ");
+    addPair(getConfigKeys.at(CONFIG_KEYS::KB_CANCEL), "x");
     addPair(getConfigKeys.at(CONFIG_KEYS::KB_USE_PICKAXE), "e");
     addPair(getConfigKeys.at(CONFIG_KEYS::KB_USE_RATION), "r");
-    addPair(getConfigKeys.at(CONFIG_KEYS::KB_QUIT), "q");
+    addPair(getConfigKeys.at(CONFIG_KEYS::KB_EXIT), "q");
 }
 
 /*

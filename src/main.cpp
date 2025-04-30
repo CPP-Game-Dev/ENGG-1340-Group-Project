@@ -12,6 +12,7 @@
 #include <ctime>
 #include <fstream>
 #include <ncurses.h>
+#include <stdexcept>
 
 #include "include/utils.h"
 #include "include/item.h"
@@ -19,6 +20,7 @@
 
 #define UNIT_VECTOR_Y Vector2D(1, 0)
 #define UNIT_VECTOR_X Vector2D(0, 1)
+#define SCREEN_SIZE_ERROR -1
 
 /*
  * Class for everything related to the main game framework
@@ -32,6 +34,8 @@ class Main {
     Player player;
     int currentMapSize = 5;
     int completedLevels = 0;
+    int highlighted = 0;
+    bool confirmed = false;
     Difficulty difficulty;
     Level currentLevel;
     KeyInput lastDirectionalInput;
@@ -58,7 +62,7 @@ class Main {
      * @return none
      */
     Main() : currentLevel(currentMapSize, Vector2D(0, 0), 4) {
-        gamestate = GameState::InLevel;
+        gamestate = GameState::MainMenu;
         player = Player();
         player.setPos(0, 0);
 
@@ -144,7 +148,10 @@ class Main {
     KeyInput getInput() { // TODO: Make it modular and configurable
         char inp = getch();
 
-        if (inp == config.getConfig(Config::KB_UP)[0]) {
+        if(inp == KEY_RESIZE) {
+            assert(checkScreenSize());
+            return KeyInput::None;
+        } else if (inp == config.getConfig(Config::KB_UP)[0]) {
             return KeyInput::Up;
         } else if (inp == config.getConfig(Config::KB_DOWN)[0]) {
             return KeyInput::Down;
@@ -152,40 +159,20 @@ class Main {
             return KeyInput::Left;
         } else if (inp == config.getConfig(Config::KB_RIGHT)[0]) {
             return KeyInput::Right;
+        } else if (inp == ' ') {//config.getConfig(Config::KB_CONFIRM)[0]) {
+            return KeyInput::Confirm;
+        } else if (inp == config.getConfig(Config::KB_CANCEL)[0]) {
+            return KeyInput::Cancel;
         } else if (inp == config.getConfig(Config::KB_USE_PICKAXE)[0]) {
             return KeyInput::UsePickaxe;
         } else if (inp == config.getConfig(Config::KB_USE_RATION)[0]) {
             return KeyInput::UseRation;
-        } else if (inp == config.getConfig(Config::KB_QUIT)[0]) {
-            return KeyInput::Quit;
+        } else if (inp == config.getConfig(Config::KB_EXIT)[0]) {
+            return KeyInput::Exit;
         }
 
         return KeyInput::None;
     }
-
-    /*
-     * Function to update player stats at the start of a turn
-     * Set player stats to their respective base stats
-     * Do not touch stats without a respective base stat
-     */
-    void updatePlayerStats() {
-        player.setFov(player.getFov() * player.getFovMult());
-        player.setRationCapacity(player.getRationCapacity() *
-                                 player.getRationCapacityMult());
-        player.setPickaxeCapacity(player.getPickaxeCapacity() *
-                                  player.getPickaxeCapacityMult());
-    }
-
-    /*
-     * Function to reset player stats at the start of a new level
-     *
-     */
-    void resetPlayerStats() {
-        player.setStamina(player.getBaseStaminaMax() *
-                          player.getStaminaMaxMult());
-        player.setFov(player.getBaseFov() * player.getFovMult());
-    }
-
     /*
      * Function to run when the user completes the current level
      * Adjusts level size and stamina based on difficulty
@@ -202,7 +189,7 @@ class Main {
                 currentMapSize += 2;
             }
 
-            energyMult = 0.7;
+            energyMult = 0.66;
             break;
         case (Difficulty::Labyrinth): // Medium mode
             currentMapSize += 2;
@@ -210,16 +197,14 @@ class Main {
             break;
         case (Difficulty::Purgatory): // Hard mode
             currentMapSize += 3;
-            energyMult = 0.3;
+            energyMult = 0.33;
             break;
         }
 
         currentLevel = Level(currentMapSize, player.getPos(), 4);
-        resetPlayerStats();
         auto newStamina =
-            std::min((int)(player.getStamina() +
-                           std::floor(player.getStamina() * energyMult)),
-                     player.getStaminaMax());
+            std::min(int(player.getStamina() + std::floor(player.getStamina() * energyMult)), 
+                int(player.getStamina() + std::floor(player.getStaminaMax() * energyMult)));
 
         player.setStamina(newStamina);
     }
@@ -264,57 +249,46 @@ class Main {
     }
 
     /*
-     * Function to hold all display related code
-     * Note that game logic does not affect display
-     */
-    void draw() {
-        // TODO(Chris): Implementation
-    }
-
-    /*
      * Moves player in the specified direction
      * Handles stamina cost and tile interaction
      *
      * @param key Direction input from player
      * @return void
      */
-  void movePlayer(KeyInput key) {
-    auto newPos = player.getPos();
+    void movePlayer(KeyInput key) {
+        auto newPos = player.getPos();
 
-    if (key == KeyInput::Up) {
-        newPos = player.getPos() - UNIT_VECTOR_Y;
-        lastDirectionalInput = KeyInput::Up;
-    } else if (key == KeyInput::Down) {
-        newPos = player.getPos() + UNIT_VECTOR_Y;
-        lastDirectionalInput = KeyInput::Down;
-    } else if (key == KeyInput::Left) {
-        newPos = player.getPos() - UNIT_VECTOR_X;
-        lastDirectionalInput = KeyInput::Left;
-    } else if (key == KeyInput::Right) {
-        newPos = player.getPos() + UNIT_VECTOR_X;
-        lastDirectionalInput = KeyInput::Right;
+        if (key == KeyInput::Up) {
+            newPos = player.getPos() - UNIT_VECTOR_Y;
+            lastDirectionalInput = KeyInput::Up;
+        } else if (key == KeyInput::Down) {
+            newPos = player.getPos() + UNIT_VECTOR_Y;
+            lastDirectionalInput = KeyInput::Down;
+        } else if (key == KeyInput::Left) {
+            newPos = player.getPos() - UNIT_VECTOR_X;
+            lastDirectionalInput = KeyInput::Left;
+        } else if (key == KeyInput::Right) {
+            newPos = player.getPos() + UNIT_VECTOR_X;
+            lastDirectionalInput = KeyInput::Right;
+        }
+
+        lastDirectionalInput = key;
+
+        if (!currentLevel.isValidMove(newPos)) { // Checks if it hits a wall
+            return;
+        }
+
+        player.setPos(newPos);
+
+        handleItemPickupAt(newPos);
+        
+        if (currentLevel.getTile(newPos) == TileObject::Exit) {
+            onLevelComplete();
+            return;
+        }
+
+        player.setStamina(player.getStamina() - 1);
     }
-
-    lastDirectionalInput = key;
-
-    if (!currentLevel.isValidMove(newPos)) { // Checks if it hits a wall
-        return;
-    }
-
-    player.setPos(newPos);
-
-
-    handleItemPickupAt(newPos);
-
-
-    
-    if (currentLevel.getTile(newPos) == TileObject::Exit) {
-        onLevelComplete();
-        return;
-    }
-
-    player.setStamina(player.getStamina() - 1);
-}
 
 
     /*
@@ -323,14 +297,13 @@ class Main {
      * If so, check if the player is facing a wall,
      * the wall is removed (TileType set to None) and the pickaxe capacity is
      * reduced by 1
-     *
+     * @return void
      */
     void breakWall() {
         // Check if the player has a pickaxe, and pickaxe capacity > 0
         // Right now since there are no inventory checks yet, we will assume the
         // player has it
-        // TODO: Add inventory checks later
-        if (player.getPickaxeCapacity() > 0) {
+        if (player.getPickaxesOwned() > 0) {
             // Check if the player is facing a wall
             Vector2D newPos = player.getPos();
             if (lastDirectionalInput == KeyInput::Up) {
@@ -347,7 +320,7 @@ class Main {
 
             if (tile == TileObject::Wall) {
                 currentLevel.setTile(newPos, TileObject::None);
-                player.setPickaxeCapacity(player.getPickaxeCapacity() - 1);
+                player.setPickaxesOwned(player.getPickaxesOwned() - 1);
             }
         }
     }
@@ -356,12 +329,11 @@ class Main {
      * Function to use a ration
      * Checks if the ration capacity > 0
      * If so, it will heal the player's stamina by the ration regen amount
-     *
+     * @return void
      */
     void useRation() {
-        if (player.getRationCapacity() <= 0) {
+        if (player.getRationsOwned() <= 0) 
             return;
-        }
 
         auto newStamina =
             std::min(player.getStamina() + player.getRationRegen(),
@@ -370,48 +342,241 @@ class Main {
         player.setStamina(newStamina);
     }
 
+
+    /*
+     * Function to check if screen size is too smalll
+     * Throws out_of_range error if not
+     * @return bool
+     */
+    bool checkScreenSize() {
+        int maxY, maxX;
+        getmaxyx(stdscr, maxY, maxX);
+        return (maxY < 26 || maxX < 48);
+    }
+
+    /*
+     * Function to handle menu options selection
+     * @param highlighted The currently highlighted element
+     * @param key Key input
+     * @param optionsCount the number of options avaliable
+     * @return void
+     */
+    void menuSelection(KeyInput key, int optionsCount) {
+        if (key == KeyInput::Confirm) 
+            confirmed = true;
+        else if (key == KeyInput::Up)
+            highlighted -= 1;
+        else if (key == KeyInput::Down)
+            highlighted += 1;
+        highlighted = (optionsCount + highlighted) % optionsCount;
+    }
+    
     /*
      * Game Logic:
      * Game is not updated at all if no valid player input is detected
      * Otherwise, perform an action according to current gamestate & key input
-     * player stats are
-     *
+     * 
+     * @return void
      */
-
-    // Main game loop
     void runGame() {
         Display::initCurses();
         KeyInput key = KeyInput::None;
+        bool running = true;
+        while (running) {
+            switch(gamestate) {
+                case GameState::MainMenu:
+                    #pragma region MAIN MENU
+                    Display::drawMainMenu(highlighted);
+                    // Player is still picking an option
+                    if (!confirmed) {       
+                        key = getInput();
+                        menuSelection(key, 4);
+                        break;
+                    }
+                    // Player pressed quit
+                    if (key == KeyInput::Exit) {
+                        running = false;
+                        break;
+                    }
+                    // Played confirmed their choice
+                    switch(highlighted) {
+                        case 0: // New Game
+                            gamestate = GameState::DifficultyMenu;
+                            break;
+                        case 1: // Help Menu
+                            gamestate = GameState::HelpMenu;
+                            break;
+                        case 2:
+                            gamestate = GameState::SettingsMenu;
+                            break;
+                        case 3: // Exit
+                            running = false;
+                            break;
+                    }
+                    // Reset highlighted item
+                    highlighted = 0;
+                    confirmed = false;
+                    break;
+                    #pragma endregion
 
-        while (true) {
-            if (gamestate == GameState::InLevel) {
-                Display::drawLevel(currentLevel, player);
+                case GameState::DifficultyMenu: {
+                    #pragma region DIFFICULTY MENU
+                    Display::drawDifficultyMenu(highlighted);
+                    // Player is still picking an option
+                    if (!confirmed) {   
+                        key = getInput();
+                        menuSelection(key, 4);
+                        break;
+                    }
+                    
+                    // Played confirmed their choice
+                    if (key != KeyInput::Exit)
+                        gamestate = GameState::InLevel;
+                    switch(highlighted) {
+                        case 0: // Catacombs
+                            difficulty = Difficulty::Catacombs;
+                            break;
+                        case 1: // Labyrinth
+                            difficulty = Difficulty::Labyrinth;
+                            break;
+                        case 2: // Purgatory
+                            difficulty = Difficulty::Purgatory;
+                            break;
+                        case 3: // Back to main menu
+                            gamestate = GameState::MainMenu;
+                            break;
+                    }
+                    highlighted = 0;
+                    confirmed = false;
+                    break;
+                    #pragma endregion
+                }
+                case GameState::HelpMenu: {
+                    #pragma region HELP MENU
+                    Display::drawHelpMenu(highlighted);
+                    if (!confirmed) {   
+                        key = getInput();
+                        menuSelection(key, 1);
+                        break;
+                    }
+                    gamestate = GameState::MainMenu;
+                    highlighted = 0;
+                    confirmed = false;
+                    break;
+                    #pragma endregion
+                }
+                case GameState::InLevel:
+                    #pragma region IN LEVEL
+                    Display::drawLevel(currentLevel, player, completedLevels);
+  
+                    key = getInput();
+
+                    player.preUpdate();
+
+                    
+        
+                    // Check for key press
+                    if (key == KeyInput::Exit) {
+                        gamestate = GameState::PauseMenu;
+                        break;
+                    }
+                    if (key == KeyInput::Up || key == KeyInput::Down ||
+                        key == KeyInput::Left || key == KeyInput::Right) {
+                        movePlayer(key);
+                    } else if (key == KeyInput::UsePickaxe) 
+                        breakWall();
+                    else if (key == KeyInput::UseRation) 
+                        useRation();
+                    
+                    player.update();
+
+                    if (player.getStamina() <= 0) 
+                        gamestate = GameState::GameOverMenu;
+
+                    player.postUpdate();
+                    break;
+                    #pragma endregion
+    
+                case GameState::InventoryMenu:
+                    #pragma region INVENTORY MENU
+                    break;
+                    #pragma endregion
+    
+                case GameState::PauseMenu:
+                    #pragma region PAUSE MENU
+                    Display::drawMainMenu(highlighted);
+                    // Player is still picking an option
+                    if (!confirmed) {       
+                        key = getInput();
+                        menuSelection(key, 5);
+                        break;
+                    }
+                    // Player pressed quit
+                    if (key == KeyInput::Exit) {
+                        gamestate = GameState::InLevel;
+                        break;
+                    }
+                    // Played confirmed their choice
+                    switch(highlighted) {
+                        case 0: // Continue
+                            gamestate = GameState::InLevel;
+                            break;
+                        case 1: // New Game
+                            gamestate = GameState::DifficultyMenu;
+                            break;
+                        case 2: // Help Menu
+                            gamestate = GameState::HelpMenu;
+                            break;
+                        case 3: // Settings Menu
+                            gamestate = GameState::SettingsMenu;
+                            break;
+                        case 4: // Exit
+                            gamestate = GameState::MainMenu;
+                            break;
+                    }
+                    // Reset highlight & confirm
+                    highlighted = 0;
+                    confirmed = false;
+                    break;
+                    #pragma endregion
+    
+                case GameState::SettingsMenu:
+                    #pragma region SETTINGS MENU
+                    break;
+                    #pragma endregion
+                
+                case GameState::GameOverMenu:
+                    #pragma region GAME OVEER MENU
+                    Display::drawGameOverMenu(highlighted);
+                    // Player is still picking an option
+                    if (!confirmed) {       
+                        key = getInput();
+                        menuSelection(key, 2);
+                        break;
+                    }
+                    // Player pressed quit
+                    if (key == KeyInput::Exit) {
+                        gamestate = GameState::MainMenu;
+                        break;
+                    }
+                    // Played confirmed their choice
+                    switch(highlighted) {
+                        case 0: // New Game
+                            gamestate = GameState::DifficultyMenu;
+                            break;
+                        case 1: // Exit
+                            gamestate = GameState::MainMenu;
+                            break;
+                    }
+                    // Reset highlighted item
+                    highlighted = 0;
+                    confirmed = false;
+                    break;
+                    #pragma endregion
             }
-
-            key = getInput();
-
-            if (key == KeyInput::Quit) {
-                Display::terminate();
-                break;
-            }
-
-            if (player.getStamina() <= 0) {
-                Display::terminate();
-                break;
-            }
-
-            // Check for key type
-            if (key == KeyInput::Up || key == KeyInput::Down ||
-                key == KeyInput::Left || key == KeyInput::Right) {
-                movePlayer(key);
-            } else if (key == KeyInput::UsePickaxe) {
-                breakWall();
-            } else if (key == KeyInput::UseRation) {
-                useRation();
-            }
-
-            this->updatePlayerStats();
+            Display::flush();
         }
+        Display::terminate();
     }
     /*
      * Handles item pickup at a specific pos
@@ -437,11 +602,6 @@ class Main {
         }
     }
 
-    /*
-     * Draws the main menu and handles difficulty selection
-     * @return void
-     */
-    void runMenu() { Display::drawMainMenu(0, &difficulty); }
 };
 
 // DRIVER CODE //
@@ -449,7 +609,6 @@ int main() {
     srand(time(NULL));
 
     Main game = Main();
-    game.runMenu();
     game.runGame();
     return 0;
 }

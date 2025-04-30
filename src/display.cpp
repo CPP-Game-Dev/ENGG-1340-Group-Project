@@ -6,8 +6,11 @@
 #include <cmath>
 #include <ncurses.h>
 #include <string>
+#include <algorithm>
+#include <string.h>
 
 #define MEGAPIXEL "  "
+#define FOG "::"
 
 
 /*
@@ -22,14 +25,21 @@ void Display::initCurses() {
     noecho();
     raw();
     curs_set(0);
+    
 
     // Define color pairs
-    init_pair(1, COLOR_YELLOW, COLOR_BLACK); // Player
-    init_pair(2, COLOR_WHITE, COLOR_WHITE);  // Wall
-    init_pair(3, COLOR_BLACK, COLOR_BLACK);  // None
-    init_pair(4, COLOR_RED, COLOR_RED);      // Exit
-    init_pair(5, COLOR_GREEN, COLOR_BLACK);  // Extras
-    init_pair(6, COLOR_BLACK, COLOR_CYAN);   // Hidden
+    init_pair(1, COLOR_YELLOW, COLOR_BLACK);    // Player
+    init_pair(2, COLOR_WHITE, COLOR_WHITE);     // Wall
+    init_pair(3, COLOR_BLACK, COLOR_BLACK);     // None
+    init_pair(4, COLOR_RED, COLOR_RED);         // Exit
+    init_pair(5, COLOR_GREEN, COLOR_BLACK);     // Extras
+    if(can_change_color()) {
+        init_color(COLOR_CYAN, 32, 32, 32);
+        init_color(COLOR_MAGENTA, 250, 150, 0);
+    }
+    init_pair(6, COLOR_WHITE, COLOR_BLACK);     // Fog
+    init_pair(7, COLOR_WHITE, COLOR_BLACK);     // Text
+    init_pair(8, COLOR_MAGENTA, COLOR_BLACK);   // HUD text
 }
 
 
@@ -49,7 +59,6 @@ void Display::flush() {
  * @param tile TileObject enum
  * @return std::string representation for display
  */
-#pragma region Helper Functions for drawLevel
 std::string getTileChar(TileObject tile) {
     switch (tile) {
     case TileObject::Player:
@@ -122,6 +131,87 @@ bool isVisible(int y1, int x1, int y2, int x2, int fov) {
     double dy = std::abs(y1 - y2), dx = std::abs(x1 - x2);
     return std::round(std::sqrt(dy * dy + dx * dx)) <= fov;
 }
+
+/* 
+ * Draw a HUD behind the current screen
+ * @param player Player
+ * @param maxY, maxX Maximum size of screen
+ * @param currentLevel the number of levels completed - 1
+ */
+#pragma region DRAW LEVEL HUD
+void drawLevelHUD(const Player &player, const int maxY, const int maxX, int currentLevel) {
+    int height = 26, width = 23;
+    Vector2D anchor = Vector2D(int(maxY / 2) + 1, int(maxX / 2));
+    
+    // Draw background
+    attron(COLOR_PAIR(6) | A_DIM);
+    for(int i = 0; i < 21; i++) {
+        move(anchor.y - 10 + i, anchor.x - 20);
+        for(int j = 0; j < 21; j++) {
+            addstr(FOG);
+        }
+    }
+    attroff(COLOR_PAIR(6) | A_DIM);
+
+    // Draw border
+    attron(A_BOLD);
+    attron(COLOR_PAIR(7));
+    // Left
+    for (int i = 0; i < height; i++) 
+        mvaddstr(anchor.y - 14 + i, anchor.x - 22, " |");
+    
+    // Right
+    for (int i = 0; i < height; i++) 
+        mvaddstr(anchor.y - 14 + i, anchor.x + 22, "| ");
+    
+    // Top
+    move(anchor.y - 14, anchor.x - 22);
+    for (int i = 0; i < width; i++) 
+        addstr("--");
+    
+    // Middle
+    move(anchor.y - 11, anchor.x - 22);
+    for (int i = 0; i < width; i++) 
+        addstr("--");
+
+    //Bottom
+    move(anchor.y + 11, anchor.x - 22);
+    for (int i = 0; i < width; i++) 
+        addstr("--");
+
+    // 6 Corners
+    mvaddstr(anchor.y - 14, anchor.x - 22, " +");
+    mvaddstr(anchor.y - 14, anchor.x + 22, "+ ");
+    mvaddstr(anchor.y - 11, anchor.x - 22, " +");
+    mvaddstr(anchor.y - 11, anchor.x + 22, "+ ");
+    mvaddstr(anchor.y + 11, anchor.x - 22, " +");
+    mvaddstr(anchor.y + 11, anchor.x + 22, "+ ");
+
+    attroff(COLOR_PAIR(7));
+    attroff(A_BOLD);
+
+    std::string stamina = "Stamina: ", rations = "Rations: ", pickaxes = "Pickaxes: ", level = "Layer ";
+    stamina.append(std::to_string(player.getStamina()));
+    stamina.append("/");
+    stamina.append(std::to_string(player.getStaminaMax()));
+
+    rations.append(std::to_string(player.getRationsOwned()));
+    rations.append("/");
+    rations.append(std::to_string(player.getRationCapacity()));
+
+    pickaxes.append(std::to_string(player.getPickaxesOwned()));
+    pickaxes.append("/");
+    pickaxes.append(std::to_string(player.getPickaxeCapacity()));
+
+    level.append(std::to_string(currentLevel));
+
+    attron(COLOR_PAIR(8));
+    mvaddstr(anchor.y - 13, anchor.x - 20, level.c_str());
+    mvaddstr(anchor.y - 13, anchor.x + 2, pickaxes.c_str());
+    mvaddstr(anchor.y - 12, anchor.x - 20, stamina.c_str());
+    mvaddstr(anchor.y - 12, anchor.x + 2, rations.c_str());
+    attroff(COLOR_PAIR(8));
+}
 #pragma endregion
 
 /*
@@ -132,24 +222,32 @@ bool isVisible(int y1, int x1, int y2, int x2, int fov) {
  * @param player Player object used for position and FOV
  * @return void
  */
-void Display::drawLevel(const Level &level, const Player &player) {
-    // TODO(Chris): Implement Manhatton distance based radius calculation
-    //              & related drawing calculations
+#pragma region DRAW LEVEL
+void Display::drawLevel(const Level &level, const Player &player, int currentLevel) {
     clear();
     TileMap maze = level.getMaze();
     int size = level.getSize();
     int playerY = player.getPos().y, playerX = player.getPos().x;
     // int fov = player.getFov();
-    int fov = mapfov(4);
+    int fov = 4;
 
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
     // Initialize top left anchor to center
-    Vector2D anchor = Vector2D(int(maxY / 2), int(maxX / 2));
+    Vector2D anchor = Vector2D(int(maxY / 2) + 1, int(maxX / 2));
 
     auto isPerimeter = [](int y, int x, int size) {
         return (y == -1 || x == -1 || y == size || x == size);
     };
+
+
+    /*
+    10: -1
+    11: -1, 0
+    12: -1, 0, 1
+    */
+
+    drawLevelHUD(player, maxY, maxX, currentLevel);
 
     for (int i = -1; i <= size; i++) {
         // Move cursor to 1 mp left of anchor point
@@ -168,7 +266,6 @@ void Display::drawLevel(const Level &level, const Player &player) {
 
                 attron(COLOR_PAIR(tile_color));
                 if (maze[i][j] == TileObject::Wall ||
-                    maze[i][j] == TileObject::Wall ||
                     maze[i][j] == TileObject::None ||
                     maze[i][j] == TileObject::Exit) {
                     addstr(MEGAPIXEL); // Print two spaces as a "block"
@@ -180,65 +277,90 @@ void Display::drawLevel(const Level &level, const Player &player) {
                 attroff(COLOR_PAIR(tile_color));
             } else {
                 // Tile Outside Field of view
-                attron(COLOR_PAIR(6));
-                addstr(MEGAPIXEL);
-                attroff(COLOR_PAIR(6));
-            }
-        }
-        printw("\n");
-    }
-
-    const char *str = "P1";
-    mvprintw(anchor.y, anchor.x, "%s", str);
-}
-
-/*
- * Draws the main menu and handles difficulty selection
- *
- * @param highlighted Index of the highlighted option (unused)
- * @param difficulty Pointer to store selected difficulty
- * @return void
- */
-void Display::drawMainMenu(int highlighted, Difficulty *difficulty) {
-    std::vector<std::string> mainMenuItems = {
-        "Start",
-        "Help",
-        "Exit",
-    };
-    std::vector<std::string> difficultyMenuItems = {"Easy", "Medium", "Hard",
-                                                    "Back"};
-    ArrowDisplay mainMenu(mainMenuItems, 0, 0);
-    ArrowDisplay difficultyMenu(difficultyMenuItems, 0, 0);
-    size_t mainChoice = mainMenu.run();
-    if (mainChoice >= 0 && mainChoice < mainMenuItems.size()) {
-        printf("You selected: %s\n", mainMenuItems[mainChoice].c_str());
-        if (mainChoice == 0) {
-            size_t difficultyChoice = difficultyMenu.run();
-            if (difficultyChoice >= 0 &&
-                difficultyChoice < difficultyMenuItems.size()) {
-                printf("You selected: %s\n",
-                       difficultyMenuItems[difficultyChoice].c_str());
-
-                switch (difficultyChoice) {
-                case 0:
-                    *difficulty = Difficulty::Catacombs;
-                    break;
-                case 1:
-                    *difficulty = Difficulty::Labyrinth;
-                    break;
-                case 2:
-                    *difficulty = Difficulty::Purgatory;
-                    break;
-                default:
-                    printf("Invalid choice.\n");
-                    break;
+                if(i < playerY - 10 || j < playerX - 10 || j > playerX + 10 || i > playerY + 10 ) {
+                    continue;
                 }
+                attron(COLOR_PAIR(6) | A_DIM);
+                addstr(FOG);
+                attroff(COLOR_PAIR(6) | A_DIM);
             }
         }
-    } else {
-        printf("No selection made or menu canceled.\n");
+        //printw("\n");
     }
+    mvaddstr(anchor.y, anchor.x, "P1");
 }
+#pragma endregion
+
+#pragma region DRAW MENU
+void drawMenu(std::vector<char*> options, int highlighted, int dy = 0, int dx = 0) {
+    int maxY, maxX;
+    getmaxyx(stdscr, maxY, maxX);
+    // Initialize top left anchor to center
+    Vector2D anchor = Vector2D(int(maxY / 2), int(maxX / 2));
+    anchor.y -= int(options.size()/2);
+    for (int i = 0; i < options.size(); i++) {
+        int len = strlen(options[i]);
+        if(i == highlighted % options.size()) {
+            attron(COLOR_PAIR(7));
+            mvprintw(anchor.y + i + dy, int(anchor.x - len/2) + dx, "< %s >", options[i]);
+            attroff(COLOR_PAIR(7));
+        } else {
+            attron(A_BOLD);
+            attron(COLOR_PAIR(5) | A_BOLD);
+            mvprintw(anchor.y + i + dy, int(anchor.x - len/2) + dx, " <%s> ", options[i]);
+            attroff(COLOR_PAIR(5) | A_BOLD);
+        }
+    }
+    refresh();
+}
+#pragma endregion
+
+void Display::drawMainMenu(int highlighted) {
+    std::vector<char*> options = {
+        "New Game",
+        "Help",
+        "Settings",
+        "Exit"
+    };
+    drawMenu(options, highlighted);
+}
+
+void Display::drawDifficultyMenu(int highlighted) {
+    std::vector<char*> options = {
+        "Catacombs",
+        "Labyrinth",
+        "Purgatory",
+        "Back"
+    };
+    drawMenu(options, highlighted);
+}
+
+void Display::drawPauseMenu(int highlighted) {
+    std::vector<char*> options = {
+        "Continue",
+        "New Game",
+        "Help",
+        "Settings",
+        "Exit"
+    };
+    drawMenu(options, highlighted);
+}
+
+void Display::drawGameOverMenu(int highlighted) {
+    std::vector<char*> options = {
+        "Start Over",
+        "Exit"
+    };
+    drawMenu(options, highlighted);
+}
+
+void Display::drawHelpMenu(int highlighted) {
+    std::vector<char*> options = {
+        "Back"
+    };
+    drawMenu(options, highlighted);
+}
+
 
 /*
  * Terminates ncurses session and restores terminal
@@ -246,64 +368,3 @@ void Display::drawMainMenu(int highlighted, Difficulty *difficulty) {
  * @return void
  */
 void Display::terminate() { endwin(); }
-
-/*
- * Displays a list of options with arrow key navigation
- *
- * Highlights the currently selected option
- *
- * @return void
- */
-void ArrowDisplay::display() {
-    for (int i = 0; i < options.size(); ++i) {
-        move(y + i, x);
-        if (i == selected) {
-            attron(A_REVERSE); // Highlight selected option
-            printw("> %s", options[i].c_str());
-            attroff(A_REVERSE);
-        } else {
-            printw("  %s", options[i].c_str());
-        }
-    }
-    refresh();
-}
-
-/*
- * Handles user input for navigating the menu with arrow keys
- *
- * @return int index of selected option, or -1 if cancelled
- */
-int ArrowDisplay::run() {
-    initscr();
-    clear();
-    noecho();
-    cbreak();             // Line buffering disabled
-    keypad(stdscr, TRUE); // Enable special keys
-    curs_set(0);          // Hide cursor
-
-    display();
-
-    while (true) {
-        int ch = getch();
-        switch (ch) {
-        case KEY_UP:
-            if (selected > 0) {
-                selected--;
-                display();
-            }
-            break;
-        case KEY_DOWN:
-            if (selected < options.size() - 1) {
-                selected++;
-                display();
-            }
-            break;
-        case '\n': // Enter key
-            endwin();
-            return selected;
-        case 27: // ESC key
-            endwin();
-            return -1;
-        }
-    }
-}

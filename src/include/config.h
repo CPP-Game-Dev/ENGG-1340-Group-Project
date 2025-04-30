@@ -17,9 +17,11 @@ class Config {
         {KB_DOWN, "KB_DOWN"},
         {KB_LEFT, "KB_LEFT"},
         {KB_RIGHT, "KB_RIGHT"},
+        {KB_CONFIRM, "KB_CONFIRM"},
+        {KB_CANCEL, "KB_CANCEL"},
         {KB_USE_PICKAXE, "KB_USE_PICKAXE"},
         {KB_USE_RATION, "KB_USE_RATION"},
-        {KB_QUIT, "KB_QUIT"},
+        {KB_EXIT, "KB_EXIT"},
     };
 
   public:
@@ -29,9 +31,11 @@ class Config {
         KB_DOWN,
         KB_LEFT,
         KB_RIGHT,
+        KB_CONFIRM,
+        KB_CANCEL,
         KB_USE_PICKAXE,
         KB_USE_RATION,
-        KB_QUIT,
+        KB_EXIT,
     };
     std::string getConfig(CONFIG_KEYS);
 };

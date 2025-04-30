@@ -6,12 +6,14 @@
 File to store all enums used in other classes
 */
 enum GameState {
-    StartMenu,
+    MainMenu,
+    DifficultyMenu,
     HelpMenu,
     SettingsMenu,
     InLevel,
     PauseMenu,
-    InventoryMenu
+    InventoryMenu,
+    GameOverMenu
 };
 
 enum class ItemID {
@@ -92,14 +94,13 @@ enum class KeyInput {
     Up,
     Down,
     Left,
-    Right, // Only this part matters for the MVP
+    Right, 
     Confirm,
     Cancel,
-    Pause,
     UseAbility,
     UsePickaxe,
     UseRation,
-    Quit,
+    Exit,
     None
 };
 

@@ -48,6 +48,9 @@
         "streambuf": "cpp",
         "typeinfo": "cpp",
         "__availability": "cpp",
-        "__hash_table": "cpp"
+        "__hash_table": "cpp",
+        "cstring": "cpp",
+        "map": "cpp",
+        "cinttypes": "cpp"
     }
 }

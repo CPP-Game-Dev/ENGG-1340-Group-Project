@@ -10,12 +10,12 @@ namespace player_tests {
 // Using Item for tests since that's what the codebase uses
 void testDefaultConstructor() {
     Player player;
-    assert(player.getBaseStaminaMax() == DEFAULT_STAMINA);
+    assert(player.getBaseStaminaMax() == DEFAULT_STAMINA_MAX);
     assert(player.getBaseRationRegen() == DEFAULT_RATION_REGEN);
     assert(player.getBaseFov() == DEFAULT_FOV);
     assert(player.getBaseRationCapacity() == DEFAULT_RATION_CAPACITY);
     assert(player.getBasePickaxeCapacity() == DEFAULT_PICKAXE_CAPACITY);
-    assert(player.getStaminaMaxMult() == DEFAULT_STAMINA_MULT);
+    assert(player.getStaminaMaxMult() == DEFAULT_STAMINA_MAX_MULT);
     assert(player.getRationRegenMult() == DEFAULT_RATION_REGEN_MULT);
     assert(player.getFovMult() == DEFAULT_FOV_MULT);
     assert(player.getRationCapacityMult() == DEFAULT_RATION_CAPACITY_MULT);

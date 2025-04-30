@@ -17,18 +17,27 @@
  * @return none
  */
 Player::Player() {
-    this->baseStaminaMax = DEFAULT_STAMINA;
+    this->baseStaminaMax = DEFAULT_STAMINA_MAX;
     this->baseRationRegen = DEFAULT_RATION_REGEN;
     this->baseFov = DEFAULT_FOV;
     this->baseRationCapacity = DEFAULT_RATION_CAPACITY;
     this->basePickaxeCapacity = DEFAULT_PICKAXE_CAPACITY;
 
-    this->stamina = DEFAULT_STAMINA;
-    this->staminaMaxMult = DEFAULT_STAMINA_MULT;
+    this->stamina = DEFAULT_STAMINA_MAX;
+    this->staminaMax = DEFAULT_STAMINA_MAX;
+    this->rationRegen = DEFAULT_RATION_REGEN;
+    this->fov = DEFAULT_FOV;
+    this->rationCapacity = DEFAULT_RATION_CAPACITY;
+    this->rationsOwned = 0;
+    this->pickaxeCapacity = DEFAULT_PICKAXE_CAPACITY;
+    this->pickaxesOwned = 0;
+
+    this->staminaMaxMult = DEFAULT_STAMINA_MAX_MULT;
     this->rationRegenMult = DEFAULT_RATION_REGEN_MULT;
     this->fovMult = DEFAULT_FOV_MULT;
     this->rationCapacityMult = DEFAULT_RATION_CAPACITY_MULT;
     this->pickaxeCapacityMult = DEFAULT_PICKAXE_CAPACITY_MULT;
+
 
     this->prevPos = Vector2D(0, 0);
     this->pos = Vector2D(0, 0);
@@ -99,13 +108,9 @@ void Player::preUpdate() {
      */
     
     this->staminaMax = this->baseStaminaMax;
-    
     this->rationRegen = this->baseRationRegen;
-
     this->fov = this->baseFov;
-
     this->rationCapacity = this->baseRationCapacity;
-
     this->pickaxeCapacity = this->basePickaxeCapacity;
 
     this->staminaMaxMult = 1.0f;
@@ -139,17 +144,17 @@ void Player::update() {
      * mults after all that, multiply each of the player's current stat with
      * their respective mult
      */
-    staminaMax         = baseStaminaMax;
-    rationRegen        = baseRationRegen;
-    fov                = baseFov;
-    rationCapacity     = baseRationCapacity;
-    pickaxeCapacity    = basePickaxeCapacity;
+    this->staminaMax         = this->baseStaminaMax;
+    this->rationRegen        = this->baseRationRegen;
+    this->fov                = this->baseFov;
+    this->rationCapacity     = this->baseRationCapacity;
+    this->pickaxeCapacity    = this->basePickaxeCapacity;
 
-    staminaMaxMult         = 1.0f;
-    rationRegenMult        = 1.0f;
-    fovMult                = 1.0f;
-    rationCapacityMult     = 1.0f;
-    pickaxeCapacityMult    = 1.0f;
+    this->staminaMaxMult         = 1.0f;
+    this->rationRegenMult        = 1.0f;
+    this->fovMult                = 1.0f;
+    this->rationCapacityMult     = 1.0f;
+    this->pickaxeCapacityMult    = 1.0f;
 
 
     for (const auto& item : inventory) {
@@ -160,25 +165,25 @@ void Player::update() {
         }
 
         // Flat bonuses
-        staminaMax         += item->bonusStaminaMax;
-        rationRegen        += item->bonusRationRegen;
-        fov                += item->bonusFov;
-        rationCapacity     += item->bonusRationCapacity;
-        pickaxeCapacity    += item->bonusPickaxeCapacity;
+        this->staminaMax         += item->bonusStaminaMax;
+        this->rationRegen        += item->bonusRationRegen;
+        this->fov                += item->bonusFov;
+        this->rationCapacity     += item->bonusRationCapacity;
+        this->pickaxeCapacity    += item->bonusPickaxeCapacity;
 
         // Multipliers
-        staminaMaxMult         *= item->bonusStaminaMaxMult;
-        rationRegenMult        *= item->bonusRationRegenMult;
-        fovMult                *= item->bonusFovMult;
-        rationCapacityMult     *= item->bonusRationCapacityMult;
-        pickaxeCapacityMult    *= item->bonusPickaxeCapacityMult;
+        this->staminaMaxMult         += item->bonusStaminaMaxMult;
+        this->rationRegenMult        += item->bonusRationRegenMult;
+        this->fovMult                += item->bonusFovMult;
+        this->rationCapacityMult     += item->bonusRationCapacityMult;
+        this->pickaxeCapacityMult    += item->bonusPickaxeCapacityMult;
     }
 
-    staminaMax         = static_cast<int>(staminaMax * staminaMaxMult);
-    rationRegen        = static_cast<int>(rationRegen * rationRegenMult);
-    fov                = static_cast<int>(fov * fovMult);
-    rationCapacity     = static_cast<int>(rationCapacity * rationCapacityMult);
-    pickaxeCapacity    = static_cast<int>(pickaxeCapacity * pickaxeCapacityMult);
+    this->staminaMax         = static_cast<int>(this->staminaMax * this->staminaMaxMult);
+    this->rationRegen        = static_cast<int>(this->rationRegen * this->rationRegenMult);
+    this->fov                = static_cast<int>(this->fov * this->fovMult);
+    this->rationCapacity     = static_cast<int>(this->rationCapacity * this->rationCapacityMult);
+    this->pickaxeCapacity    = static_cast<int>(this->pickaxeCapacity * this->pickaxeCapacityMult);
 }
 
 /*
@@ -193,36 +198,26 @@ void Player::update() {
  * @return void
  */
 void Player::postUpdate() {
-    if (stamina > staminaMax) {
-        stamina = staminaMax;
-    }
-    if (stamina < 0) {
-        stamina = 0;
-    }
+    // Ensure values are within possible range
+    if (this->stamina > this->staminaMax)               this->stamina = this->staminaMax;
+    if (this->stamina < 0)                              this->stamina = 0;
+    if (this->staminaMax < 1)                           this->staminaMax = 1;
+    if (this->rationsOwned < 0)                         this->rationsOwned = 0;
+    if (this->rationsOwned > this->rationCapacity)      this->rationsOwned = this->rationCapacity;
+    if (this->pickaxesOwned < 0)                        this->pickaxesOwned = 0;
+    if (this->pickaxesOwned > this->pickaxeCapacity)    this->pickaxesOwned = this->pickaxeCapacity;
+    if (this->fov < 1)                                  this->fov = 1;
+    if (this->fov > 10)                                 this->fov = 10;
 
-    if (rationCapacity < 0) {
-        rationCapacity = 0;
-    }
-
-    if (pickaxeCapacity < 0) {
-        pickaxeCapacity = 0;
-    }
-
-    if (fov < 1) {
-        fov = 1;
-    }
 
     // Optional: Snap multipliers to zero if they became NaN or negative
-    if (staminaMaxMult < 0.0f) staminaMaxMult = 1.0f;
-    if (rationRegenMult < 0.0f) rationRegenMult = 1.0f;
-    if (fovMult < 0.0f) fovMult = 1.0f;
-    if (rationCapacityMult < 0.0f) rationCapacityMult = 1.0f;
-    if (pickaxeCapacityMult < 0.0f) pickaxeCapacityMult = 1.0f;
-
-    // TODO(Arthur): come up with something to put here or delete the whole
-    // function
+    if (this->staminaMaxMult < 0.0f)        this->staminaMaxMult = 1.0f;
+    if (this->rationRegenMult < 0.0f)       this->rationRegenMult = 1.0f;
+    if (this->fovMult < 0.0f)               this->fovMult = 1.0f;
+    if (this->rationCapacityMult < 0.0f)    this->rationCapacityMult = 1.0f;
+    if (this->pickaxeCapacityMult < 0.0f)   this->pickaxeCapacityMult = 1.0f;
 
     
 }
 
-// Vector2D Player::getPos() const { return this->pos; }
+
