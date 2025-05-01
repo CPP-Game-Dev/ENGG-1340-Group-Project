@@ -292,22 +292,22 @@ void Display::drawLevel(const Level &level, const Player &player, int currentLev
 #pragma endregion
 
 #pragma region DRAW MENU
-void drawMenu(std::vector<char*> options, int highlighted, int dy = 0, int dx = 0) {
+void drawMenu(std::vector<std::string> options, int highlighted, int dy = 0, int dx = 0) {
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
     // Initialize top left anchor to center
     Vector2D anchor = Vector2D(int(maxY / 2), int(maxX / 2));
     anchor.y -= int(options.size()/2);
     for (int i = 0; i < options.size(); i++) {
-        int len = strlen(options[i]);
+        int len = strlen(options[i].c_str());
         if(i == highlighted % options.size()) {
             attron(COLOR_PAIR(7));
-            mvprintw(anchor.y + i + dy, int(anchor.x - len/2) + dx, "< %s >", options[i]);
+            mvprintw(anchor.y + i + dy, int(anchor.x - len/2) + dx, "< %s >", options[i].c_str());
             attroff(COLOR_PAIR(7));
         } else {
             attron(A_BOLD);
             attron(COLOR_PAIR(5) | A_BOLD);
-            mvprintw(anchor.y + i + dy, int(anchor.x - len/2) + dx, " <%s> ", options[i]);
+            mvprintw(anchor.y + i + dy, int(anchor.x - len/2) + dx, " <%s> ", options[i].c_str());
             attroff(COLOR_PAIR(5) | A_BOLD);
         }
     }
@@ -316,7 +316,7 @@ void drawMenu(std::vector<char*> options, int highlighted, int dy = 0, int dx = 
 #pragma endregion
 
 void Display::drawMainMenu(int highlighted) {
-    std::vector<char*> options = {
+    std::vector<std::string> options = {
         "New Game",
         "Help",
         "Settings",
@@ -326,7 +326,7 @@ void Display::drawMainMenu(int highlighted) {
 }
 
 void Display::drawDifficultyMenu(int highlighted) {
-    std::vector<char*> options = {
+    std::vector<std::string> options = {
         "Catacombs",
         "Labyrinth",
         "Purgatory",
@@ -336,7 +336,7 @@ void Display::drawDifficultyMenu(int highlighted) {
 }
 
 void Display::drawPauseMenu(int highlighted) {
-    std::vector<char*> options = {
+    std::vector<std::string> options = {
         "Continue",
         "New Game",
         "Help",
@@ -347,7 +347,7 @@ void Display::drawPauseMenu(int highlighted) {
 }
 
 void Display::drawGameOverMenu(int highlighted) {
-    std::vector<char*> options = {
+    std::vector<std::string> options = {
         "Start Over",
         "Exit"
     };
@@ -355,7 +355,7 @@ void Display::drawGameOverMenu(int highlighted) {
 }
 
 void Display::drawHelpMenu(int highlighted) {
-    std::vector<char*> options = {
+    std::vector<std::string> options = {
         "Back"
     };
     drawMenu(options, highlighted);
