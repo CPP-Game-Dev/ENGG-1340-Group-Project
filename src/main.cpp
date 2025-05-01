@@ -38,6 +38,11 @@ class Main {
     Config config;
 
     std::vector<std::unique_ptr<Item> > items;
+
+    std::vector<std::unique_ptr<Item>> commonItems;
+    std::vector<std::unique_ptr<Item>> uncommonItems;
+    std::vector<std::unique_ptr<Item>> rareItems;
+    std::vector<std::unique_ptr<Item>> relicItems;
     
     /*
      * Initializes the item list from CSV data
@@ -46,8 +51,18 @@ class Main {
      * @return void
      */
     void initialiseItems() {
+      auto parsed  = utils::parseItemsFromCSV("data/items.csv");
 
-        items = utils::parseItemsFromCSV("data/items.csv");
+      for (auto& item: parsed) {
+        switch (item->rarity) {
+          
+          case 0: commonItems.push_back(std::move(item)); break;
+          case 1: uncommonItems.push_back(std::move(item)); break;
+          case 2: rareItems.push_back(std::move(item)); break;
+          case 3: relicItems.push_back(std::move(item)); break;
+          default: break;
+        }
+      }
     }
 
   public:
@@ -305,6 +320,7 @@ class Main {
 
 
     handleItemPickupAt(newPos);
+    handleChestAt(newPos);
 
 
     
@@ -435,6 +451,48 @@ class Main {
                 std::cout << "[Warning] No more items available to pick up." << std::endl;
             }
         }
+    }
+
+    std::unique_ptr<Item> generateRandomItem() {
+      std::vector<int> availableRarities;
+
+      if(!commonItems.empty()) availableRarities.push_back(0);
+      if (!uncommonItems.empty()) availableRarities.push_back(1);
+      if (!rareItems.empty()) availableRarities.push_back(2);
+      if (!relicItems.empty()) availableRarities.push_back(3);
+
+      if (availableRarities.empty()) return nullptr;
+
+      int rarity = availableRarities[rand() % availableRarities.size()];
+      std::vector<std::unique_ptr<Item>>* pool = nullptr;
+
+      switch (rarity) {
+        case 0: pool = &commonItems; break;
+        case 1: pool = &uncommonItems; break;
+        case 2: pool = &rareItems; break;
+        case 3: pool = &relicItems; break;
+      }
+
+      int index = rand() % pool->size();
+      std::unique_ptr<Item> item = std::move((*pool)[index]);
+      pool->erase(pool->begin() + index);
+  
+      return item;
+    }
+
+    void handleChestAt(Vector2D pos) {
+      
+      if (currentLevel.getTile(pos) == TileObject::Chest) {
+        
+        auto item = generateRandomItem();
+        if (item) {
+            player.addItem(std::move(item));
+            std::cout << "[Chest] You got a random item!" << std::endl;
+        } else {
+            std::cout << "[Chest] No more items available." << std::endl;
+        }
+        currentLevel.setTile(pos, TileObject::None);
+      }
     }
 
     /*
