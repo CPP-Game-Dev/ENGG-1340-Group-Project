@@ -1,6 +1,5 @@
 #include "../src/include/display.h"
 #include "../src/include/enums.h"
-#include "../src/include/vector2d.h"
 #include <cassert>
 #include <iostream>
 #include <string>
@@ -82,25 +81,12 @@ void testIsVisible() {
     std::cout << "isVisible test passed!" << std::endl;
 }
 
-void testArrowDisplay() {
-    // Basic test for ArrowDisplay construction (without running the UI)
-    std::vector<std::string> options = {"Option 1", "Option 2", "Option 3"};
-    ArrowDisplay display(options, 1, 2);
-
-    // Test that it constructed correctly (can't test much more without UI
-    // interaction) assert(display.getSelectedIndex() == 0); // Default selected
-    // index is 0
-
-    std::cout << "ArrowDisplay construction test passed!" << std::endl;
-}
-
 void runAll() {
     std::cout << "Running Display tests..." << std::endl;
     testGetTileChar();
     testGetTileColor();
     testMapFov();
     testIsVisible();
-    testArrowDisplay();
     std::cout << "All Display tests passed!" << std::endl;
 }
 

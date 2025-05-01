@@ -5,14 +5,14 @@
 #include <memory>
 #include <vector>
 
-const int DEFAULT_STAMINA = 100;
-const int DEFAULT_STAMINA_MULT = 100;
-const int DEFAULT_RATION_REGEN = 0;
-const int DEFAULT_RATION_REGEN_MULT = 0;
-const int DEFAULT_FOV = 3;
+const int DEFAULT_STAMINA_MAX = 60;
+const int DEFAULT_STAMINA_MAX_MULT = 1;
+const int DEFAULT_RATION_REGEN = 15;
+const int DEFAULT_RATION_REGEN_MULT = 1;
+const int DEFAULT_FOV = 2;
 const int DEFAULT_FOV_MULT = 1;
-const int DEFAULT_RATION_CAPACITY = 0;
-const int DEFAULT_PICKAXE_CAPACITY = 100;
+const int DEFAULT_RATION_CAPACITY = 2;
+const int DEFAULT_PICKAXE_CAPACITY = 1;
 const int DEFAULT_RATION_CAPACITY_MULT = 1;
 const int DEFAULT_PICKAXE_CAPACITY_MULT = 1;
 
@@ -34,6 +34,8 @@ class Player {
     int stamina;         // Current stamina
     int staminaMax;      // Current max stamina
     int rationRegen;     // Current ration regeneration amount
+    int rationsOwned;
+    int pickaxesOwned;
     int fov;             // Current FOV
     int rationCapacity;  // Current ration capacity
     int pickaxeCapacity; // Current pickaxe capacity
@@ -81,20 +83,20 @@ const std::vector<std::unique_ptr<Item>>& getInventory() const;
 template <typename ItemType>
 void removeItemTo(std::vector<std::unique_ptr<Item>>& itemList) {
   
-  auto it = inventory.begin();
+auto it = inventory.begin();
   
-        while (it != inventory.end()) {
+    while (it != inventory.end()) {
           
-            if (dynamic_cast<ItemType*>(it->get()) != nullptr) {
+        if (dynamic_cast<ItemType*>(it->get()) != nullptr) {
               
-                itemList.push_back(std::move(*it));
-                it = inventory.erase(it);
-            } 
-            else {
-                ++it;
-            }
+            itemList.push_back(std::move(*it));
+            it = inventory.erase(it);
+        } 
+        else {
+            ++it;
         }
     }
+}
 
   
 #pragma endregion
@@ -102,6 +104,9 @@ void removeItemTo(std::vector<std::unique_ptr<Item>>& itemList) {
     void preUpdate();  // Prepares the player instance for update()
     void update();     // Updates statz & shitz
     void postUpdate(); // Cleans up
+
+    bool useRation();
+    bool usePickaxe();
 
 #pragma region Getters
     inline int getBaseStaminaMax() const { return this->baseStaminaMax; }
@@ -117,6 +122,8 @@ void removeItemTo(std::vector<std::unique_ptr<Item>>& itemList) {
     inline int getStamina() const { return this->stamina; }
     inline int getStaminaMax() const { return this->staminaMax; }
     inline int getRationRegen() const { return this->rationRegen; }
+    inline int getRationsOwned() const { return this->rationsOwned; }
+    inline int getPickaxesOwned() const { return this->pickaxesOwned; }
     inline int getFov() const { return this->fov; }
     inline int getRationCapacity() const { return this->rationCapacity; }
     inline int getPickaxeCapacity() const { return this->pickaxeCapacity; }
@@ -147,6 +154,8 @@ void removeItemTo(std::vector<std::unique_ptr<Item>>& itemList) {
     inline void setStamina(int value) { this->stamina = value; }
     inline void setStaminaMax(int value) { this->staminaMax = value; }
     inline void setRationRegen(int value) { this->rationRegen = value; }
+    inline void setRationsOwned(int value) { this->rationsOwned = value; }
+    inline void setPickaxesOwned(int value) { this->pickaxesOwned = value; }
     inline void setFov(int value) { this->fov = value; }
     inline void setRationCapacity(int value) { this->rationCapacity = value; }
     inline void setPickaxeCapacity(int value) { this->pickaxeCapacity = value; }
