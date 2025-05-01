@@ -414,30 +414,6 @@ class Main {
         }
     }
     /*
-     * Handles item pickup at a specific pos
-     * Adds item to inventory and clears tile
-     * @param pos Tile position where item was picked up
-     * @return void
-     */
-    void handleItemPickupAt(Vector2D pos) {
-      if (currentLevel.getTile(pos) == TileObject::Item) {
-            if (!items.empty()) {
-                std::unique_ptr<Item> pickedItem = std::move(items.back());
-                items.pop_back();
-
-                player.addItem(std::move(pickedItem));
-
-                currentLevel.setTile(pos, TileObject::None);
-
-                std::cout << "[Pickup] Player picked up an item at ("
-                          << pos.x << ", " << pos.y << ")" << std::endl;
-            } else {
-                std::cout << "[Warning] No more items available to pick up." << std::endl;
-            }
-        }
-    }
-
-    /*
      * Draws the main menu and handles difficulty selection
      * @return void
      */
