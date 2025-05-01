@@ -1,9 +1,7 @@
 
 #include "include/item.h"
-#include "player.h"
 #include "include/enums.h"
-#include "include/utils.h"
-
+#include "include/player.h"
 
 #include <string>
 
@@ -51,7 +49,8 @@ Item::Item(ItemID id) {
  * Overloaded constructor for Item
  *
  * Initializes an Item with specific values provided by parameters.
- * All bonus stats are initialized to zero. Typically used when reading from file.
+ * All bonus stats are initialized to zero. Typically used when reading from
+ * file.
  *
  * @param id          Unique identifier for the item
  * @param name        Name of the item
@@ -90,6 +89,4 @@ Item::Item(ItemID id, const std::string &name, const std::string &description,
  * @param player Reference to the Player object affected by the item
  * @return void
  */
-void Item::update(Player& player) {
-
-}
+void Item::update(Player &player) {}
