@@ -5,13 +5,11 @@
 #include <assert.h>
 #include <cmath>
 #include <ncurses.h>
-#include <string>
-#include <algorithm>
 #include <string.h>
+#include <string>
 
 #define MEGAPIXEL "  "
 #define FOG "::"
-
 
 /*
  * Initializes the ncurses library and sets up color pairs for display
@@ -25,23 +23,21 @@ void Display::initCurses() {
     noecho();
     raw();
     curs_set(0);
-    
 
     // Define color pairs
-    init_pair(1, COLOR_YELLOW, COLOR_BLACK);    // Player
-    init_pair(2, COLOR_WHITE, COLOR_WHITE);     // Wall
-    init_pair(3, COLOR_BLACK, COLOR_BLACK);     // None
-    init_pair(4, COLOR_RED, COLOR_RED);         // Exit
-    init_pair(5, COLOR_GREEN, COLOR_BLACK);     // Extras
-    if(can_change_color()) {
+    init_pair(1, COLOR_YELLOW, COLOR_BLACK); // Player
+    init_pair(2, COLOR_WHITE, COLOR_WHITE);  // Wall
+    init_pair(3, COLOR_BLACK, COLOR_BLACK);  // None
+    init_pair(4, COLOR_RED, COLOR_RED);      // Exit
+    init_pair(5, COLOR_GREEN, COLOR_BLACK);  // Extras
+    if (can_change_color()) {
         init_color(COLOR_CYAN, 32, 32, 32);
         init_color(COLOR_MAGENTA, 250, 150, 0);
     }
-    init_pair(6, COLOR_WHITE, COLOR_BLACK);     // Fog
-    init_pair(7, COLOR_WHITE, COLOR_BLACK);     // Text
-    init_pair(8, COLOR_MAGENTA, COLOR_BLACK);   // HUD text
+    init_pair(6, COLOR_WHITE, COLOR_BLACK);   // Fog
+    init_pair(7, COLOR_WHITE, COLOR_BLACK);   // Text
+    init_pair(8, COLOR_MAGENTA, COLOR_BLACK); // HUD text
 }
-
 
 /*
  * Clears and refreshes the screen
@@ -132,22 +128,23 @@ bool isVisible(int y1, int x1, int y2, int x2, int fov) {
     return std::round(std::sqrt(dy * dy + dx * dx)) <= fov;
 }
 
-/* 
+/*
  * Draw a HUD behind the current screen
  * @param player Player
  * @param maxY, maxX Maximum size of screen
  * @param currentLevel the number of levels completed - 1
  */
 #pragma region DRAW LEVEL HUD
-void drawLevelHUD(const Player &player, const int maxY, const int maxX, int currentLevel) {
+void drawLevelHUD(const Player &player, const int maxY, const int maxX,
+                  int currentLevel) {
     int height = 26, width = 23;
     Vector2D anchor = Vector2D(int(maxY / 2) + 1, int(maxX / 2));
-    
+
     // Draw background
     attron(COLOR_PAIR(6) | A_DIM);
-    for(int i = 0; i < 21; i++) {
+    for (int i = 0; i < 21; i++) {
         move(anchor.y - 10 + i, anchor.x - 20);
-        for(int j = 0; j < 21; j++) {
+        for (int j = 0; j < 21; j++) {
             addstr(FOG);
         }
     }
@@ -157,26 +154,26 @@ void drawLevelHUD(const Player &player, const int maxY, const int maxX, int curr
     attron(A_BOLD);
     attron(COLOR_PAIR(7));
     // Left
-    for (int i = 0; i < height; i++) 
+    for (int i = 0; i < height; i++)
         mvaddstr(anchor.y - 14 + i, anchor.x - 22, " |");
-    
+
     // Right
-    for (int i = 0; i < height; i++) 
+    for (int i = 0; i < height; i++)
         mvaddstr(anchor.y - 14 + i, anchor.x + 22, "| ");
-    
+
     // Top
     move(anchor.y - 14, anchor.x - 22);
-    for (int i = 0; i < width; i++) 
-        addstr("--");
-    
-    // Middle
-    move(anchor.y - 11, anchor.x - 22);
-    for (int i = 0; i < width; i++) 
+    for (int i = 0; i < width; i++)
         addstr("--");
 
-    //Bottom
+    // Middle
+    move(anchor.y - 11, anchor.x - 22);
+    for (int i = 0; i < width; i++)
+        addstr("--");
+
+    // Bottom
     move(anchor.y + 11, anchor.x - 22);
-    for (int i = 0; i < width; i++) 
+    for (int i = 0; i < width; i++)
         addstr("--");
 
     // 6 Corners
@@ -190,7 +187,8 @@ void drawLevelHUD(const Player &player, const int maxY, const int maxX, int curr
     attroff(COLOR_PAIR(7));
     attroff(A_BOLD);
 
-    std::string stamina = "Stamina: ", rations = "Rations: ", pickaxes = "Pickaxes: ", level = "Layer ";
+    std::string stamina = "Stamina: ", rations = "Rations: ",
+                pickaxes = "Pickaxes: ", level = "Layer ";
     stamina.append(std::to_string(player.getStamina()));
     stamina.append("/");
     stamina.append(std::to_string(player.getStaminaMax()));
@@ -223,7 +221,8 @@ void drawLevelHUD(const Player &player, const int maxY, const int maxX, int curr
  * @return void
  */
 #pragma region DRAW LEVEL
-void Display::drawLevel(const Level &level, const Player &player, int currentLevel) {
+void Display::drawLevel(const Level &level, const Player &player,
+                        int currentLevel) {
     clear();
     TileMap maze = level.getMaze();
     int size = level.getSize();
@@ -239,7 +238,6 @@ void Display::drawLevel(const Level &level, const Player &player, int currentLev
     auto isPerimeter = [](int y, int x, int size) {
         return (y == -1 || x == -1 || y == size || x == size);
     };
-
 
     /*
     10: -1
@@ -277,7 +275,8 @@ void Display::drawLevel(const Level &level, const Player &player, int currentLev
                 attroff(COLOR_PAIR(tile_color));
             } else {
                 // Tile Outside Field of view
-                if(i < playerY - 10 || j < playerX - 10 || j > playerX + 10 || i > playerY + 10 ) {
+                if (i < playerY - 10 || j < playerX - 10 || j > playerX + 10 ||
+                    i > playerY + 10) {
                     continue;
                 }
                 attron(COLOR_PAIR(6) | A_DIM);
@@ -285,29 +284,32 @@ void Display::drawLevel(const Level &level, const Player &player, int currentLev
                 attroff(COLOR_PAIR(6) | A_DIM);
             }
         }
-        //printw("\n");
+        // printw("\n");
     }
     mvaddstr(anchor.y, anchor.x, "P1");
 }
 #pragma endregion
 
 #pragma region DRAW MENU
-void drawMenu(std::vector<std::string> options, int highlighted, int dy = 0, int dx = 0) {
+void drawMenu(std::vector<std::string> options, int highlighted, int dy = 0,
+              int dx = 0) {
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
     // Initialize top left anchor to center
     Vector2D anchor = Vector2D(int(maxY / 2), int(maxX / 2));
-    anchor.y -= int(options.size()/2);
+    anchor.y -= int(options.size() / 2);
     for (int i = 0; i < options.size(); i++) {
         int len = strlen(options[i].c_str());
-        if(i == highlighted % options.size()) {
+        if (i == highlighted % options.size()) {
             attron(COLOR_PAIR(7));
-            mvprintw(anchor.y + i + dy, int(anchor.x - len/2) + dx, "< %s >", options[i].c_str());
+            mvprintw(anchor.y + i + dy, int(anchor.x - len / 2) + dx, "< %s >",
+                     options[i].c_str());
             attroff(COLOR_PAIR(7));
         } else {
             attron(A_BOLD);
             attron(COLOR_PAIR(5) | A_BOLD);
-            mvprintw(anchor.y + i + dy, int(anchor.x - len/2) + dx, " <%s> ", options[i].c_str());
+            mvprintw(anchor.y + i + dy, int(anchor.x - len / 2) + dx, " <%s> ",
+                     options[i].c_str());
             attroff(COLOR_PAIR(5) | A_BOLD);
         }
     }
@@ -316,51 +318,34 @@ void drawMenu(std::vector<std::string> options, int highlighted, int dy = 0, int
 #pragma endregion
 
 void Display::drawMainMenu(int highlighted) {
-    std::vector<std::string> options = {
-        "New Game",
-        "Help",
-        "Settings",
-        "Exit"
-    };
+    std::vector<std::string> options = {"New Game", "Help", "Settings", "Exit"};
     drawMenu(options, highlighted);
 }
 
 void Display::drawDifficultyMenu(int highlighted) {
-    std::vector<std::string> options = {
-        "Catacombs",
-        "Labyrinth",
-        "Purgatory",
-        "Back"
-    };
+    std::vector<std::string> options = {"Catacombs", "Labyrinth", "Purgatory",
+                                        "Back"};
+
     drawMenu(options, highlighted);
 }
 
 void Display::drawPauseMenu(int highlighted) {
-    std::vector<std::string> options = {
-        "Continue",
-        "New Game",
-        "Help",
-        "Settings",
-        "Exit"
-    };
+    std::vector<std::string> options = {"Continue", "New Game", "Help",
+                                        "Settings", "Exit"};
     drawMenu(options, highlighted);
 }
 
 void Display::drawGameOverMenu(int highlighted) {
-    std::vector<std::string> options = {
-        "Start Over",
-        "Exit"
-    };
+    std::vector<std::string> options = {"Start Over", "Exit"};
+
     drawMenu(options, highlighted);
 }
 
 void Display::drawHelpMenu(int highlighted) {
-    std::vector<std::string> options = {
-        "Back"
-    };
+    std::vector<std::string> options = {"Back"};
+
     drawMenu(options, highlighted);
 }
-
 
 /*
  * Terminates ncurses session and restores terminal
