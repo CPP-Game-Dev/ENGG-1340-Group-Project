@@ -109,7 +109,7 @@ std::string Config::getPair(std::string key) {
  * - Use Pickaxe   -> "e"
  * - Use Ration    -> "r"
  * - Exit Game     -> "q"
- * 
+ *
  * @return void
  */
 void Config::createDefaultConfig() {

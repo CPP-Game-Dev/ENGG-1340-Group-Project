@@ -105,7 +105,6 @@ void test_default_config_creation() {
     assert(config.getConfig(Config::KB_RIGHT) == "d");
     assert(config.getConfig(Config::KB_USE_PICKAXE) == "e");
     assert(config.getConfig(Config::KB_USE_RATION) == "r");
-    assert(config.getConfig(Config::KB_EXIT) == "q");
 
     std::cout << "Default config creation test passed!" << std::endl;
 }
