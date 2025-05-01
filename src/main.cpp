@@ -159,7 +159,7 @@ class Main {
             return KeyInput::Left;
         } else if (inp == config.getConfig(Config::KB_RIGHT)[0]) {
             return KeyInput::Right;
-        } else if (inp == ' ') {//config.getConfig(Config::KB_CONFIRM)[0]) {
+        } else if (inp == config.getConfig(Config::KB_CONFIRM)[0]) {
             return KeyInput::Confirm;
         } else if (inp == config.getConfig(Config::KB_CANCEL)[0]) {
             return KeyInput::Cancel;
@@ -478,6 +478,8 @@ class Main {
                     // Check for key press
                     if (key == KeyInput::Exit) {
                         gamestate = GameState::PauseMenu;
+                        highlighted = 0;
+                        confirmed = false;
                         break;
                     }
                     if (key == KeyInput::Up || key == KeyInput::Down ||
@@ -504,7 +506,7 @@ class Main {
     
                 case GameState::PauseMenu:
                     #pragma region PAUSE MENU
-                    Display::drawMainMenu(highlighted);
+                    Display::drawPauseMenu(highlighted);
                     // Player is still picking an option
                     if (!confirmed) {       
                         key = getInput();

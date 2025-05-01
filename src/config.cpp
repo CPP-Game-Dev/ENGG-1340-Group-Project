@@ -104,7 +104,7 @@ std::string Config::getPair(std::string key) {
  * - Move Down     -> "s"
  * - Move Left     -> "a"
  * - Move Right    -> "d"
- * - Confirm       -> " "
+ * - Confirm       -> "f"
  * - Cancel        -> "x"
  * - Use Pickaxe   -> "e"
  * - Use Ration    -> "r"
@@ -117,7 +117,7 @@ void Config::createDefaultConfig() {
     addPair(getConfigKeys.at(CONFIG_KEYS::KB_UP), "w");
     addPair(getConfigKeys.at(CONFIG_KEYS::KB_LEFT), "a");
     addPair(getConfigKeys.at(CONFIG_KEYS::KB_RIGHT), "d");
-    addPair(getConfigKeys.at(CONFIG_KEYS::KB_CONFIRM), " ");
+    addPair(getConfigKeys.at(CONFIG_KEYS::KB_CONFIRM), "f");
     addPair(getConfigKeys.at(CONFIG_KEYS::KB_CANCEL), "x");
     addPair(getConfigKeys.at(CONFIG_KEYS::KB_USE_PICKAXE), "e");
     addPair(getConfigKeys.at(CONFIG_KEYS::KB_USE_RATION), "r");
