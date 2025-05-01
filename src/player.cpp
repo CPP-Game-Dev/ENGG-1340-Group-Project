@@ -4,6 +4,7 @@
 // #include <iostream>
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 /*
  * Constructor for default player
@@ -81,9 +82,35 @@ Player::Player(int baseStaminaMax, int baseRationRegen, int baseFov,
  * @param item Item to add (unique pointer)
  * @return void
  */
-void Player::addItem(std::unique_ptr<Item> item) {
+void Player::addItem(std::unique_ptr<Item> &item, std::vector<std::unique_ptr<Item> > &itemList) {
+    if(this->inventory.size() >= 5) 
+        return;
+
     this->inventory.push_back(std::move(item));
+    itemList.erase(std::remove(itemList.begin(), itemList.end(), nullptr), itemList.end());
 }
+
+void Player::removeItem(int itemID, std::vector<std::vector<std::unique_ptr<Item> > > &unobtainedItems) {
+    // Doesn't have the item to be removed
+    if(!this->hasItem(itemID))
+        return;
+    
+    // Go through inventory to find the item & move it back to the itemList responsible to hold it
+    for(auto &item: this->inventory) {
+        if (item->id == itemID) {
+            unobtainedItems[item->rarity].push_back(std::move(item));
+        }
+    }
+    this->inventory.erase(std::remove(this->inventory.begin(), this->inventory.end(), nullptr), this->inventory.end());
+}
+
+bool Player::hasItem(int itemID) {
+    for(auto &item: this->inventory) 
+        if (item->id == itemID) 
+            return true;
+    return false;
+}
+
 
 /*
  * Resets player stats before applying bonuses
@@ -217,7 +244,7 @@ void Player::postUpdate() {
     if (this->rationCapacityMult < 0.0f)    this->rationCapacityMult = 1.0f;
     if (this->pickaxeCapacityMult < 0.0f)   this->pickaxeCapacityMult = 1.0f;
 
-    
+    this->prevPos = this->pos;
 }
 
 

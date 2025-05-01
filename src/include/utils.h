@@ -15,6 +15,8 @@
 // It mainly offers a custom implementation of make_unique, along with helper
 // functions for creating instances of the Item class based on different initialization requirements.
 
+const std::string ITEM_DATA = "data/items.bsv";
+
 namespace utils {
 
     // make_unique
@@ -29,61 +31,53 @@ namespace utils {
         static_assert(!std::is_array<T>::value, "arrays not supported");
         return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
-    //TODO(Jenna):
-    // createItem (Basic version)
-    // Creates an Item instance using only an ItemID.
-    // This version initializes the Item with default placeholder values such as
-    // the name "Item" and the description.
-    // mainly used when no specific information is available at creation time.
 
-    inline std::unique_ptr<Item> createItem(ItemID id) {
-        return utils::make_unique<Item>(id);
+    inline std::unique_ptr<Item> createItem(int id, const std::string& name, const std::string& description, int rarity, bool hasCustomBehavior, const std::vector<int> &flatBonus, const std::vector<float> &mult) {
+        return utils::make_unique<Item>(id, name, description, rarity, hasCustomBehavior, flatBonus, mult);
     }
 
-    //create Item  (Overloaded version)
-    // Creates an Item instance using detailed initialization parameters including
-    // the name, description, and a property value which typically represents rarity.
-    // This version is particularly useful when data is sourced externally, such as
-    // from a CSV file or user input, and allows for more meaningful Item objects.
+    inline void loadItems(std::vector<std::vector<std::unique_ptr<Item> > > &unobtainedItems) {
+        std::ifstream itemData(ITEM_DATA);
+        std::string line, name, temp, desc;
+        int id, rarity;
+        bool hasCustomBehavior;
+        std::vector<int> flatBonus(5, 0);
+        std::vector<float> mult(5, 0.0f);
+        std::unique_ptr<Item> item;
 
-    inline std::unique_ptr<Item> createItem(ItemID id, const std::string& name, const std::string& description, int property) {
-        return utils::make_unique<Item>(id, name, description, property);
+        while(std::getline(itemData, line)) {
+            std::stringstream ss(line);
+
+            // Get ID
+            std::getline(ss, temp, '|');
+            id = atoi(temp.c_str());
+            
+            // Get Name
+            std::getline(ss, name, '|');
+            
+            // Get Description
+            std::getline(ss, desc, '|');
+
+            // Get rarity
+            std::getline(ss, temp, '|');
+            rarity = atoi(temp.c_str());
+
+            // Get hasCustomBehavior
+            std::getline(ss, temp, '|');
+            hasCustomBehavior = bool(atoi(temp.c_str()));
+
+            // Get the 5 flat bonuses
+            for(int i = 0; i < 5; i++) {
+                std::getline(ss, temp, '|');
+                flatBonus.push_back(atoi(temp.c_str()));
+            }
+
+            // Get the 5 mults
+            for(int i = 0; i < 5; i++) {
+                std::getline(ss, temp, '|');
+                mult.push_back(atof(temp.c_str()));
+            }
+            unobtainedItems[rarity].push_back(std::move(utils::createItem(id, name, desc, rarity, hasCustomBehavior, flatBonus, mult)));
+        }
     }
-
-    inline std::vector<std::unique_ptr<Item>> parseItemsFromCSV(const std::string& filename) {
-
-        // Vector to hold all items created from CSV
-        std::vector<std::unique_ptr<Item>> items;
-        std::ifstream file(filename);
-        
-        // Temporary variable to store each line
-        std::string line;
-        
-
-    while (std::getline(file, line)) {
-
-        // Use a stringstream to parse the CSV line
-        std::stringstream ss(line);
-        
-        std::string idStr, name, description, propertyStr;
-
-        std::getline(ss, idStr, ',');
-        std::getline(ss, name, ',');
-        std::getline(ss, description, ',');
-        std::getline(ss, propertyStr, ',');
-
-        
-        ItemID id = static_cast<ItemID>(std::stoi(idStr));
-        
-        int property = std::stoi(propertyStr);
-
-        items.push_back(utils::createItem(id, name, description, property));
-    }
-
-        
-    return items;
-    }
-
-
-// std::vector<std::unique_ptr<Item> parseItemsFromCSV(const std::string& filename);
 }

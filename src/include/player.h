@@ -41,7 +41,7 @@ class Player {
     int pickaxeCapacity; // Current pickaxe capacity
     Vector2D prevPos;    // Previous position
     Vector2D pos;        // Current position
-#pragma region endregion
+#pragma endregion
 #pragma region Stat Multipliers
     float staminaMaxMult;      // Multiplier for max stamina
     float rationRegenMult;     // Multiplier for ration stamina regen
@@ -59,45 +59,12 @@ class Player {
 
 #pragma region Inventory Management
   
-    void addItem(std::unique_ptr<Item> item);
+    void addItem(std::unique_ptr<Item> &item, std::vector<std::unique_ptr<Item> > &itemList);
+    void removeItem(int itemID, std::vector<std::vector<std::unique_ptr<Item> > > &unobtainedItems);
+    bool hasItem(int itemID);
 
-    template <typename ItemType>
-    void removeItem(std::vector<std::unique_ptr<Item> > itemList) {
-        for (auto &item : this->inventory) {
-            if (dynamic_cast<ItemType *>(item.get()) != nullptr) {
-                itemList.push_back(std::move(item));
-            }
-        }
-    }
-
-    template <typename ItemType> bool hasItem() {
-        for (auto &item : this->inventory)
-            if (dynamic_cast<ItemType *>(item.get()) != nullptr)
-                return true;
-        return false;
-    }
-
-const std::vector<std::unique_ptr<Item>>& getInventory() const;
-
-
-template <typename ItemType>
-void removeItemTo(std::vector<std::unique_ptr<Item>>& itemList) {
-  
-auto it = inventory.begin();
-  
-    while (it != inventory.end()) {
-          
-        if (dynamic_cast<ItemType*>(it->get()) != nullptr) {
-              
-            itemList.push_back(std::move(*it));
-            it = inventory.erase(it);
-        } 
-        else {
-            ++it;
-        }
-    }
-}
-
+    inline const std::vector<std::unique_ptr<Item>>& getInventory() const { return this->inventory; };
+    inline const int getItemCount() const { return this->inventory.size(); }
   
 #pragma endregion
 
@@ -128,6 +95,7 @@ auto it = inventory.begin();
     inline int getRationCapacity() const { return this->rationCapacity; }
     inline int getPickaxeCapacity() const { return this->pickaxeCapacity; }
 
+    inline Vector2D getPrevPos() const { return this->prevPos; }
     inline Vector2D getPos() const { return this->pos; }
 
     inline double getStaminaMaxMult() const { return this->staminaMaxMult; }
@@ -160,6 +128,8 @@ auto it = inventory.begin();
     inline void setRationCapacity(int value) { this->rationCapacity = value; }
     inline void setPickaxeCapacity(int value) { this->pickaxeCapacity = value; }
 
+    inline void setPrevPos(int y, int x) { this->prevPos = Vector2D(y, x); }
+    inline void setPrevPos(Vector2D newPos) { this->prevPos = newPos; }
     inline void setPos(int y, int x) { this->pos = Vector2D(y, x); }
     inline void setPos(Vector2D newPos) { this->pos = newPos; }
 
