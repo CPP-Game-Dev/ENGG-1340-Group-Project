@@ -3,8 +3,6 @@
 #include "include/vector2d.h"
 // #include <iostream>
 #include <algorithm>
-#include <memory>
-#include <vector>
 
 /*
  * Constructor for default player

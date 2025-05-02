@@ -1,9 +1,7 @@
 
 #include "include/item.h"
-#include "player.h"
 #include "include/enums.h"
-#include "include/utils.h"
-
+#include "include/player.h"
 
 #include <string>
 
@@ -51,7 +49,8 @@ Item::Item() {
  * Overloaded constructor for Item
  *
  * Initializes an Item with specific values provided by parameters.
- * All bonus stats are initialized to zero. Typically used when reading from file.
+ * All bonus stats are initialized to zero. Typically used when reading from
+ * file.
  *
  * @param id          Unique identifier for the item
  * @param name        Name of the item
@@ -59,9 +58,9 @@ Item::Item() {
  * @param property    Integer representing item rarity or other property
  * @return none
  */
-Item::Item(int id, const std::string& name, const std::string& description, 
-            int rarity, bool hasCustomBehavior, const std::vector<int> &flatBonus, 
-            const std::vector<float> &mult) {
+Item::Item(int id, const std::string &name, const std::string &description,
+           int rarity, bool hasCustomBehavior,
+           const std::vector<int> &flatBonus, const std::vector<float> &mult) {
 
     this->id = id;
     this->name = name;
@@ -93,8 +92,8 @@ Item::Item(int id, const std::string& name, const std::string& description,
  * @param player Reference to the Player object affected by the item
  * @return void
  */
-void Item::update(Player& player) {
-    switch(this->id) {
+void Item::update(Player &player) {
+    switch (this->id) {
     case ItemID::WornSneakers:
         if (player.getPrevPos() != player.getPos() && rand() % 10 < 1)
             player.setStamina(player.getStamina() + 1);
@@ -104,18 +103,18 @@ void Item::update(Player& player) {
             player.setStamina(player.getStamina() + 1);
         break;
     case ItemID::HermesBoots:
-            if (player.getPrevPos() != player.getPos() && rand() % 10 < 8)
-                player.setStamina(player.getStamina() + 1);
-            break;
+        if (player.getPrevPos() != player.getPos() && rand() % 10 < 8)
+            player.setStamina(player.getStamina() + 1);
+        break;
     case ItemID::LitTorch:
         if (player.getPrevPos() != player.getPos())
             this->counter += 1;
-        if(this->counter >= 150) {
+        if (this->counter >= 150) {
             this->bonusFov = 0;
             this->name = "Smoldering Torch";
             this->description = "It has burnt out";
         }
-            break;
+        break;
     case ItemID::EmergencyRations:
         if (player.getStamina() == 0) {
             player.setStamina(player.getStaminaMax());
@@ -124,17 +123,18 @@ void Item::update(Player& player) {
         }
         break;
     case ItemID::MutatedPotato:
-        if (player.getPrevPos() != player.getPos()) 
+        if (player.getPrevPos() != player.getPos())
             this->counter++;
         if (this->counter >= 60) {
-            if(player.hasItem(ItemID::SuspiciousPills))
-                player.setStamina(player.getStamina() + int(player.getStaminaMax() * 0.1f));
+            if (player.hasItem(ItemID::SuspiciousPills))
+                player.setStamina(player.getStamina() +
+                                  int(player.getStaminaMax() * 0.1f));
             else if (player.getRationsOwned() < player.getRationCapacity())
-                player.setRationsOwned(player.getRationsOwned() + 1); 
-            else 
+                player.setRationsOwned(player.getRationsOwned() + 1);
+            else
                 break;
             this->counter = 0;
-        } 
+        }
         break;
     }
 }
