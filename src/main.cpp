@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <cmath>
 #include <cstdlib>
+#include <cstring>
 #include <ctime>
 #include <fstream>
 #include <iostream>
