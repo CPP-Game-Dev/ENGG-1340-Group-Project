@@ -43,6 +43,47 @@ class Main {
 
     std::vector<std::vector<std::unique_ptr<Item> > > unobtainedItems;
 
+    /*
+     * Opens the configuration file using the user's default editor
+     * First checks the EDITOR environment variable, then falls back to vi
+     * Temporarily exits ncurses mode to allow full terminal control
+     *
+     * @return void
+     */
+    void openConfigWithEditor() {
+        // Get the config file path
+        std::string configFile = config.getConfigFilePath();
+
+        // Get the user's preferred editor from environment
+        char *editorEnv = getenv("EDITOR");
+        std::string editor;
+
+        if (editorEnv && strlen(editorEnv) > 0) {
+            editor = editorEnv;
+        } else {
+// Default editors by platform (prefer simpler editors)
+#ifdef __APPLE__
+            editor = "nano";
+#else
+            editor = "vi";
+#endif
+        }
+
+        // Prepare to exit ncurses temporarily
+        Display::terminate();
+
+        // Construct and execute the command
+        std::string command = editor + " " + configFile;
+        std::cout << "Opening config with: " << command << std::endl;
+        system(command.c_str());
+
+        // Restore ncurses
+        Display::initCurses();
+
+        // Reload config
+        config = Config();
+    }
+
   public:
     /*
      * Default constructor for Main class
@@ -431,7 +472,10 @@ class Main {
                     gamestate = GameState::HelpMenu;
                     break;
                 case 2:
-                    gamestate = GameState::SettingsMenu;
+                    openConfigWithEditor();
+                    // You might want to redraw the screen or update the UI
+                    // after Redraw the main menu
+                    Display::drawMainMenu(highlighted);
                     break;
                 case 3: // Exit
                     running = false;
@@ -606,6 +650,9 @@ class Main {
 
             case GameState::SettingsMenu:
 #pragma region SETTINGS MENU
+                openConfigWithEditor();
+                // Return to pause menu after editing config
+                gamestate = GameState::PauseMenu;
                 break;
 #pragma endregion
 

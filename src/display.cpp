@@ -204,12 +204,12 @@ void drawLevelHUD(const Player &player, int currentLevel) {
 
     level.append(std::to_string(currentLevel));
 
-    attron(COLOR_PAIR(8));
+    attron(COLOR_PAIR(7));
     mvaddstr(anchor.y - 13, anchor.x - 20, level.c_str());
     mvaddstr(anchor.y - 13, anchor.x + 2, pickaxes.c_str());
     mvaddstr(anchor.y - 12, anchor.x - 20, stamina.c_str());
     mvaddstr(anchor.y - 12, anchor.x + 2, rations.c_str());
-    attroff(COLOR_PAIR(8));
+    attroff(COLOR_PAIR(7));
 }
 
 /*
@@ -227,21 +227,21 @@ void drawHUD() {
     attron(COLOR_PAIR(7));
     // Left
     for (int i = 0; i < height; i++)
-    mvaddstr(anchor.y - 14 + i, anchor.x - 22, " |");
+        mvaddstr(anchor.y - 14 + i, anchor.x - 22, " |");
 
     // Right
     for (int i = 0; i < height; i++)
-    mvaddstr(anchor.y - 14 + i, anchor.x + 22, "| ");
+        mvaddstr(anchor.y - 14 + i, anchor.x + 22, "| ");
 
     // Top
     move(anchor.y - 14, anchor.x - 22);
     for (int i = 0; i < width; i++)
-    addstr("--");
+        addstr("--");
 
     // Bottom
     move(anchor.y + 11, anchor.x - 22);
     for (int i = 0; i < width; i++)
-    addstr("--");
+        addstr("--");
 
     // 4 Corners
     mvaddstr(anchor.y - 14, anchor.x - 22, " +");
@@ -342,7 +342,7 @@ void drawMenu(std::vector<std::string> options, int highlighted, int dy = 0,
     anchor.y -= int(options.size() / 2);
     anchor.y += dy;
     for (int i = 0; i < options.size(); i++) {
-        if(options[i] == "\n") { // Special case, creates an empty row instead
+        if (options[i] == "\n") { // Special case, creates an empty row instead
             highlighted++;
             continue;
         }
@@ -379,8 +379,8 @@ void Display::drawDifficultyMenu(int highlighted) {
 
 void Display::drawPauseMenu(int highlighted) {
     drawHUD();
-    std::vector<std::string> options = {"Continue", "New Game", "Inventory", "Help",
-                                        "Settings", "Exit"};
+    std::vector<std::string> options = {"Continue", "New Game", "Inventory",
+                                        "Help",     "Settings", "Exit"};
     drawMenu(options, highlighted);
 }
 
@@ -398,15 +398,16 @@ void Display::drawHelpMenu(int highlighted) {
     drawMenu(options, highlighted);
 }
 
-void Display::drawInventoryMenu(int highlighted, const std::vector<std::unique_ptr<Item> > &inventory) {
+void Display::drawInventoryMenu(
+    int highlighted, const std::vector<std::unique_ptr<Item> > &inventory) {
     drawHUD();
     std::vector<std::string> options(5, "Empty");
-    for (int i = 0; i < inventory.size(); i++) 
+    for (int i = 0; i < inventory.size(); i++)
         options[i] = inventory[i]->name;
 
     options.push_back("\n");
     options.push_back("Back");
-        
+
     drawMenu(options, highlighted);
 }
 
@@ -417,8 +418,7 @@ void Display::drawItemMenu(int highlighted, std::string desc) {
     Vector2D anchor = Vector2D(int(maxY / 2), int(maxX / 2));
     int len = strlen(desc.c_str());
     attron(COLOR_PAIR(5));
-    mvprintw(anchor.y - 1, int(anchor.x - len / 2), "%s",
-             desc.c_str());
+    mvprintw(anchor.y - 1, int(anchor.x - len / 2), "%s", desc.c_str());
     attroff(COLOR_PAIR(5));
     std::vector<std::string> options = {"Discard", "Back"};
     drawMenu(options, highlighted);
