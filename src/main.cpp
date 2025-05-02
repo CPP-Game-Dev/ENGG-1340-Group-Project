@@ -41,10 +41,8 @@ class Main {
     KeyInput lastDirectionalInput;
     Config config;
 
-    std::vector<
-        std::vector<
-            std::unique_ptr<Item> > > unobtainedItems;
-        
+    std::vector<std::vector<std::unique_ptr<Item> > > unobtainedItems;
+
   public:
     /*
      * Default constructor for Main class
@@ -60,6 +58,9 @@ class Main {
         config = Config();
 
         utils::loadItems(unobtainedItems);
+
+        // print contents of unobtainedItems
+        //
     }
 
     /*
@@ -214,32 +215,54 @@ class Main {
     void handleCollectableInteraction(Vector2D pos) {
         TileObject collectable = currentLevel.getTile(pos);
         switch (collectable) {
-            case TileObject::Ration:
-                if(player.getRationsOwned() < player.getRationCapacity()) {
-                    player.setRationsOwned(player.getRationsOwned() + 1);
-                    currentLevel.setTile(pos, TileObject::None);
-                }
+        case TileObject::Ration:
+            if (player.getRationsOwned() < player.getRationCapacity()) {
+                player.setRationsOwned(player.getRationsOwned() + 1);
+                currentLevel.setTile(pos, TileObject::None);
+            }
+            break;
+        case TileObject::Pickaxe:
+            if (player.getPickaxesOwned() < player.getPickaxeCapacity()) {
+                player.setPickaxesOwned(player.getPickaxesOwned() + 1);
+                currentLevel.setTile(pos, TileObject::None);
+            }
+            break;
+        case TileObject::EnergyDrink:
+            if (int(player.getStamina() + player.getStaminaMax() * 0.1f) <
+                player.getStaminaMax()) {
+                player.setStamina(
+                    int(player.getStamina() + player.getStaminaMax() * 0.1f));
+                currentLevel.setTile(pos, TileObject::None);
+            }
+            break;
+        case TileObject::Chest:
+            if (player.getItemCount() >= 5)
                 break;
-            case TileObject::Pickaxe:
-                if(player.getPickaxesOwned() < player.getPickaxeCapacity()) {
-                    player.setPickaxesOwned(player.getPickaxesOwned() + 1);
-                    currentLevel.setTile(pos, TileObject::None);
-                }
-                break;
-            case TileObject::EnergyDrink:
-                if(int(player.getStamina() + player.getStaminaMax() * 0.1f) < player.getStaminaMax()) {
-                    player.setStamina(int(player.getStamina() + player.getStaminaMax() * 0.1f));
-                    currentLevel.setTile(pos, TileObject::None);
-                }
-                break;
-            case TileObject::Chest:
 
-                if(player.getItemCount() >= 5) 
+            // Check if we have any items at all
+            bool hasItems = false;
+            for (const auto &list : unobtainedItems) {
+                if (!list.empty()) {
+                    hasItems = true;
                     break;
-                auto &itemList = unobtainedItems[rand()%4];
-                player.addItem(itemList[rand() % itemList.size()], itemList);
-                
+                }
+            }
+
+            if (!hasItems) {
+                std::cerr << "No items available!" << std::endl;
                 break;
+            }
+            // Select a non-empty item list
+            int rarity;
+            do {
+                rarity = rand() % unobtainedItems.size();
+            } while (unobtainedItems[rarity].empty());
+
+            auto &itemList = unobtainedItems[rarity];
+            int itemIndex = rand() % itemList.size();
+            player.addItem(itemList[itemIndex], itemList);
+
+            break;
         }
     }
 #pragma enderegion
@@ -266,14 +289,14 @@ class Main {
             newPos = player.getPos() + UNIT_VECTOR_X;
             lastDirectionalInput = KeyInput::Right;
         }
-        
+
         lastDirectionalInput = key;
 
         if (!currentLevel.isValidMove(newPos)) { // Checks if it hits a wall
             return;
         }
 
-        if(player.hasItem(ItemID::InkBottle))
+        if (player.hasItem(ItemID::InkBottle))
             currentLevel.setTile(player.getPos(), TileObject::Ink);
 
         player.setPos(newPos);
@@ -283,9 +306,9 @@ class Main {
             return;
         }
 
-        if(currentLevel.getTile(newPos) != TileObject::None && currentLevel.getTile(newPos) != TileObject::Ink) 
+        if (currentLevel.getTile(newPos) != TileObject::None &&
+            currentLevel.getTile(newPos) != TileObject::Ink)
             handleCollectableInteraction(newPos);
-
 
         player.setStamina(player.getStamina() - 1);
     }
@@ -474,8 +497,6 @@ class Main {
 
                 player.preUpdate();
 
-                    
-        
                 // Check for key press
                 if (key == KeyInput::Exit) {
                     gamestate = GameState::PauseMenu;
@@ -486,11 +507,11 @@ class Main {
                 if (key == KeyInput::Up || key == KeyInput::Down ||
                     key == KeyInput::Left || key == KeyInput::Right) {
                     movePlayer(key);
-                } else if (key == KeyInput::UsePickaxe) 
+                } else if (key == KeyInput::UsePickaxe)
                     breakWall();
-                else if (key == KeyInput::UseRation) 
+                else if (key == KeyInput::UseRation)
                     useRation();
-                
+
                 player.update();
 
                 if (player.getStamina() <= 0)
@@ -499,22 +520,23 @@ class Main {
                 player.postUpdate();
                 break;
 #pragma endregion
-    
+
             case GameState::InventoryMenu:
 #pragma region INVENTORY MENU
                 Display::drawInventoryMenu(highlighted, player.getInventory());
-                if (!confirmed) {       
+                if (!confirmed) {
                     key = getInput();
                     menuSelection(key, player.getInventory().size() + 1);
                     break;
                 }
-                if(highlighted == player.getInventory().size()) // Back
+                if (highlighted == player.getInventory().size()) // Back
                     gamestate = GameState::PauseMenu;
                 else {
-                    selectedItemDesc = player.getInventory()[highlighted]->description;
+                    selectedItemDesc =
+                        player.getInventory()[highlighted]->description;
                     selectedItemID = player.getInventory()[highlighted]->id;
                 }
-                    
+
                 highlighted = 0;
                 confirmed = false;
                 break;
@@ -522,12 +544,12 @@ class Main {
             case GameState::ItemMenu:
 #pragma region ITEM MENU
                 Display::drawItemMenu(highlighted, selectedItemDesc);
-                if (!confirmed) {       
+                if (!confirmed) {
                     key = getInput();
                     menuSelection(key, 2);
                     break;
                 }
-                switch(highlighted) {
+                switch (highlighted) {
                 case 0: // Discard item
                     player.removeItem(selectedItemID, unobtainedItems);
                     gamestate = GameState::InventoryMenu;
@@ -540,12 +562,12 @@ class Main {
                 confirmed = false;
                 break;
 #pragma endregion
-    
+
             case GameState::PauseMenu:
 #pragma region PAUSE MENU
                 Display::drawPauseMenu(highlighted);
                 // Player is still picking an option
-                if (!confirmed) {       
+                if (!confirmed) {
                     key = getInput();
                     menuSelection(key, 6);
                     break;
@@ -556,7 +578,7 @@ class Main {
                     break;
                 }
                 // Played confirmed their choice
-                switch(highlighted) {
+                switch (highlighted) {
                 case 0: // Continue
                     gamestate = GameState::InLevel;
                     break;
@@ -576,22 +598,22 @@ class Main {
                     gamestate = GameState::MainMenu;
                     break;
                 }
-                    // Reset highlight & confirm
+                // Reset highlight & confirm
                 highlighted = 0;
                 confirmed = false;
                 break;
-                #pragma endregion
-    
+#pragma endregion
+
             case GameState::SettingsMenu:
 #pragma region SETTINGS MENU
                 break;
 #pragma endregion
-                
+
             case GameState::GameOverMenu:
 #pragma region GAME OVER MENU
                 Display::drawGameOverMenu(highlighted);
                 // Player is still picking an option
-                if (!confirmed) {       
+                if (!confirmed) {
                     key = getInput();
                     menuSelection(key, 2);
                     break;
@@ -602,7 +624,7 @@ class Main {
                     break;
                 }
                 // Played confirmed their choice
-                switch(highlighted) {
+                switch (highlighted) {
                 case 0: // New Game
                     gamestate = GameState::DifficultyMenu;
                     break;
