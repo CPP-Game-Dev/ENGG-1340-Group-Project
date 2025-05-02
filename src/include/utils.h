@@ -4,6 +4,7 @@
 #include "item.h"
 #include <assert.h>
 #include <fstream>
+#include <iostream>
 #include <memory>
 #include <sstream>
 #include <string>
