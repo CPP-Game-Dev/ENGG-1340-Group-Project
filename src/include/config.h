@@ -38,4 +38,7 @@ class Config {
         KB_EXIT,
     };
     std::string getConfig(CONFIG_KEYS);
+
+    // Get the absolute path to the config file
+    std::string getConfigFilePath() const { return configDir + CONFIG_FILE; }
 };

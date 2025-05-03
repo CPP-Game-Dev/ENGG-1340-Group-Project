@@ -1,16 +1,9 @@
 #include "include/level.h"
 #include "include/enums.h"
-#include "include/utils.h"
 #include "include/vector2d.h"
-#include <algorithm>
-#include <iostream>
-#include <random>
 #include <stdlib.h>
-#include <string>
 #include <unistd.h>
-#include <utility>
 #include <vector>
-
 
 /*
  * Constructor for the Level class
@@ -174,8 +167,8 @@ std::vector<Vector2D> getRandPaths(std::vector<Vector2D> &pathList, int count) {
  */
 void Level::placeItems(int count) {
     TileObject items[] = {TileObject::Ration, TileObject::EnergyDrink,
-                          TileObject::Battery, TileObject::Chest};
-    int weights[] = {66, 22, 2, 10};
+                          TileObject::Chest, TileObject::Pickaxe};
+    int weights[] = {50, 25, 10, 15};
 
     std::vector<Vector2D> pathList = std::vector<Vector2D>();
     for (int i = 0; i < this->size; i++)
@@ -218,7 +211,6 @@ TileMap Level::getMaze() const { return this->maze; }
  */
 Vector2D Level::getStart() const { return this->startPos; }
 
-
 /*
  * Gets the exit position of the maze
  *
@@ -232,7 +224,6 @@ Vector2D Level::getEnd() const { return this->endPos; }
  * @return bool Whether the game is ongoing or not
  */
 bool Level::getGameStatus() const { return this->gameStatus; }
-
 
 /*
  * Checks if a given move is valid (not out of bounds or a wall)
@@ -250,7 +241,6 @@ bool Level::isValidMove(Vector2D playerPos) const {
 
     return true;
 }
-
 
 /*
  * Sets the tile at a specific position to the given tile object

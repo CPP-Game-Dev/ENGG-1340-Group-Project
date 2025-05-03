@@ -16,7 +16,8 @@ class Display {
     static void drawDifficultyMenu(int highlighted);
     static void drawPauseMenu(int highlighted);
     static void drawHelpMenu(int highlighted);
-    static void drawInventory(int highlighted);
+    static void drawInventoryMenu(int highlighted, const std::vector<std::unique_ptr<Item> > &inventory);
+    static void drawItemMenu(int highlighted, std::string desc);
     static void drawGameOverMenu(int highlighted);
     static void terminate();
 };

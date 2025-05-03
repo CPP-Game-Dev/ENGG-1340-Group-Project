@@ -8,11 +8,13 @@
 #include <assert.h>
 #include <cmath>
 #include <cstdlib>
+#include <cstring>
 #include <ctime>
 #include <fstream>
 #include <iostream>
 #include <ncurses.h>
 #include <stdexcept>
+#include <string>
 
 #include "include/item.h"
 #include "include/utils.h"
@@ -40,17 +42,47 @@ class Main {
     KeyInput lastDirectionalInput;
     Config config;
 
-    std::vector<std::unique_ptr<Item> > items;
+    std::vector<std::vector<std::unique_ptr<Item> > > unobtainedItems;
 
     /*
-     * Initializes the item list from CSV data
-     * Called in constructor
+     * Opens the configuration file using the user's default editor
+     * First checks the EDITOR environment variable, then falls back to vi
+     * Temporarily exits ncurses mode to allow full terminal control
      *
      * @return void
      */
-    void initialiseItems() {
+    void openConfigWithEditor() {
+        // Get the config file path
+        std::string configFile = config.getConfigFilePath();
 
-        items = utils::parseItemsFromCSV("data/items.csv");
+        // Get the user's preferred editor from environment
+        char *editorEnv = getenv("EDITOR");
+        std::string editor;
+
+        if (editorEnv && strlen(editorEnv) > 0) {
+            editor = editorEnv;
+        } else {
+// Default editors by platform (prefer simpler editors)
+#ifdef __APPLE__
+            editor = "nano";
+#else
+            editor = "vi";
+#endif
+        }
+
+        // Prepare to exit ncurses temporarily
+        Display::terminate();
+
+        // Construct and execute the command
+        std::string command = editor + " " + configFile;
+        std::cout << "Opening config with: " << command << std::endl;
+        system(command.c_str());
+
+        // Restore ncurses
+        Display::initCurses();
+
+        // Reload config
+        config = Config();
     }
 
   public:
@@ -67,7 +99,10 @@ class Main {
 
         config = Config();
 
-        initialiseItems();
+        utils::loadItems(unobtainedItems);
+
+        // print contents of unobtainedItems
+        //
     }
 
     /*
@@ -144,6 +179,7 @@ class Main {
      *
      * @return KeyInput
      */
+#pragma region GET INPUT
     KeyInput getInput() { // TODO: Make it modular and configurable
         char inp = getch();
 
@@ -172,6 +208,8 @@ class Main {
 
         return KeyInput::None;
     }
+#pragma enderegion
+
     /*
      * Function to run when the user completes the current level
      * Adjusts level size and stamina based on difficulty
@@ -209,53 +247,67 @@ class Main {
 
         player.setStamina(newStamina);
     }
-
     /*
-     * Function to update player inventory items
-     * Calls the update() function of every item in the player's inventory
+     * Handles item pickup at a specific pos
+     * Adds item to inventory and clears tile
+     * @param pos Tile position where item was picked up
+     * @return void
      */
-    void updatePlayerInventory() {
+#pragma region HANDLE COLLECTABLE INTERACTION
+    void handleCollectableInteraction(Vector2D pos) {
+        TileObject collectable = currentLevel.getTile(pos);
+        switch (collectable) {
+        case TileObject::Ration:
+            if (player.getRationsOwned() < player.getRationCapacity()) {
+                player.setRationsOwned(player.getRationsOwned() + 1);
+                currentLevel.setTile(pos, TileObject::None);
+            }
+            break;
+        case TileObject::Pickaxe:
+            if (player.getPickaxesOwned() < player.getPickaxeCapacity()) {
+                player.setPickaxesOwned(player.getPickaxesOwned() + 1);
+                currentLevel.setTile(pos, TileObject::None);
+            }
+            break;
+        case TileObject::EnergyDrink:
+            if (int(player.getStamina() + player.getStaminaMax() * 0.1f) <
+                player.getStaminaMax()) {
+                player.setStamina(
+                    int(player.getStamina() + player.getStaminaMax() * 0.1f));
+                currentLevel.setTile(pos, TileObject::None);
+            }
+            break;
+        case TileObject::Chest:
+            if (player.getItemCount() >= 5)
+                break;
 
-        player.preUpdate();
-
-        // Loop through player's inventory
-        const auto &inventory = player.getInventory();
-
-        for (const auto &item : inventory) {
-            if (!item)
-                continue;
-
-            // If item defines custom logic, call it
-            if (item->hasCustomBehavior) {
-                item->update(player);
+            // Check if we have any items at all
+            bool hasItems = false;
+            for (const auto &list : unobtainedItems) {
+                if (!list.empty()) {
+                    hasItems = true;
+                    break;
+                }
             }
 
-            // Apply flat bonuses
-            player.setStaminaMax(player.getStaminaMax() +
-                                 item->bonusStaminaMax);
-            player.setRationRegen(player.getRationRegen() +
-                                  item->bonusRationRegen);
-            player.setFov(player.getFov() + item->bonusFov);
-            player.setRationCapacity(player.getRationCapacity() +
-                                     item->bonusRationCapacity);
-            player.setPickaxeCapacity(player.getPickaxeCapacity() +
-                                      item->bonusPickaxeCapacity);
+            if (!hasItems) {
+                std::cerr << "No items available!" << std::endl;
+                break;
+            }
+            // Select a non-empty item list
+            int rarity;
+            do {
+                rarity = rand() % unobtainedItems.size();
+            } while (unobtainedItems[rarity].empty());
 
-            // Apply stat multipliers
-            player.setStaminaMaxMult(player.getStaminaMaxMult() *
-                                     item->bonusStaminaMaxMult);
-            player.setRationRegenMult(player.getRationRegenMult() *
-                                      item->bonusRationRegenMult);
-            player.setFovMult(player.getFovMult() * item->bonusFovMult);
-            player.setRationCapacityMult(player.getRationCapacityMult() *
-                                         item->bonusRationCapacityMult);
-            player.setPickaxeCapacityMult(player.getPickaxeCapacityMult() *
-                                          item->bonusPickaxeCapacityMult);
+            auto &itemList = unobtainedItems[rarity];
+            int itemIndex = rand() % itemList.size();
+            player.addItem(itemList[itemIndex], itemList);
+
+            break;
         }
-
-        player.update();
     }
-
+#pragma enderegion
     /*
      * Moves player in the specified direction
      * Handles stamina cost and tile interaction
@@ -264,7 +316,7 @@ class Main {
      * @return void
      */
     void movePlayer(KeyInput key) {
-        auto newPos = player.getPos();
+        Vector2D newPos = player.getPos();
 
         if (key == KeyInput::Up) {
             newPos = player.getPos() - UNIT_VECTOR_Y;
@@ -286,14 +338,19 @@ class Main {
             return;
         }
 
-        player.setPos(newPos);
+        if (player.hasItem(ItemID::InkBottle))
+            currentLevel.setTile(player.getPos(), TileObject::Ink);
 
-        handleItemPickupAt(newPos);
+        player.setPos(newPos);
 
         if (currentLevel.getTile(newPos) == TileObject::Exit) {
             onLevelComplete();
             return;
         }
+
+        if (currentLevel.getTile(newPos) != TileObject::None &&
+            currentLevel.getTile(newPos) != TileObject::Ink)
+            handleCollectableInteraction(newPos);
 
         player.setStamina(player.getStamina() - 1);
     }
@@ -347,6 +404,7 @@ class Main {
                      player.getStaminaMax());
 
         player.setStamina(newStamina);
+        player.setRationsOwned(player.getRationsOwned() - 1);
     }
 
     /*
@@ -378,6 +436,23 @@ class Main {
     }
 
     /*
+     * Resets the game state for a new game
+     * @return void
+     */
+    void resetGame() {
+        // Reset player
+        player = Player();
+        player.setPos(0, 0);
+
+        // Reset map
+        currentMapSize = 5;
+        completedLevels = 0;
+
+        // Reset level
+        currentLevel = Level(currentMapSize, player.getPos(), 4);
+    }
+
+    /*
      * Game Logic:
      * Game is not updated at all if no valid player input is detected
      * Otherwise, perform an action according to current gamestate & key input
@@ -388,6 +463,8 @@ class Main {
         Display::initCurses();
         KeyInput key = KeyInput::None;
         bool running = true;
+        std::string selectedItemDesc;
+        int selectedItemID;
         while (running) {
             switch (gamestate) {
             case GameState::MainMenu:
@@ -406,14 +483,18 @@ class Main {
                 }
                 // Played confirmed their choice
                 switch (highlighted) {
-                case 0: // New Game
+                case 0:          // New Game
+                    resetGame(); // Add this line
                     gamestate = GameState::DifficultyMenu;
                     break;
                 case 1: // Help Menu
                     gamestate = GameState::HelpMenu;
                     break;
                 case 2:
-                    gamestate = GameState::SettingsMenu;
+                    openConfigWithEditor();
+                    // You might want to redraw the screen or update the UI
+                    // after Redraw the main menu
+                    Display::drawMainMenu(highlighted);
                     break;
                 case 3: // Exit
                     running = false;
@@ -477,138 +558,168 @@ class Main {
 
                 key = getInput();
 
-                    player.preUpdate();
+                player.preUpdate();
 
-                    
-        
-                    // Check for key press
-                    if (key == KeyInput::Exit) {
-                        gamestate = GameState::PauseMenu;
-                        highlighted = 0;
-                        confirmed = false;
-                        break;
-                    }
-                    if (key == KeyInput::Up || key == KeyInput::Down ||
-                        key == KeyInput::Left || key == KeyInput::Right) {
-                        movePlayer(key);
-                    } else if (key == KeyInput::UsePickaxe) 
-                        breakWall();
-                    else if (key == KeyInput::UseRation) 
-                        useRation();
-                    
-                    player.update();
+                // Check for key press
+                if (key == KeyInput::Exit) {
+                    gamestate = GameState::PauseMenu;
+                    highlighted = 0;
+                    confirmed = false;
+                    break;
+                }
+                if (key == KeyInput::Up || key == KeyInput::Down ||
+                    key == KeyInput::Left || key == KeyInput::Right) {
+                    movePlayer(key);
+                } else if (key == KeyInput::UsePickaxe)
+                    breakWall();
+                else if (key == KeyInput::UseRation)
+                    useRation();
+
+                player.update();
 
                 if (player.getStamina() <= 0)
                     gamestate = GameState::GameOverMenu;
 
-                    player.postUpdate();
+                player.postUpdate();
+                break;
+#pragma endregion
+
+            case GameState::InventoryMenu:
+#pragma region INVENTORY MENU
+                Display::drawInventoryMenu(highlighted, player.getInventory());
+                if (!confirmed) {
+                    key = getInput();
+                    // Use the maximum of either 5 or actual inventory size,
+                    // plus 1 for Back button
+                    menuSelection(
+                        key,
+                        std::max(5, (int)player.getInventory().size()) + 1);
                     break;
-                    #pragma endregion
-    
-                case GameState::InventoryMenu:
-                    #pragma region INVENTORY MENU
+                }
+
+                // When confirming a selection
+                if (highlighted ==
+                    std::max(5, (int)player.getInventory().size())) {
+                    // Selected the Back button
+                    gamestate = GameState::PauseMenu;
+                } else if (highlighted < player.getInventory().size()) {
+                    // Selected an actual item
+                    selectedItemDesc =
+                        player.getInventory()[highlighted]->description;
+                    selectedItemID = player.getInventory()[highlighted]->id;
+                    gamestate = GameState::ItemMenu;
+                }
+                // Otherwise selected an empty slot, do nothing special
+
+                highlighted = 0;
+                confirmed = false;
+                break;
+#pragma endregion
+            case GameState::ItemMenu:
+#pragma region ITEM MENU
+                Display::drawItemMenu(highlighted, selectedItemDesc);
+                if (!confirmed) {
+                    key = getInput();
+                    menuSelection(key, 2);
                     break;
-                    #pragma endregion
-    
-                case GameState::PauseMenu:
-                    #pragma region PAUSE MENU
-                    Display::drawPauseMenu(highlighted);
-                    // Player is still picking an option
-                    if (!confirmed) {       
-                        key = getInput();
-                        menuSelection(key, 5);
-                        break;
-                    }
-                    // Player pressed quit
-                    if (key == KeyInput::Exit) {
-                        gamestate = GameState::InLevel;
-                        break;
-                    }
-                    // Played confirmed their choice
-                    switch(highlighted) {
-                        case 0: // Continue
-                            gamestate = GameState::InLevel;
-                            break;
-                        case 1: // New Game
-                            gamestate = GameState::DifficultyMenu;
-                            break;
-                        case 2: // Help Menu
-                            gamestate = GameState::HelpMenu;
-                            break;
-                        case 3: // Settings Menu
-                            gamestate = GameState::SettingsMenu;
-                            break;
-                        case 4: // Exit
-                            gamestate = GameState::MainMenu;
-                            break;
-                    }
-                    // Reset highlight & confirm
-                    highlighted = 0;
-                    confirmed = false;
+                }
+                switch (highlighted) {
+                case 0: // Discard item
+                    player.removeItem(selectedItemID, unobtainedItems);
+                    gamestate = GameState::InventoryMenu;
                     break;
-                    #pragma endregion
-    
-                case GameState::SettingsMenu:
-                    #pragma region SETTINGS MENU
+                case 1: // Back
+                    gamestate = GameState::InventoryMenu;
                     break;
-                    #pragma endregion
-                
-                case GameState::GameOverMenu:
-                    #pragma region GAME OVEER MENU
-                    Display::drawGameOverMenu(highlighted);
-                    // Player is still picking an option
-                    if (!confirmed) {       
-                        key = getInput();
-                        menuSelection(key, 2);
-                        break;
-                    }
-                    // Player pressed quit
-                    if (key == KeyInput::Exit) {
-                        gamestate = GameState::MainMenu;
-                        break;
-                    }
-                    // Played confirmed their choice
-                    switch(highlighted) {
-                        case 0: // New Game
-                            gamestate = GameState::DifficultyMenu;
-                            break;
-                        case 1: // Exit
-                            gamestate = GameState::MainMenu;
-                            break;
-                    }
-                    // Reset highlighted item
-                    highlighted = 0;
-                    confirmed = false;
+                }
+                highlighted = 0;
+                confirmed = false;
+                break;
+#pragma endregion
+
+            case GameState::PauseMenu:
+#pragma region PAUSE MENU
+                Display::drawPauseMenu(highlighted);
+                // Player is still picking an option
+                if (!confirmed) {
+                    key = getInput();
+                    menuSelection(key, 6);
                     break;
-                    #pragma endregion
+                }
+                // Player pressed quit
+                if (key == KeyInput::Exit) {
+                    gamestate = GameState::InLevel;
+                    break;
+                }
+                // Played confirmed their choice
+                switch (highlighted) {
+                case 0: // Continue
+                    gamestate = GameState::InLevel;
+                    break;
+                case 1: // New Game
+                    resetGame();
+                    gamestate = GameState::DifficultyMenu;
+                    break;
+                case 2: // Inventory menu
+                    gamestate = GameState::InventoryMenu;
+                    break;
+                case 3: // Help Menu
+                    gamestate = GameState::HelpMenu;
+                    break;
+                case 4: // Settings Menu
+                    gamestate = GameState::SettingsMenu;
+                    break;
+                case 5: // Exit
+                    gamestate = GameState::MainMenu;
+                    break;
+                }
+                // Reset highlight & confirm
+                highlighted = 0;
+                confirmed = false;
+                break;
+#pragma endregion
+
+            case GameState::SettingsMenu:
+#pragma region SETTINGS MENU
+                openConfigWithEditor();
+                // Return to pause menu after editing config
+                gamestate = GameState::PauseMenu;
+                break;
+#pragma endregion
+
+            case GameState::GameOverMenu:
+#pragma region GAME OVER MENU
+                Display::drawGameOverMenu(highlighted);
+                // Player is still picking an option
+                if (!confirmed) {
+                    key = getInput();
+                    menuSelection(key, 2);
+                    break;
+                }
+                // Player pressed quit
+                if (key == KeyInput::Exit) {
+                    gamestate = GameState::MainMenu;
+                    break;
+                }
+                // Played confirmed their choice
+                switch (highlighted) {
+                case 0:          // Start Over
+                    resetGame(); // Add this line to reset game state
+                    gamestate = GameState::DifficultyMenu;
+                    break;
+                case 1: // Exit
+                    gamestate = GameState::MainMenu;
+                    break;
+                }
+                // Reset highlighted item
+                highlighted = 0;
+                confirmed = false;
+                break;
+#pragma endregion
             }
             Display::flush();
         }
         Display::terminate();
-    }
-    /*
-     * Handles item pickup at a specific pos
-     * Adds item to inventory and clears tile
-     * @param pos Tile position where item was picked up
-     * @return void
-     */
-    void handleItemPickupAt(Vector2D pos) {
-        if (currentLevel.getTile(pos) == TileObject::Item) {
-            if (!items.empty()) {
-                std::unique_ptr<Item> pickedItem = std::move(items.back());
-                items.pop_back();
-
-                player.addItem(std::move(pickedItem));
-
-                currentLevel.setTile(pos, TileObject::None);
-
-                std::cout << "[Pickup] Player picked up an item at (" << pos.x
-                          << ", " << pos.y << ")" << std::endl;
-            } else {
-                std::cout << "[Warning] No more items available to pick up."
-                          << std::endl;
-            }
-        }
     }
 };
 

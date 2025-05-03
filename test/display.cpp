@@ -18,11 +18,11 @@ void testGetTileChar() {
     assert(getTileChar(TileObject::Player) == "P1");
     assert(getTileChar(TileObject::Wall) == "##");
     assert(getTileChar(TileObject::None) == "__");
-    assert(getTileChar(TileObject::Exit) == "\\/");
-    assert(getTileChar(TileObject::Ration) == "O ");
-    assert(getTileChar(TileObject::EnergyDrink) == "RB");
-    assert(getTileChar(TileObject::Battery) == "EN");
-    assert(getTileChar(TileObject::Chest) == "[]");
+    assert(getTileChar(TileObject::Exit) == ">>");
+    assert(getTileChar(TileObject::Ration) == "RA");
+    assert(getTileChar(TileObject::EnergyDrink) == "EN");
+    assert(getTileChar(TileObject::Pickaxe) == "PX");
+    assert(getTileChar(TileObject::Chest) == "{}");
 
     // Test unknown tile
     assert(getTileChar(static_cast<TileObject>(999)) == "??");
@@ -40,8 +40,8 @@ void testGetTileColor() {
     // Other tiles should be green (color code 5)
     assert(getTileColor(TileObject::Ration) == 5);
     assert(getTileColor(TileObject::EnergyDrink) == 5);
-    assert(getTileColor(TileObject::Battery) == 5);
     assert(getTileColor(TileObject::Chest) == 5);
+    assert(getTileColor(TileObject::Ink) == 5);
 
     std::cout << "getTileColor test passed!" << std::endl;
 }
