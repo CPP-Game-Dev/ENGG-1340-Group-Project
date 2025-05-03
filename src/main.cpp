@@ -436,6 +436,23 @@ class Main {
     }
 
     /*
+     * Resets the game state for a new game
+     * @return void
+     */
+    void resetGame() {
+        // Reset player
+        player = Player();
+        player.setPos(0, 0);
+
+        // Reset map
+        currentMapSize = 5;
+        completedLevels = 0;
+
+        // Reset level
+        currentLevel = Level(currentMapSize, player.getPos(), 4);
+    }
+
+    /*
      * Game Logic:
      * Game is not updated at all if no valid player input is detected
      * Otherwise, perform an action according to current gamestate & key input
@@ -466,7 +483,8 @@ class Main {
                 }
                 // Played confirmed their choice
                 switch (highlighted) {
-                case 0: // New Game
+                case 0:          // New Game
+                    resetGame(); // Add this line
                     gamestate = GameState::DifficultyMenu;
                     break;
                 case 1: // Help Menu
@@ -627,7 +645,8 @@ class Main {
                 case 0: // Continue
                     gamestate = GameState::InLevel;
                     break;
-                case 1: // New Game
+                case 1:          // New Game
+                    resetGame(); // Add this line
                     gamestate = GameState::DifficultyMenu;
                     break;
                 case 2: // Inventory menu
@@ -673,7 +692,8 @@ class Main {
                 }
                 // Played confirmed their choice
                 switch (highlighted) {
-                case 0: // New Game
+                case 0:          // Start Over
+                    resetGame(); // Add this line to reset game state
                     gamestate = GameState::DifficultyMenu;
                     break;
                 case 1: // Exit
