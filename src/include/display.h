@@ -3,7 +3,7 @@
 #include "enums.h"
 #include "level.h"
 #include "player.h"
-
+#include <unistd.h>
 /*
  * Class to store functions to draw the game on the console
  */
@@ -19,5 +19,7 @@ class Display {
     static void drawInventoryMenu(int highlighted, const std::vector<std::unique_ptr<Item> > &inventory);
     static void drawItemMenu(int highlighted, std::string desc);
     static void drawGameOverMenu(int highlighted);
+    static void drawIntro();
+    static void drawScrollingText(const std::string& text, std::pair<int, int> pos = {-1, -1}, int updates = 10, bool mirrored = false, bool flush_screen = false, bool bold = false);
     static void terminate();
 };

@@ -713,6 +713,8 @@ class Main {
      */
     void runGame() {
         Display::initCurses();
+        Display::drawIntro();
+        
         while (running) {
             switch (gamestate) {
             case GameState::MainMenu:
