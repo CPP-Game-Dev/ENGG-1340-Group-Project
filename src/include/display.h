@@ -11,7 +11,7 @@ class Display {
   public:
     static void initCurses();
     static void flush();
-    static void drawLevel(const Level &level, const Player &player, int currentLevel);
+    static void drawLevel(const Level &level, const Player &player, int currentLevel, std::string &text);
     static void drawMainMenu(int highlighted);
     static void drawDifficultyMenu(int highlighted);
     static void drawPauseMenu(int highlighted);

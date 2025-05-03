@@ -41,6 +41,8 @@ class Main {
     KeyInput key = KeyInput::None;
     bool running = true;
 
+    std::string collectedItemName = "";
+
     std::string selectedItemDesc;
     int selectedItemID;
 
@@ -180,7 +182,7 @@ class Main {
             energyMult = 0.4;
             break;
         }
-        if(player.hasItem(ItemID::GUEV1)) 
+        if(player.hasItem(ItemID::GTCDV1)) 
             itemCount += 2;
 
         currentLevel = Level(currentMapSize, player.getPos(), int(std::floor(itemCount)));
@@ -232,6 +234,7 @@ class Main {
                 player.setRationsOwned(player.getRationsOwned() + 1);
                 currentLevel.setTile(pos, TileObject::None);
                 pickup = true;
+                collectedItemName = "Ration";
             }
             break;
         case TileObject::Pickaxe:
@@ -239,6 +242,7 @@ class Main {
                 player.setPickaxesOwned(player.getPickaxesOwned() + 1);
                 currentLevel.setTile(pos, TileObject::None);
                 pickup = true;
+                collectedItemName = "Pickaxe";
             }
             break;
         case TileObject::EnergyDrink: {
@@ -249,6 +253,7 @@ class Main {
                     int(player.getStamina() + player.getStaminaMax() * mult));
                 currentLevel.setTile(pos, TileObject::None);
                 pickup = true;
+                collectedItemName = "Energy Drink";
             }
             break;
         }
@@ -271,12 +276,18 @@ class Main {
             }
             // Select a non-empty item list
             int rarity, weights[] = {50, 30, 15, 5}, rnd;
+            if(player.hasItem(ItemID::MetalDetector)) {
+                weights[0] = 40;
+                weights[1] = 33;
+                weights[2] = 20;
+                weights[3] = 7;
+            }
             do {
                 rnd = rand() % 100;
                 for (int i = 0; i < 4; i++) {
                     rnd -= weights[i];
                     if (rnd <= 0) {
-                        rarity = 3;
+                        rarity = i;
                         break;
                     }
                 }
@@ -284,6 +295,7 @@ class Main {
 
             auto &itemList = unobtainedItems[rarity];
             int itemIndex = rand() % itemList.size();
+            collectedItemName = itemList[itemIndex]->name;
             player.addItem(itemList[itemIndex], itemList);
             currentLevel.setTile(pos, TileObject::None);
             pickup = true;
@@ -511,12 +523,14 @@ class Main {
     }
     
     void handleLevelLogic() {
-        Display::drawLevel(currentLevel, player, completedLevels);
-
-        key = getInput();
+        //Display::drawLevel(currentLevel, player, completedLevels, collectedItemName);
 
         player.preUpdate();
         player.update();
+
+        Display::drawLevel(currentLevel, player, completedLevels, collectedItemName);
+
+        key = getInput();
         // Check for key press
         if (key == KeyInput::Exit) {
             gamestate = GameState::PauseMenu;

@@ -69,9 +69,9 @@ struct ItemID {
     static const int MRE = 21;
     static const int MillitaryBackpack = 22;
     static const int EnchantedBracelet = 23;
-    static const int GUEV1 = 24;
-    static const int GUEV2 = 25;
-    static const int BundleOfSpinach = 26;
+    static const int GTCDV1 = 24;
+    static const int GTCDV2 = 25;
+    static const int BundleOfBreadsticks = 26;
     // Rare
     static const int Headlights = 27;
     static const int TelescopeGlasses = 28;

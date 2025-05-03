@@ -8,7 +8,7 @@
 8|Worn Sneakers|Max SP +5_10% chance to not conume stamina when moving|0|1|5|0|0|0|0|0|0|0|0|0
 9|Spinach Leaf|Max SP +10%|0|0|0|0|0|0|0|0.1|0|0|0|0
 10|Ink Bottle|Leave ink marks behind as you move|0|1|0|0|0|0|0|0|0|0|0|0
-11|Comically Oversized Cookie|Effectiveness of Rations +8|0|0|0|8|0|0|0|0|0|0|0|0
+11|Gigiantic Cookie|Effectiveness of Rations +8|0|0|0|8|0|0|0|0|0|0|0|0
 12|Mutated Potato|Ration Capacity -1_+1 Ration every 50 steps|0|1|0|0|0|0|0|0|0|0|0|0
 13|Moldy Cheese|Effectiveness of Rations -25%_+20% chance to not consume Ration|0|1|0|0|0|0|0|0|0.25|0|0|0
 14|Sleeping Bag|+10 SP at the end of a level|0|1|0|0|0|0|0|0|0|0|0|0
@@ -21,8 +21,8 @@
 21|M.R.E.|Effectiveness of Rations +10_ Max SP +10%|1|0|10|0|0|0|0|0.1|0|0|0|0
 22|Millitary Backpack|Ration Capacity +5_Effectiveness of Rations -10%|1|0|0|0|5|0|0|0|-0.1|0|0|0
 23|Enchanted Bracelet|+15 SP at the end of a level|1|1|0|0|0|0|0|0|0|0|0|0
-24|Guide to Underground Exploration (Vol 1)|Increase the amount of collectables by 2|1|1|0|0|0|0|0|0|0|0|0|0
-25|Guide to Underground Exploration (Vol 2)|20% chance to +3 stamina every step|1|1|0|0|0|0|0|0|0|0|0|0
+24|Guide to Cave Diving (Vol 1)|Increase the amount of collectables by 2|1|1|0|0|0|0|0|0|0|0|0|0
+25|Guide to Cave Diving (Vol 2)|20% chance to +3 stamina every step|1|1|0|0|0|0|0|0|0|0|0|0
 26|Bundle Of Breadsticks|Max SP +20%|1|0|0|0|0|0|0|0.2|0|0|0|0
 27|Headlights|FOV +3|2|0|0|0|3|0|0|0|0|0|0|0
 28|Telescope Glasses|FOV +75%, can no longer see yourself|2|1|0|0|0|0|0|0|0|0.75|0|0

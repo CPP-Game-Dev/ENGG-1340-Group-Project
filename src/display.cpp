@@ -136,11 +136,11 @@ bool isVisible(int y1, int x1, int y2, int x2, int fov) {
  * @param currentLevel the number of levels completed - 1
  */
 #pragma region DRAW LEVEL HUD
-void drawLevelHUD(const Player &player, int currentLevel) {
+void drawLevelHUD(const Player &player, int currentLevel, std::string &text) {
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
-    int height = 26, width = 23;
-    Vector2D anchor = Vector2D(int(maxY / 2) + 1, int(maxX / 2));
+    int height = 27, width = 23;
+    Vector2D anchor = Vector2D(int(maxY / 2) + 2, int(maxX / 2));
 
     // Draw background
     attron(COLOR_PAIR(6) | A_DIM);
@@ -159,14 +159,14 @@ void drawLevelHUD(const Player &player, int currentLevel) {
     attron(COLOR_PAIR(7));
     // Left
     for (int i = 0; i < height; i++)
-        mvaddstr(anchor.y - 14 + i, anchor.x - 22, " |");
+        mvaddstr(anchor.y - 15 + i, anchor.x - 22, " |");
 
     // Right
     for (int i = 0; i < height; i++)
-        mvaddstr(anchor.y - 14 + i, anchor.x + 22, "| ");
+        mvaddstr(anchor.y - 15 + i, anchor.x + 22, "| ");
 
     // Top
-    move(anchor.y - 14, anchor.x - 22);
+    move(anchor.y - 15, anchor.x - 22);
     for (int i = 0; i < width; i++)
         addstr("--");
 
@@ -181,8 +181,8 @@ void drawLevelHUD(const Player &player, int currentLevel) {
         addstr("--");
 
     // 6 Corners
-    mvaddstr(anchor.y - 14, anchor.x - 22, " +");
-    mvaddstr(anchor.y - 14, anchor.x + 22, "+ ");
+    mvaddstr(anchor.y - 15, anchor.x - 22, " +");
+    mvaddstr(anchor.y - 15, anchor.x + 22, "+ ");
     mvaddstr(anchor.y - 11, anchor.x - 22, " +");
     mvaddstr(anchor.y - 11, anchor.x + 22, "+ ");
     mvaddstr(anchor.y + 11, anchor.x - 22, " +");
@@ -191,8 +191,9 @@ void drawLevelHUD(const Player &player, int currentLevel) {
     attroff(COLOR_PAIR(7));
     attroff(A_BOLD);
 
-    std::string stamina = "Stamina: ", rations = "Rations: ",
-                pickaxes = "Pickaxes: ", level = "Layer ";
+    std::string stamina = "SP: ", rations = "Rations: ",
+                pickaxes = "Pickaxes: ", level = "Layer ",
+                line;
     stamina.append(std::to_string(player.getStamina()));
     stamina.append("/");
     stamina.append(std::to_string(player.getStaminaMax()));
@@ -206,13 +207,26 @@ void drawLevelHUD(const Player &player, int currentLevel) {
     pickaxes.append(std::to_string(player.getPickaxeCapacity()));
 
     level.append(std::to_string(currentLevel));
+    if(!text.compare("Energy Drink")) 
+        line.append("Consumed Energy Drink");
+    else {
+        line.append("Collected ");
+        line.append(text);
+    }
 
     attron(COLOR_PAIR(7));
-    mvaddstr(anchor.y - 13, anchor.x - 20, level.c_str());
-    mvaddstr(anchor.y - 13, anchor.x + 2, pickaxes.c_str());
-    mvaddstr(anchor.y - 12, anchor.x - 20, stamina.c_str());
-    mvaddstr(anchor.y - 12, anchor.x + 2, rations.c_str());
+    mvaddstr(anchor.y - 14, anchor.x - 10 - int(level.size()/2), level.c_str());
+    mvaddstr(anchor.y - 14, anchor.x + 10 - int(pickaxes.size()/2), pickaxes.c_str());
+    mvaddstr(anchor.y - 13, anchor.x - 10 - int(stamina.size()/2), stamina.c_str());
+    mvaddstr(anchor.y - 13, anchor.x + 10 - int(rations.size()/2), rations.c_str());
     attroff(COLOR_PAIR(7));
+
+    attron(COLOR_PAIR(1));
+    if(!text.empty()) {
+        mvaddstr(anchor.y - 12, anchor.x - int(line.size()/2), line.c_str());
+        text = "";
+    }
+    attroff(COLOR_PAIR(1));
 }
 
 /*
@@ -222,22 +236,22 @@ void drawLevelHUD(const Player &player, int currentLevel) {
 void drawHUD() {
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
-    int height = 26, width = 23;
-    Vector2D anchor = Vector2D(int(maxY / 2) + 1, int(maxX / 2));
+    int height = 27, width = 23;
+    Vector2D anchor = Vector2D(int(maxY / 2) + 2, int(maxX / 2));
 
     // Draw border
     attron(A_BOLD);
     attron(COLOR_PAIR(7));
     // Left
     for (int i = 0; i < height; i++)
-        mvaddstr(anchor.y - 14 + i, anchor.x - 22, " |");
+        mvaddstr(anchor.y - 15 + i, anchor.x - 22, " |");
 
     // Right
     for (int i = 0; i < height; i++)
-        mvaddstr(anchor.y - 14 + i, anchor.x + 22, "| ");
+        mvaddstr(anchor.y - 15 + i, anchor.x + 22, "| ");
 
     // Top
-    move(anchor.y - 14, anchor.x - 22);
+    move(anchor.y - 15, anchor.x - 22);
     for (int i = 0; i < width; i++)
         addstr("--");
 
@@ -247,8 +261,8 @@ void drawHUD() {
         addstr("--");
 
     // 4 Corners
-    mvaddstr(anchor.y - 14, anchor.x - 22, " +");
-    mvaddstr(anchor.y - 14, anchor.x + 22, "+ ");
+    mvaddstr(anchor.y - 15, anchor.x - 22, " +");
+    mvaddstr(anchor.y - 15, anchor.x + 22, "+ ");
     mvaddstr(anchor.y + 11, anchor.x - 22, " +");
     mvaddstr(anchor.y + 11, anchor.x + 22, "+ ");
 
@@ -267,7 +281,7 @@ void drawHUD() {
  */
 #pragma region DRAW LEVEL
 void Display::drawLevel(const Level &level, const Player &player,
-                        int currentLevel) {
+                        int currentLevel, std::string &text) {
     clear();
     TileMap maze = level.getMaze();
     int size = level.getSize();
@@ -277,13 +291,13 @@ void Display::drawLevel(const Level &level, const Player &player,
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
     // Initialize top left anchor to center
-    Vector2D anchor = Vector2D(int(maxY / 2) + 1, int(maxX / 2));
+    Vector2D anchor = Vector2D(int(maxY / 2) + 2, int(maxX / 2));
 
     auto isPerimeter = [](int y, int x, int size) {
         return (y == -1 || x == -1 || y == size || x == size);
     };
 
-    drawLevelHUD(player, currentLevel);
+    drawLevelHUD(player, currentLevel, text);
 
     for (int i = -1; i <= size; i++) {
         for (int j = -1; j <= size; j++) {
@@ -349,8 +363,10 @@ void Display::drawLevel(const Level &level, const Player &player,
         }
         // printw("\n");
     }
+    attron(COLOR_PAIR(1));
     if(!player.hasItem(ItemID::TelescopeGlasses))
         mvaddstr(anchor.y, anchor.x, "P1");
+    attroff(COLOR_PAIR(1));
 }
 #pragma endregion
 
@@ -421,9 +437,41 @@ void Display::drawGameOverMenu(int highlighted) {
 
 void Display::drawHelpMenu(int highlighted) {
     drawHUD();
+
+    int maxY, maxX;
+    getmaxyx(stdscr, maxY, maxX);
+    // Initialize top left anchor to center
+    Vector2D anchor = Vector2D(int(maxY / 2), int(maxX / 2));
+
+    std::vector<std::string> text = {
+        "You're stuck in a dungeon without end.",
+        "Moving around drains your stamina.",
+        "Eat rations to regain stamina.",
+        "Energy drinks has a similar effect,",
+        "but cannot be carried.",
+        "Equip yourself with items from chests.",
+        "Use pickaxes to break through walls.",
+        "And manage your rations carefully.",
+        "Try your best to survive.",
+        "We'll see how long you can last."
+    };
+
+    anchor.y -= int(text.size() / 2);
+
+    attron(COLOR_PAIR(7) | A_ITALIC);
+    for (int i = 0; i < text.size(); i++) {
+        int len = strlen(text[i].c_str());
+        // Use visibleIndex for highlighting calculation instead
+
+        mvprintw(anchor.y + i, int(anchor.x - len / 2), " %s",
+                 text[i].c_str());
+
+    }
+    attroff(COLOR_PAIR(7) |  A_ITALIC);
+
     std::vector<std::string> options = {"Back"};
 
-    drawMenu(options, highlighted);
+    drawMenu(options, highlighted, int(text.size()/2) + 1);
 }
 
 void Display::drawInventoryMenu(

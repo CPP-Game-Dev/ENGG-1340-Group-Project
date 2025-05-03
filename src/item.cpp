@@ -152,11 +152,9 @@ void Item::update(Player &player) {
             this->counter = 0;
         }
         break;
-    case ItemID::GUEV2:
+    case ItemID::GTCDV2:
         if(player.getPrevPos() != player.getPos() && rand() % 5 < 1)
             player.setStamina(player.getStamina() + 3);
         break;
-
-
     }
 }
