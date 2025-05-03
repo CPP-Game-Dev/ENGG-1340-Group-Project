@@ -2,11 +2,13 @@
 #include "include/enums.h"
 #include "include/level.h"
 #include "include/vector2d.h"
+#include "include/item.h"
 #include <assert.h>
 #include <cmath>
 #include <ncurses.h>
 #include <string.h>
 #include <string>
+#include <sstream>
 
 #define MEGAPIXEL "  "
 #define FOG "::"
@@ -144,8 +146,8 @@ void drawLevelHUD(const Player &player, int currentLevel) {
     attron(COLOR_PAIR(6) | A_DIM);
     for (int i = 0; i < 21; i++) {
         move(anchor.y - 10 + i,
-             anchor.x - 19); // Move one character right to avoid left border
-        for (int j = 0; j < 19; j++) { // Reduced from 21 to 19 fog blocks
+             anchor.x - 20); // Move one character right to avoid left border
+        for (int j = 0; j < 21; j++) { // Reduced from 21 to 19 fog blocks
             addstr(FOG);
         }
     }
@@ -157,11 +159,11 @@ void drawLevelHUD(const Player &player, int currentLevel) {
     attron(COLOR_PAIR(7));
     // Left
     for (int i = 0; i < height; i++)
-        mvaddstr(anchor.y - 14 + i, anchor.x - 20, " |");
+        mvaddstr(anchor.y - 14 + i, anchor.x - 22, " |");
 
     // Right
     for (int i = 0; i < height; i++)
-        mvaddstr(anchor.y - 14 + i, anchor.x + 20, "| ");
+        mvaddstr(anchor.y - 14 + i, anchor.x + 22, "| ");
 
     // Top
     move(anchor.y - 14, anchor.x - 22);
@@ -270,7 +272,7 @@ void Display::drawLevel(const Level &level, const Player &player,
     TileMap maze = level.getMaze();
     int size = level.getSize();
     int playerY = player.getPos().y, playerX = player.getPos().x;
-    int fov = 4;
+    int fov = player.getFov();
 
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
@@ -286,7 +288,22 @@ void Display::drawLevel(const Level &level, const Player &player,
     for (int i = -1; i <= size; i++) {
         for (int j = -1; j <= size; j++) {
             move(anchor.y + i - playerY, anchor.x + (j - playerX) * 2);
-            if (isVisible(i, j, playerY, playerX, fov)) {
+            if (isVisible(i, j, playerY, playerX, fov) || player.hasItem(ItemID::SunSeed)) {
+                // Skip drawing if it's outside of HUD range
+                if (i <= playerY - 10 || j <= playerX - 10 || j >= playerX + 10 ||
+                    i >= playerY + 10) {
+                    continue;
+                }
+
+                // Calculate the screen coordinates before drawing
+                int screenY = anchor.y + i - playerY;
+                int screenX = anchor.x + (j - playerX) * 2;
+
+                // Skip drawing if we're at a border location
+                if (screenX == anchor.x - 20 || screenX == anchor.x + 20) {
+                    continue;
+                }
+
                 if (isPerimeter(i, j, size)) {
                     // Tile inside FOV but is part of perimeter
                     attron(COLOR_PAIR(2));
@@ -332,7 +349,8 @@ void Display::drawLevel(const Level &level, const Player &player,
         }
         // printw("\n");
     }
-    mvaddstr(anchor.y, anchor.x, "P1");
+    if(!player.hasItem(ItemID::TelescopeGlasses))
+        mvaddstr(anchor.y, anchor.x, "P1");
 }
 #pragma endregion
 
@@ -422,16 +440,27 @@ void Display::drawInventoryMenu(
 }
 
 void Display::drawItemMenu(int highlighted, std::string desc) {
+    drawHUD();
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
     // Initialize top left anchor to center
-    Vector2D anchor = Vector2D(int(maxY / 2), int(maxX / 2));
-    int len = strlen(desc.c_str());
+    Vector2D anchor = Vector2D(int(maxY / 2)-1, int(maxX / 2));
+    std::stringstream ss(desc);
+    std::vector<std::string> lines;
+    std::string line;
+    while(std::getline(ss, line, '_'))
+        lines.push_back(line);
+
+    int dy = lines.size(), len;
     attron(COLOR_PAIR(5));
-    mvprintw(anchor.y - 1, int(anchor.x - len / 2), "%s", desc.c_str());
+    for(int i = 0; i < dy; i++) {
+        len = strlen(lines[i].c_str());
+        mvprintw(anchor.y - dy + i, int(anchor.x - len / 2), "%s", lines[i].c_str());
+    }
+    
     attroff(COLOR_PAIR(5));
     std::vector<std::string> options = {"Discard", "Back"};
-    drawMenu(options, highlighted);
+    drawMenu(options, highlighted, 2);
 }
 
 /*

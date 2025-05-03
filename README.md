@@ -95,11 +95,12 @@ The keybindings can be configured in the game's configuration file, which are lo
 
 #### 6. Multiple Difficulty Levels
 - **Three Difficulty Options**: 
-  - Catacombs (Easy): Slower map growth, more generous stamina regeneration (70%)
-  - Labyrinth (Medium): Moderate map growth, balanced stamina regeneration (50%)
-  - Purgatory (Hard): Rapid map growth, minimal stamina regeneration (30%)
+  - Catacombs (Easy): Slower map growth, more generous stamina regeneration (75%)
+  - Labyrinth (Medium): Moderate map growth, balanced stamina regeneration (55%)
+  - Purgatory (Hard): Rapid map growth, minimal stamina regeneration (40%)
 - **Scaling Complexity**: Maps increase in size as players progress through levels
 - **Resource Management**: Different difficulty levels affect how scarce resources are
+
 
 ### Code Structure
 The project is structured modularly and is organized into several key components:

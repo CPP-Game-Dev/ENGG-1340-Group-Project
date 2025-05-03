@@ -173,9 +173,21 @@ void Level::placeItems(int count) {
     std::vector<Vector2D> pathList = std::vector<Vector2D>();
     for (int i = 0; i < this->size; i++)
         for (int j = 0; j < this->size; j++)
-            if (this->maze[i][j] == TileObject::None)
+            if (this->maze[i][j] == TileObject::None && i > 0 && j > 0)
                 pathList.push_back(Vector2D(i, j));
+    
     std::vector<Vector2D> selectedTiles = getRandPaths(pathList, count);
+
+    // Fixed 1 of each of collectable
+    for(int i = 0; i < 4; i++) {
+        Vector2D pos = selectedTiles[i];
+        this->maze[pos.y][pos.x] = items[i];
+    }
+    selectedTiles.erase(selectedTiles.begin(), selectedTiles.begin() + 4);
+    if (count <= 4)
+        return;
+        
+    // Weighted randomization after placing 1 of each collectable 
     for (auto pos : selectedTiles) {
         TileObject item = TileObject::None;
         int rnd = rand() % 100;

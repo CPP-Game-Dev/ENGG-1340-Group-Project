@@ -125,7 +125,7 @@ void Item::update(Player &player) {
     case ItemID::MutatedPotato:
         if (player.getPrevPos() != player.getPos())
             this->counter++;
-        if (this->counter >= 60) {
+        if (this->counter >= 50) {
             if (player.hasItem(ItemID::SuspiciousPills))
                 player.setStamina(player.getStamina() +
                                   int(player.getStaminaMax() * 0.1f));
@@ -136,5 +136,27 @@ void Item::update(Player &player) {
             this->counter = 0;
         }
         break;
+    case ItemID::SuspiciousPills:
+        if(player.getPrevPos() != player.getPos())
+            this->counter++;
+        if(this->counter >=3) {
+            this->bonusRationRegen += 1;
+            this->counter = 0;
+        }
+        break;
+    case ItemID::HikingStaff:
+        if(player.getPrevPos() != player.getPos())
+            this->counter++;
+        if(this->counter >=3) {
+            this->bonusStaminaMax += 1;
+            this->counter = 0;
+        }
+        break;
+    case ItemID::GUEV2:
+        if(player.getPrevPos() != player.getPos() && rand() % 5 < 1)
+            player.setStamina(player.getStamina() + 3);
+        break;
+
+
     }
 }

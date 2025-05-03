@@ -88,5 +88,6 @@ struct ItemID {
     static const int QuadEspresso = 38;
     static const int SunSeed = 39;
     static const int AStar = 40;
+    static const int RedBull = 41;
 };
 

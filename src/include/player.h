@@ -11,8 +11,8 @@ const int DEFAULT_RATION_REGEN = 15;
 const int DEFAULT_RATION_REGEN_MULT = 1;
 const int DEFAULT_FOV = 2;
 const int DEFAULT_FOV_MULT = 1;
-const int DEFAULT_RATION_CAPACITY = 2;
-const int DEFAULT_PICKAXE_CAPACITY = 1;
+const int DEFAULT_RATION_CAPACITY = 3;
+const int DEFAULT_PICKAXE_CAPACITY = 2;
 const int DEFAULT_RATION_CAPACITY_MULT = 1;
 const int DEFAULT_PICKAXE_CAPACITY_MULT = 1;
 
@@ -56,6 +56,8 @@ class Player {
     Player(int baseStaminaMax, int baseRationRegen, int baseFov,
            int baseRationCapacity, int basePickaxeCapacity, Vector2D pos,
            std::vector<std::unique_ptr<Item> > &&inventory);
+    
+    void resetStats();
 
 #pragma region Inventory Management
 
@@ -64,7 +66,7 @@ class Player {
     void removeItem(
         int itemID,
         std::vector<std::vector<std::unique_ptr<Item> > > &unobtainedItems);
-    bool hasItem(int itemID);
+    bool hasItem(int itemID) const;
 
     inline const std::vector<std::unique_ptr<Item> > &getInventory() const {
         return this->inventory;
