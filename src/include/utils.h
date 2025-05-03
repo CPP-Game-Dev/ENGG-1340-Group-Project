@@ -10,28 +10,19 @@
 #include <string>
 #include <vector>
 
-// The utils namespace provides utility functions that assist in the creation
-// and management of various objects throughout the project.
-// It mainly offers a custom implementation of make_unique, along with helper
-// functions for creating instances of the Item class based on different
-// initialization requirements.
-
 const std::string ITEM_DATA = "./src/data/items.bsv";
 
 namespace utils {
-
-// make_unique
-// A utility function that replicates the functionality of std::make_unique,
-// which was introduced in C++14. It ensures type safety and prevents the
-// misuse of raw pointers by encouraging the use of smart pointers.
-// Arrays are explicitly not supported to maintain consistency and safety.
 
 template <typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args &&...args) {
     static_assert(!std::is_array<T>::value, "arrays not supported");
     return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
-
+ /*
+ * Creates a unique_ptr<Item> with given parameters.
+ * Wrapper for cleaner item creation using make_unique.
+ */
 inline std::unique_ptr<Item> createItem(int id, const std::string &name,
                                         const std::string &description,
                                         int rarity, bool hasCustomBehavior,
@@ -41,6 +32,14 @@ inline std::unique_ptr<Item> createItem(int id, const std::string &name,
                                     hasCustomBehavior, flatBonus, mult);
 }
 
+/*
+ * Loads item data from ITEM_DATA into unobtainedItems vector.
+ *
+ * Each item is parsed from a BSV (bar-separated values) file and placed
+ * into the appropriate rarity tier (0 to 3).
+ *
+ * @param unobtainedItems Vector of 4 rarity-based item lists to populate.
+ */
 inline void
 loadItems(std::vector<std::vector<std::unique_ptr<Item> > > &unobtainedItems) {
     // Resize to hold all rarity levels (0-3)
