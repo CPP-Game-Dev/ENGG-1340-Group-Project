@@ -346,13 +346,18 @@ void drawMenu(std::vector<std::string> options, int highlighted, int dy = 0,
     Vector2D anchor = Vector2D(int(maxY / 2), int(maxX / 2));
     anchor.y -= int(options.size() / 2);
     anchor.y += dy;
+
+    // Keep track of visible options for highlighting
+    int visibleIndex = 0;
+
     for (int i = 0; i < options.size(); i++) {
         if (options[i] == "\n") { // Special case, creates an empty row instead
-            highlighted++;
             continue;
         }
+
         int len = strlen(options[i].c_str());
-        if (i == highlighted % options.size()) {
+        // Use visibleIndex for highlighting calculation instead
+        if (visibleIndex == highlighted % options.size()) {
             attron(COLOR_PAIR(7));
             mvprintw(anchor.y + i, int(anchor.x - len / 2) + dx, "< %s >",
                      options[i].c_str());
@@ -363,6 +368,7 @@ void drawMenu(std::vector<std::string> options, int highlighted, int dy = 0,
                      options[i].c_str());
             attroff(COLOR_PAIR(5) | A_BOLD);
         }
+        visibleIndex++;
     }
     refresh();
 }

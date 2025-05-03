@@ -589,16 +589,27 @@ class Main {
                 Display::drawInventoryMenu(highlighted, player.getInventory());
                 if (!confirmed) {
                     key = getInput();
-                    menuSelection(key, player.getInventory().size() + 1);
+                    // Use the maximum of either 5 or actual inventory size,
+                    // plus 1 for Back button
+                    menuSelection(
+                        key,
+                        std::max(5, (int)player.getInventory().size()) + 1);
                     break;
                 }
-                if (highlighted == player.getInventory().size()) // Back
+
+                // When confirming a selection
+                if (highlighted ==
+                    std::max(5, (int)player.getInventory().size())) {
+                    // Selected the Back button
                     gamestate = GameState::PauseMenu;
-                else {
+                } else if (highlighted < player.getInventory().size()) {
+                    // Selected an actual item
                     selectedItemDesc =
                         player.getInventory()[highlighted]->description;
                     selectedItemID = player.getInventory()[highlighted]->id;
+                    gamestate = GameState::ItemMenu;
                 }
+                // Otherwise selected an empty slot, do nothing special
 
                 highlighted = 0;
                 confirmed = false;
@@ -645,8 +656,8 @@ class Main {
                 case 0: // Continue
                     gamestate = GameState::InLevel;
                     break;
-                case 1:          // New Game
-                    resetGame(); // Add this line
+                case 1: // New Game
+                    resetGame();
                     gamestate = GameState::DifficultyMenu;
                     break;
                 case 2: // Inventory menu
