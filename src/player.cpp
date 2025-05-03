@@ -6,21 +6,17 @@
 
 /*
  * Constructor for default player
- *
  * Initializes player with default base stats, multipliers,
  * and starting position (0, 0).
  *
  * Usage:
  * Player player;
- *
- * @return none
  */
 Player::Player() {
     resetStats();
 }
 /*
  * Constructor with custom base stats and inventory
- *
  * Initializes player with provided stats, position, and item list.
  *
  * Usage:
@@ -33,7 +29,6 @@ Player::Player() {
  * @param basePickaxeCapacity Initial base pickaxe capacity
  * @param pos                 Starting position
  * @param inventory           Initial inventory (moved)
- * @return none
  */
 Player::Player(int baseStaminaMax, int baseRationRegen, int baseFov,
                int baseRationCapacity, int basePickaxeCapacity, Vector2D pos,
@@ -84,14 +79,12 @@ void Player::resetStats() {
 
 /*
  * Adds an item to the player's inventory
- *
  * Transfers ownership of the given item to the inventory.
  *
  * Usage:
  * player.addItem(std::make_unique<Item>());
  *
  * @param item Item to add (unique pointer)
- * @return void
  */
 void Player::addItem(std::unique_ptr<Item> &item,
                      std::vector<std::unique_ptr<Item> > &itemList) {
@@ -133,6 +126,16 @@ void Player::removeItem(
         this->inventory.end());
 }
 
+/*
+ * Checks if the player has a specific item
+ * Iterates through the inventory to see if an item with the given ID exists.
+ *
+ * Usage:
+ * bool has = player.hasItem(5);
+ *
+ * @param itemID ID of the item to look for
+ * @return true if the item exists in the inventory, false otherwise
+ */
 bool Player::hasItem(int itemID) const {
     for (auto &item : this->inventory)
         if (item->id == itemID)
@@ -152,15 +155,7 @@ bool Player::hasItem(int itemID) const {
  * @return void
  */
 void Player::preUpdate() {
-
-    // Prepares the player stats for update by resetting them to their base
-    // values. Also resets all stat multipliers to their default value (1.0).
-    /*
-     * TODO(Jenna): set all current stats to their corrosponding base stats
-     *              (don't touch the ones without a base stat)
-     *              And set all mults to 1
-     */
-
+    
     this->staminaMax = this->baseStaminaMax;
     this->rationRegen = this->baseRationRegen;
     this->fov = this->baseFov;
@@ -173,8 +168,6 @@ void Player::preUpdate() {
     this->rationCapacityMult = 1.0f;
     this->pickaxeCapacityMult = 1.0f;
 
-    // Note: Stamina itself is NOT reset here; it depends on gameplay logic
-    // elsewhere.
 }
 
 /*
@@ -185,17 +178,9 @@ void Player::preUpdate() {
  *
  * Usage:
  * player.update();
- *
- * @return void
  */
 void Player::update() {
-    /*
-     * TODO(James): loop through player inventory and call update() of each item
-     * (if hasCustomBehavior == true) Add the flat stat bonuses to the player's
-     * current stats respectively Add the stat mults to the player's respective
-     * mults after all that, multiply each of the player's current stat with
-     * their respective mult
-     */
+
     this->staminaMax = this->baseStaminaMax;
     this->rationRegen = this->baseRationRegen;
     this->fov = this->baseFov;
@@ -256,7 +241,6 @@ void Player::update() {
 
 /*
  * Post-update stat validation
- *
  * Ensures values like stamina and capacity remain in valid ranges.
  * Resets negative multipliers back to 1.0f.
  *
