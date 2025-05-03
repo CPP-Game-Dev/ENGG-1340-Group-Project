@@ -127,12 +127,13 @@ bool isVisible(int y1, int x1, int y2, int x2, int fov) {
     return std::round(std::sqrt(dy * dy + dx * dx)) <= fov;
 }
 
+
+#pragma region DRAW LEVEL HUD
 /*
  * Draw a HUD with level data & background
  * @param player Player
  * @param currentLevel the number of levels completed - 1
  */
-#pragma region DRAW LEVEL HUD
 void drawLevelHUD(const Player &player, int currentLevel, std::string &text) {
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
@@ -269,13 +270,14 @@ void drawHUD() {
 #pragma endregion
 
 
+
+#pragma region DRAW LEVEL
  /*
  * Renders the visible portion of the maze centered on the player
  * @param level current Level object
  * @param player current Player object
  * @param currentLevel index of current level (0 indexed)
  */
-#pragma region DRAW LEVEL
 void Display::drawLevel(const Level &level, const Player &player,
                         int currentLevel, std::string &text) {
     clear();
@@ -369,6 +371,12 @@ void Display::drawLevel(const Level &level, const Player &player,
 
 #pragma region DRAW MENU
 
+/*
+ * Displays a menu with selectable options and highlights current selection
+ * @param options list of menu options
+ * @param highlighted index of highlighted option
+ * @return void
+ */
 void drawMenu(std::vector<std::string> options, int highlighted, int dy = 0,
               int dx = 0) {
     int maxY, maxX;
@@ -432,7 +440,6 @@ void Display::drawDifficultyMenu(int highlighted) {
 
 /*
  * Displays the pause menu during gameplay
- *
  * @param highlighted index of selected item
  * @return void
  */
@@ -454,6 +461,7 @@ void Display::drawGameOverMenu(int highlighted) {
 
     drawMenu(options, highlighted);
 }
+
 /*
  * Displays the help menu screen
  * @param highlighted index of selected item
@@ -545,11 +553,13 @@ void Display::drawItemMenu(int highlighted, std::string desc) {
     drawMenu(options, highlighted, 2);
 }
 
+
+#pragma region DRAW ANIMATION
+
 /*
  * Displays the intro screen
  * @return void
  */
-#pragma region DRAW ANIMATION
 void Display::drawIntro() {
     wclear(stdscr);
     wrefresh(stdscr);
@@ -666,9 +676,12 @@ void Display::drawScrollingText(const std::string& text, std::pair<int, int> pos
 #pragma endregion
 
 
+#pragma region TERMINATE
 
 /*
  * Terminates ncurses session and restores terminal
  * @return void
  */
 void Display::terminate() { endwin(); }
+
+#pragma endregion
