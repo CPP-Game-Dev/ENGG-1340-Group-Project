@@ -1,6 +1,6 @@
 # ENGG 1340 Group Project
 
-A rogue-like maze exploration game where you navigate through procedurally generated levels and try to get to the exit before your stamina runs out.
+A rogue-like maze exploration game where you navigate through procedurally generated levels and try to get to the exit before your stamina runs out. Your vision is limited, and you must manage your stamina carefully to avoid getting lost in the maze. 
 
 As you navigate the maze, you will encounter various items that can help you on your journey:
 - **Rations** are consumables that restore stamina, which heals your stamina based on your ration regeneration rate. You are only able to carry 2 rations at once, so use it wisely.
@@ -58,6 +58,7 @@ The default controls are:
 - `s` - Move down
 - `a` - Move left
 - `b` - Move right
+- `f` - Confirm selection (used in the game's UI menus)
 - `e` - Use pickaxe (break walls)
 - `r` - Use ration (restore stamina)
 - `q` - **Pause menu**
