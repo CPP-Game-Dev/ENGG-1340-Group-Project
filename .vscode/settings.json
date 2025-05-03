@@ -51,6 +51,8 @@
         "__hash_table": "cpp",
         "cstring": "cpp",
         "map": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "__bit_reference": "cpp",
+        "ios": "cpp"
     }
 }

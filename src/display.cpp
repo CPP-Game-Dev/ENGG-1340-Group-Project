@@ -156,11 +156,11 @@ void drawLevelHUD(const Player &player, int currentLevel) {
     attron(COLOR_PAIR(7));
     // Left
     for (int i = 0; i < height; i++)
-        mvaddstr(anchor.y - 14 + i, anchor.x - 22, " |");
+        mvaddstr(anchor.y - 14 + i, anchor.x - 20, " |");
 
     // Right
     for (int i = 0; i < height; i++)
-        mvaddstr(anchor.y - 14 + i, anchor.x + 22, "| ");
+        mvaddstr(anchor.y - 14 + i, anchor.x + 20, "| ");
 
     // Top
     move(anchor.y - 14, anchor.x - 22);
@@ -269,7 +269,6 @@ void Display::drawLevel(const Level &level, const Player &player,
     TileMap maze = level.getMaze();
     int size = level.getSize();
     int playerY = player.getPos().y, playerX = player.getPos().x;
-    // int fov = player.getFov();
     int fov = 4;
 
     int maxY, maxX;
@@ -281,18 +280,12 @@ void Display::drawLevel(const Level &level, const Player &player,
         return (y == -1 || x == -1 || y == size || x == size);
     };
 
-    /*
-    10: -1
-    11: -1, 0
-    12: -1, 0, 1
-    */
-
     drawLevelHUD(player, currentLevel);
 
     for (int i = -1; i <= size; i++) {
-        // Move cursor to 1 mp left of anchor point
-        move(anchor.y + i - playerY, anchor.x - 2 - playerX * 2);
         for (int j = -1; j <= size; j++) {
+            // Fix: Position cursor correctly with proper tile offsets
+            move(anchor.y + i - playerY, anchor.x + (j - playerX) * 2);
             if (isVisible(i, j, playerY, playerX, fov)) {
                 if (isPerimeter(i, j, size)) {
                     // Tile inside FOV but is part of perimeter
