@@ -549,11 +549,11 @@ void Display::drawItemMenu(int highlighted, std::string desc) {
     drawMenu(options, highlighted, 2);
 }
 
-#pragma region Draw Animation
 /*
  * Displays the intro screen
  * @return void
  */
+#pragma region DRAW ANIMATION
 void Display::drawIntro() {
     wclear(stdscr);
     wrefresh(stdscr);
@@ -669,7 +669,7 @@ void Display::drawScrollingText(const std::string& text, std::pair<int, int> pos
     }
     flushinp();
 }
-
+#pragma endregion
 
 
 
