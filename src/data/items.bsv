@@ -16,7 +16,7 @@
 16|Camping Flashlight|FOV +2|1|0|0|0|2|0|0|0|0|0|0|0
 17|Charm Of Satiation|+5 SP when picking up anything_Max SP +20|1|1|20|0|0|0|0|0|0|0|0|0
 18|Emergency Rations|+100% SP when it reaches 0 (once)|1|0|0|0|0|0|0|0|0|0|0|0
-19|Roller Skates|Max Stamin +5_33% chance to not consume energy when moving|1|1|5|0|0|0|0|0|0|0|0|0
+19|Roller Skates|Max Stamin -25_33% chance to not consume energy when moving|1|1|-25|0|0|0|0|0|0|0|0|0
 20|Lit Torch|FOV +3_Burns out after 150 steps|1|1|0|0|3|0|0|0|0|0|0|0
 21|M.R.E.|Effectiveness of Rations +10_ Max SP +10%|1|0|10|0|0|0|0|0.1|0|0|0|0
 22|Millitary Backpack|Ration Capacity +5_Effectiveness of Rations -10%|1|0|0|0|5|0|0|0|-0.1|0|0|0
