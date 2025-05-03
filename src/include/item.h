@@ -8,6 +8,11 @@
 class Player;
 
 
+ /*
+ * Represents an item that grants stat bonuses or effects to the player.
+ * Items are usually loaded from data and stored in inventory.
+ */
+
 class Item {
   public:
     int id;
@@ -31,14 +36,9 @@ class Item {
     float bonusPickaxeCapacityMult;
 
   //constructors
-  // default constructor
-  //setting all the bonuses and counters to 0.
     Item();
-  //overloaded constructor:
     Item(int id, const std::string& name, const std::string& description, int rarity, bool hasCustomBehavior, const std::vector<int> &flatBonus, const std::vector<float> &mult);
-    //initialises an item with specific values.
-    //used in loading items data 
-    //implementation
+
     void update(Player& player);
   
 };
