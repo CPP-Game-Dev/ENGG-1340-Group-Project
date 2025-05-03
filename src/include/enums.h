@@ -38,7 +38,7 @@ typedef std::vector<std::vector<TileObject> > TileMap;
 enum Difficulty {
     Catacombs, // Easy
     Labyrinth, // Medium
-    Purgatory  // Hardx
+    Purgatory  // Hard
 };
 
 // Enum to store meaningful keyboard inputs
