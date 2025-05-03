@@ -220,7 +220,7 @@ void drawLevelHUD(const Player &player, int currentLevel, std::string &text) {
 
     attron(COLOR_PAIR(1));
     if(!text.empty()) {
-        mvaddstr(anchor.y - 12, anchor.x - int(line.size()/2), line.c_str());
+        mvaddstr(anchor.y - 12, anchor.x + 1 - int(line.size()/2), line.c_str());
         text = "";
     }
     attroff(COLOR_PAIR(1));
@@ -381,6 +381,7 @@ void drawMenu(std::vector<std::string> options, int highlighted, int dy = 0,
     Vector2D anchor = Vector2D(int(maxY / 2), int(maxX / 2));
     anchor.y -= int(options.size() / 2);
     anchor.y += dy;
+    anchor.x -= 1;
 
     // Keep track of visible options for highlighting
     int visibleIndex = 0;
