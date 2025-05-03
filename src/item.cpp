@@ -51,12 +51,10 @@ Item::Item(ItemID id) {
  * Initializes an Item with specific values provided by parameters.
  * All bonus stats are initialized to zero. Typically used when reading from
  * file.
- *
  * @param id          Unique identifier for the item
  * @param name        Name of the item
  * @param description Short description of the item
  * @param property    Integer representing item rarity or other property
- * @return none
  */
 Item::Item(ItemID id, const std::string &name, const std::string &description,
            int property) {
@@ -85,8 +83,6 @@ Item::Item(ItemID id, const std::string &name, const std::string &description,
  * Defines logic for items that have dynamic effects on the player.
  * Only executed if hasCustomBehavior is set to true.
  * Empty by default — override in derived classes if needed.
- *
  * @param player Reference to the Player object affected by the item
- * @return void
  */
 void Item::update(Player &player) {}
