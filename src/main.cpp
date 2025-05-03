@@ -377,6 +377,8 @@ class Main {
 
             if (tile == TileObject::Wall) {
                 currentLevel.setTile(newPos, TileObject::None);
+                if(player.hasItem(ItemID::MiningHelmet) && rand() % 2 < 1)
+                    return;
                 player.setPickaxesOwned(player.getPickaxesOwned() - 1);
             }
         }
