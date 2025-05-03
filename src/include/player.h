@@ -31,9 +31,9 @@ class Player {
     int basePickaxeCapacity; // The number of pickaxes that can be carried
 #pragma endregion
 #pragma region Current Stats
-    int stamina;         // Current stamina
-    int staminaMax;      // Current max stamina
-    int rationRegen;     // Current ration regeneration amount
+    int stamina;     // Current stamina
+    int staminaMax;  // Current max stamina
+    int rationRegen; // Current ration regeneration amount
     int rationsOwned;
     int pickaxesOwned;
     int fov;             // Current FOV
@@ -58,14 +58,19 @@ class Player {
            std::vector<std::unique_ptr<Item> > &&inventory);
 
 #pragma region Inventory Management
-  
-    void addItem(std::unique_ptr<Item> &item, std::vector<std::unique_ptr<Item> > &itemList);
-    void removeItem(int itemID, std::vector<std::vector<std::unique_ptr<Item> > > &unobtainedItems);
+
+    void addItem(std::unique_ptr<Item> &item,
+                 std::vector<std::unique_ptr<Item> > &itemList);
+    void removeItem(
+        int itemID,
+        std::vector<std::vector<std::unique_ptr<Item> > > &unobtainedItems);
     bool hasItem(int itemID);
 
-    inline const std::vector<std::unique_ptr<Item>>& getInventory() const { return this->inventory; };
-    inline const int getItemCount() const { return this->inventory.size(); }
-  
+    inline const std::vector<std::unique_ptr<Item> > &getInventory() const {
+        return this->inventory;
+    };
+    inline int getItemCount() const { return this->inventory.size(); }
+
 #pragma endregion
 
     void preUpdate();  // Prepares the player instance for update()

@@ -285,7 +285,6 @@ void Display::drawLevel(const Level &level, const Player &player,
 
     for (int i = -1; i <= size; i++) {
         for (int j = -1; j <= size; j++) {
-            // Fix: Position cursor correctly with proper tile offsets
             move(anchor.y + i - playerY, anchor.x + (j - playerX) * 2);
             if (isVisible(i, j, playerY, playerX, fov)) {
                 if (isPerimeter(i, j, size)) {

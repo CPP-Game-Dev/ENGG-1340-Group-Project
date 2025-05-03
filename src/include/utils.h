@@ -16,7 +16,6 @@
 // functions for creating instances of the Item class based on different
 // initialization requirements.
 
-// Fix: Update path to point to correct location
 const std::string ITEM_DATA = "./src/data/items.bsv";
 
 namespace utils {
