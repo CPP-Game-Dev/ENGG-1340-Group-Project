@@ -366,13 +366,9 @@ void Display::drawLevel(const Level &level, const Player &player,
 }
 #pragma endregion
 
-/*
- * Displays a menu with selectable options and highlights current selection
- * @param options list of menu options
- * @param highlighted index of highlighted option
- * @return void
- */
+
 #pragma region DRAW MENU
+
 void drawMenu(std::vector<std::string> options, int highlighted, int dy = 0,
               int dx = 0) {
     int maxY, maxX;
@@ -557,9 +553,9 @@ void Display::drawItemMenu(int highlighted, std::string desc) {
 void Display::drawIntro() {
     wclear(stdscr);
     wrefresh(stdscr);
-    drawScrollingText("Presented by Group 137...                   ", std::make_pair(20, 0));
-    usleep(50000);
-
+    drawScrollingText("Presented by Group 137...                   ", std::make_pair(0, 0));
+    usleep(500000);
+    
     std::vector<std::string> title = {
         "       HH   HH  EEEEEEE  LL       LL       \n",
         "       HH   HH  EE       LL       LL       \n",
@@ -613,7 +609,7 @@ void Display::drawIntro() {
                 start_y + 8, x_shift + 52/2 + i);
         usleep(50000);
     }
-
+    usleep(500000);
     flushinp();
     wclear(stdscr);
     wrefresh(stdscr);
@@ -629,17 +625,12 @@ void Display::drawIntro() {
  * @param bold if true, text will be bold
  * @return void
  */
-void Display::drawScrollingText(const std::string& text, std::pair<int, int> pos, int updates, bool mirrored, bool flush_screen, bool bold) {
+void Display::drawScrollingText(const std::string& text, std::pair<int, int> pos, int updates, bool mirrored, bool bold) {
     int y_max, x_max;                            
     getmaxyx(stdscr, y_max, x_max);
     
     if (pos.first == -1 || pos.second == -1) {
         pos = {y_max/2, x_max/2};
-    }
-    
-    if (flush_screen) {
-        wclear(stdscr);
-        wrefresh(stdscr);
     }
     
     WINDOW* pad = newpad(10, 100);
@@ -668,6 +659,9 @@ void Display::drawScrollingText(const std::string& text, std::pair<int, int> pos
         wattron(stdscr, COLOR_PAIR(6));
     }
     flushinp();
+    usleep(500000);
+    wclear(stdscr);
+    wrefresh(stdscr);
 }
 #pragma endregion
 

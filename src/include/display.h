@@ -20,6 +20,6 @@ class Display {
     static void drawItemMenu(int highlighted, std::string desc);
     static void drawGameOverMenu(int highlighted);
     static void drawIntro();
-    static void drawScrollingText(const std::string& text, std::pair<int, int> pos = {-1, -1}, int updates = 10, bool mirrored = false, bool flush_screen = false, bool bold = false);
+    static void drawScrollingText(const std::string& text, std::pair<int, int> pos = {-1, -1}, int updates = 10, bool mirrored = false, bool bold = false);
     static void terminate();
 };
