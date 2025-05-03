@@ -58,8 +58,6 @@ class Main {
      * Opens the configuration file using the user's default editor
      * First checks the EDITOR environment variable, then falls back to vi
      * Temporarily exits ncurses mode to allow full terminal control
-     *
-     * @return void
      */
     void openConfigWithEditor() {
         // Get the config file path
@@ -96,11 +94,12 @@ class Main {
     }
 
   public:
-    /*
-     * Default constructor for Main class
-     * Sets up initial game state, level, player, and loads config & items
+      /*
+     * Initializes the game state, player, configuration, and item data.
+     * Sets up the first level with default parameters.
      *
-     * @return none
+     * Usage:
+     * Main game;
      */
     Main() : currentLevel(currentMapSize, Vector2D(0, 0), 4) {
         gamestate = GameState::MainMenu;
@@ -111,8 +110,6 @@ class Main {
 
         utils::loadItems(unobtainedItems);
 
-        // print contents of unobtainedItems
-        //
     }
 
     /*
@@ -212,7 +209,6 @@ class Main {
             itemCount -= 1;
         currentLevel = Level(currentMapSize, player.getPos(), int(itemCount));
     }
-
 
     /*
      * Handles item pickup at a specific pos
@@ -438,7 +434,12 @@ class Main {
             highlighted += 1;
         highlighted = (optionsCount + highlighted) % optionsCount;
     }
-
+     /*
+     * Handles the main menu logic
+     *
+     * Draws the main menu screen, takes input, and updates the game state
+     * based on the player's selection.
+     */
     void handleMainMenu() {
         Display::drawMainMenu(highlighted);
         // Player is still picking an option
@@ -475,6 +476,12 @@ class Main {
         confirmed = false;
     }
 
+    /*
+     * Handles the difficulty selection menu
+     *
+     * Draws the difficulty menu, gets user input, and starts a new game
+     * with the chosen difficulty.
+     */
     void handleDifficultyMenu() {
         Display::drawDifficultyMenu(highlighted);
         // Player is still picking an option
@@ -505,7 +512,12 @@ class Main {
         highlighted = 0;
         confirmed = false;
     }
-    
+    /*
+     * Handles the help menu display
+     * Shows controls or instructions and returns to the main menu upon confirmation.
+     *
+     * @return void
+     */
     void handleHelpMenu() {
         Display::drawHelpMenu(highlighted);
         if (!confirmed) {
@@ -517,7 +529,13 @@ class Main {
         highlighted = 0;
         confirmed = false;
     }
-    
+     /*
+     * Main gameplay logic while in a level
+     *
+     * Updates player status, handles movement, actions, and transitions
+     * between game states such as pause or game over.
+     * @return void
+     */
     void handleLevelLogic() {
         //Display::drawLevel(currentLevel, player, completedLevels, collectedItemName);
 
@@ -549,7 +567,13 @@ class Main {
 
         player.postUpdate();
     }
-    
+     /*
+     * Handles logic for the inventory menu
+     *
+     * Allows the player to navigate their inventory, select or inspect items,
+     * and discard items.
+     * @return void
+     */
     void handleInventoryMenu() {
         Display::drawInventoryMenu(highlighted, player.getInventory());
         if (!confirmed) {
@@ -576,7 +600,12 @@ class Main {
         highlighted = 0;
         confirmed = false;
     }
-    
+    /*
+     * Handles item menu interactions
+     * Lets the player discard an item or return to the inventory menu.
+     *
+     * @return void
+     */
     void handleItemMenu() {
         Display::drawItemMenu(highlighted, selectedItemDesc);
         if (!confirmed) {
@@ -596,7 +625,13 @@ class Main {
         highlighted = 0;
         confirmed = false;
     }
-    
+      /*
+     * Handles logic for the pause menu
+     *
+     * Lets the player continue, restart, access inventory/help/settings, or exit.
+     *
+     * @return void
+     */
     void handlePauseMenu() {
         Display::drawPauseMenu(highlighted);
         // Player is still picking an option
@@ -636,6 +671,13 @@ class Main {
         confirmed = false;
     }
 
+    /*
+     * Handles logic for the game over menu
+     *
+     * Allows the player to restart or return to the main menu.
+     *
+     * @return void
+     */
     void handleGameOverMenu() {
         Display::drawGameOverMenu(highlighted);
         // Player is still picking an option
