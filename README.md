@@ -57,7 +57,7 @@ The default controls are:
 - `w` - Move up/Go up (in menu)
 - `s` - Move down/Go down (in menu)
 - `a` - Move left
-- `b` - Move right
+- `d` - Move right
 - `f` - Confirm selection (used in the game's UI menus)
 - `e` - Use pickaxe (break walls)
 - `r` - Use ration (restore stamina)
