@@ -135,7 +135,6 @@ bool isVisible(int y1, int x1, int y2, int x2, int fov) {
  */
 #pragma region DRAW LEVEL HUD
 void drawLevelHUD(const Player &player, int currentLevel) {
-
     int maxY, maxX;
     getmaxyx(stdscr, maxY, maxX);
     int height = 26, width = 23;
@@ -144,13 +143,15 @@ void drawLevelHUD(const Player &player, int currentLevel) {
     // Draw background
     attron(COLOR_PAIR(6) | A_DIM);
     for (int i = 0; i < 21; i++) {
-        move(anchor.y - 10 + i, anchor.x - 20);
-        for (int j = 0; j < 21; j++) {
+        move(anchor.y - 10 + i,
+             anchor.x - 19); // Move one character right to avoid left border
+        for (int j = 0; j < 19; j++) { // Reduced from 21 to 19 fog blocks
             addstr(FOG);
         }
     }
     attroff(COLOR_PAIR(6) | A_DIM);
 
+    // Rest of the function unchanged
     // Draw border
     attron(A_BOLD);
     attron(COLOR_PAIR(7));
@@ -314,6 +315,17 @@ void Display::drawLevel(const Level &level, const Player &player,
                     i > playerY + 10) {
                     continue;
                 }
+
+                // Calculate the screen coordinates before drawing
+                int screenY = anchor.y + i - playerY;
+                int screenX = anchor.x + (j - playerX) * 2;
+
+                // Skip drawing fog if we're at a border location
+                if (screenX == anchor.x - 20 || screenX == anchor.x + 20) {
+                    continue;
+                }
+
+                move(screenY, screenX);
                 attron(COLOR_PAIR(6) | A_DIM);
                 addstr(FOG);
                 attroff(COLOR_PAIR(6) | A_DIM);
