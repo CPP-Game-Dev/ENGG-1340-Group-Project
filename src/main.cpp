@@ -186,11 +186,7 @@ class Main {
             itemCount += 2;
 
         currentLevel = Level(currentMapSize, player.getPos(), int(std::floor(itemCount)));
-        auto newStamina =
-            std::min(int(player.getStamina() +
-                         std::floor(player.getStamina() * energyMult)),
-                     int(player.getStamina() +
-                         std::floor(player.getStaminaMax() * energyMult)));
+        auto newStamina = int(player.getStamina() + std::floor(player.getStaminaMax() * energyMult));
 
         if(player.hasItem(ItemID::SleepingBag))
             newStamina += 10;
