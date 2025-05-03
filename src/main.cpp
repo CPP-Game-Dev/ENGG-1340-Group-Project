@@ -51,7 +51,6 @@ class Main {
     KeyInput lastDirectionalInput;
     Config config;
 
-
     std::vector<std::vector<std::unique_ptr<Item> > > unobtainedItems;
 
     /*
@@ -94,7 +93,7 @@ class Main {
     }
 
   public:
-      /*
+    /*
      * Initializes the game state, player, configuration, and item data.
      * Sets up the first level with default parameters.
      *
@@ -109,7 +108,6 @@ class Main {
         config = Config();
 
         utils::loadItems(unobtainedItems);
-
     }
 
     /*
@@ -179,17 +177,19 @@ class Main {
             energyMult = 0.4;
             break;
         }
-        if(player.hasItem(ItemID::GTCDV1)) 
+        if (player.hasItem(ItemID::GTCDV1))
             itemCount += 2;
 
-        currentLevel = Level(currentMapSize, player.getPos(), int(std::floor(itemCount)));
-        auto newStamina = int(player.getStamina() + std::floor(player.getStaminaMax() * energyMult));
+        currentLevel =
+            Level(currentMapSize, player.getPos(), int(std::floor(itemCount)));
+        auto newStamina = int(player.getStamina() +
+                              std::floor(player.getStaminaMax() * energyMult));
 
-        if(player.hasItem(ItemID::SleepingBag))
+        if (player.hasItem(ItemID::SleepingBag))
             newStamina += 10;
-        if(player.hasItem(ItemID::EnchantedBracelet))
+        if (player.hasItem(ItemID::EnchantedBracelet))
             newStamina += 15;
-        if(player.hasItem(ItemID::AStar))
+        if (player.hasItem(ItemID::AStar))
             player.setBaseStaminaMax(player.getBaseStaminaMax() + 10);
 
         player.setStamina(newStamina);
@@ -205,7 +205,7 @@ class Main {
         completedLevels = 0;
         currentMapSize = 5;
         itemCount = 4.0f;
-        if(difficulty == Difficulty::Purgatory)
+        if (difficulty == Difficulty::Purgatory)
             itemCount -= 1;
         currentLevel = Level(currentMapSize, player.getPos(), int(itemCount));
     }
@@ -268,7 +268,7 @@ class Main {
             }
             // Select a non-empty item list
             int rarity, weights[] = {50, 30, 15, 5}, rnd;
-            if(player.hasItem(ItemID::MetalDetector)) {
+            if (player.hasItem(ItemID::MetalDetector)) {
                 weights[0] = 40;
                 weights[1] = 33;
                 weights[2] = 20;
@@ -294,9 +294,8 @@ class Main {
             break;
         }
 
-        if(pickup & player.hasItem(ItemID::CharmOfSatiation)) 
+        if (pickup & player.hasItem(ItemID::CharmOfSatiation))
             player.setStamina(player.getStamina() + 5);
-
     }
 #pragma enderegion
     /*
@@ -330,7 +329,8 @@ class Main {
             return;
         }
 
-        if (player.hasItem(ItemID::InkBottle) && currentLevel.getTile(player.getPos()) == TileObject::None)
+        if (player.hasItem(ItemID::InkBottle) &&
+            currentLevel.getTile(player.getPos()) == TileObject::None)
             currentLevel.setTile(player.getPos(), TileObject::Ink);
 
         player.setPos(newPos);
@@ -399,12 +399,10 @@ class Main {
                      player.getStaminaMax());
 
         player.setStamina(newStamina);
-        if(player.hasItem(ItemID::BlueCheese) && rand() % 10 < 2)
+        if (player.hasItem(ItemID::BlueCheese) && rand() % 10 < 2)
             return;
 
         player.setRationsOwned(player.getRationsOwned() - 1);
-
-
     }
 #pragma endregion
     /*
@@ -434,7 +432,7 @@ class Main {
             highlighted += 1;
         highlighted = (optionsCount + highlighted) % optionsCount;
     }
-     /*
+    /*
      * Handles the main menu logic
      *
      * Draws the main menu screen, takes input, and updates the game state
@@ -455,7 +453,7 @@ class Main {
         }
         // Played confirmed their choice
         switch (highlighted) {
-        case 0:          // New Game
+        case 0: // New Game
             gamestate = GameState::DifficultyMenu;
             break;
         case 1: // Help Menu
@@ -514,7 +512,8 @@ class Main {
     }
     /*
      * Handles the help menu display
-     * Shows controls or instructions and returns to the main menu upon confirmation.
+     * Shows controls or instructions and returns to the main menu upon
+     * confirmation.
      *
      * @return void
      */
@@ -529,7 +528,7 @@ class Main {
         highlighted = 0;
         confirmed = false;
     }
-     /*
+    /*
      * Main gameplay logic while in a level
      *
      * Updates player status, handles movement, actions, and transitions
@@ -537,12 +536,14 @@ class Main {
      * @return void
      */
     void handleLevelLogic() {
-        //Display::drawLevel(currentLevel, player, completedLevels, collectedItemName);
+        // Display::drawLevel(currentLevel, player, completedLevels,
+        // collectedItemName);
 
         player.preUpdate();
         player.update();
 
-        Display::drawLevel(currentLevel, player, completedLevels, collectedItemName);
+        Display::drawLevel(currentLevel, player, completedLevels,
+                           collectedItemName, lastDirectionalInput);
 
         key = getInput();
         // Check for key press
@@ -560,14 +561,12 @@ class Main {
         else if (key == KeyInput::UseRation)
             useRation();
 
-
-
         if (player.getStamina() <= 0)
             gamestate = GameState::GameOverMenu;
 
         player.postUpdate();
     }
-     /*
+    /*
      * Handles logic for the inventory menu
      *
      * Allows the player to navigate their inventory, select or inspect items,
@@ -625,10 +624,11 @@ class Main {
         highlighted = 0;
         confirmed = false;
     }
-      /*
+    /*
      * Handles logic for the pause menu
      *
-     * Lets the player continue, restart, access inventory/help/settings, or exit.
+     * Lets the player continue, restart, access inventory/help/settings, or
+     * exit.
      *
      * @return void
      */
@@ -693,7 +693,7 @@ class Main {
         }
         // Played confirmed their choice
         switch (highlighted) {
-        case 0:          // Start Over
+        case 0: // Start Over
             gamestate = GameState::DifficultyMenu;
             break;
         case 1: // Exit
@@ -714,17 +714,17 @@ class Main {
     void runGame() {
         Display::initCurses();
         Display::drawIntro();
-        
+
         while (running) {
             switch (gamestate) {
             case GameState::MainMenu:
                 handleMainMenu();
                 break;
 
-            case GameState::DifficultyMenu: 
+            case GameState::DifficultyMenu:
                 handleDifficultyMenu();
                 break;
-            
+
             case GameState::HelpMenu: {
                 handleHelpMenu();
                 break;
