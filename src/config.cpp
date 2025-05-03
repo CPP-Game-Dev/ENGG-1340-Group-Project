@@ -74,6 +74,7 @@ void Config::addPair(std::string key, std::string value) {
  * Returns a string which contains the value of the key value pair
  *
  * @param key
+ * @return std::string
  */
 std::string Config::getPair(std::string key) {
     std::ifstream file(configDir + CONFIG_FILE);

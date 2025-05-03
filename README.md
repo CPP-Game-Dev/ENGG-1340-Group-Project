@@ -5,7 +5,11 @@ A rogue-like maze exploration game where you navigate through procedurally gener
 As you navigate the maze, you will encounter various items that can help you on your journey:
 - **Rations** are consumables that restore stamina, which heals your stamina based on your ration regeneration rate. You are only able to carry 2 rations at once, so use it wisely.
 - **Energy Drinks** are consumed immediately as you collect it, increasing your stamina by a fixed amount.
-- Lastly, **Items** are game-changing items that alter the gameplay significantly, each with its own advantages and disadvantages. You are allowed to carry up to 5 items at once. View the items you collected and manage them in the pause menu.
+- **Pickaxes** are used to break walls, allowing you to create shortcuts in the maze. You can only carry 2 pickaxe at a time, so use it wisely.
+- **Items** are game-changing items that alter the gameplay significantly, such as increasing your FOV, ration regeneration rate, and stamina consumption. However, each item comes with its own advantages and disadvantages. You are allowed to carry up to 5 items at once. 
+  - View the items you collected and manage them in the **pause menu**.
+
+To view the list of default keybinds, refer to **Game Controls** in the documentation.
 
 ## Getting Started
 ### Prerequisites
