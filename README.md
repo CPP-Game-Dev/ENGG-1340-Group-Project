@@ -54,8 +54,8 @@ The Makefile handles:
 ### Game Controls
 The default controls are:
 
-- `w` - Move up
-- `s` - Move down
+- `w` - Move up/Go up (in menu)
+- `s` - Move down/Go down (in menu)
 - `a` - Move left
 - `b` - Move right
 - `f` - Confirm selection (used in the game's UI menus)
