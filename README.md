@@ -1,6 +1,11 @@
 # ENGG 1340 Group Project
 
-A maze-based exploration game where players navigate through procedurally generated levels, managing resources like stamina and items while finding their way to the exit.
+A rogue-like maze exploration game where you navigate through procedurally generated levels and try to get to the exit before your stamina runs out.
+
+As you navigate the maze, you will encounter various items that can help you on your journey:
+- **Rations** are consumables that restore stamina, which heals your stamina based on your ration regeneration rate. You are only able to carry 2 rations at once, so use it wisely.
+- **Energy Drinks** are consumed immediately as you collect it, increasing your stamina by a fixed amount.
+- Lastly, **Items** are game-changing items that alter the gameplay significantly, each with its own advantages and disadvantages. You are allowed to carry up to 5 items at once. View the items you collected and manage them in the pause menu.
 
 ## Getting Started
 ### Prerequisites
@@ -51,7 +56,9 @@ The default controls are:
 - `b` - Move right
 - `e` - Use pickaxe (break walls)
 - `r` - Use ration (restore stamina)
-- `q` - Quit game
+- `q` - **Pause menu**
+
+**Pause menu**: Aside from being able to pause and exit the game, the pause menu allows you to manage your inventory. You can view what each item does, as well as discard items, as you are limited to 5 items in your inventory at a time.
 
 The keybindings can be configured in the game's configuration file, which are located in:
 - `$XDG_CONFIG_HOME/game_name/config.txt`, if `$XDG_CONFIG_HOME` is set
