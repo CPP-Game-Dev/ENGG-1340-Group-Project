@@ -205,8 +205,8 @@ class Main {
         completedLevels = 0;
         currentMapSize = 5;
         itemCount = 4.0f;
-        if (difficulty == Difficulty::Purgatory)
-            itemCount -= 1;
+        // if (difficulty == Difficulty::Purgatory)
+        //     itemCount -= 1;
         currentLevel = Level(currentMapSize, player.getPos(), int(itemCount));
     }
 

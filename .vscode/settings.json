@@ -53,6 +53,7 @@
         "map": "cpp",
         "cinttypes": "cpp",
         "__bit_reference": "cpp",
-        "ios": "cpp"
+        "ios": "cpp",
+        "bitset": "cpp"
     }
 }
