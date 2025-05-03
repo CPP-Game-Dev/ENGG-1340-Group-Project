@@ -70,6 +70,9 @@ The keybindings can be configured in the game's configuration file, which are lo
 - **Player Inventory**: Dynamic vector of unique pointers to store collected items
 - **Position Management**: Custom Vector2D struct for position tracking and movement
 - **Configuration Maps**: Uses std::map to store and retrieve configuration key-value pairs
+  - Edit keybindings directly from within the game
+  - Uses your system's default text editor (from $EDITOR environment variable)
+  - Settings are saved and applied immediately
 
 #### 3. Dynamic Memory Management
 - **Smart Pointers**: Extensive use of `std::unique_ptr` for safe memory management
@@ -82,20 +85,22 @@ The keybindings can be configured in the game's configuration file, which are lo
 - **XDG-Compliant Paths**: Follows [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/latest/) for config locations
 - **Persistent Settings**: User controls and preferences are saved between game sessions
 - **Directory Management**: Creates necessary directories if they don't exist
+- **Item Database**: Items are loaded from a structured data file `src/data/items.bsv` and initialized at run time. 
 
 #### 5. Program Codes in Multiple Files
 - **Modular Architecture**: Code is organized across 15+ files with clear separation of concerns
 - **Header/Implementation Separation**: Interface definitions in header files with implementations in .cpp files
 - **Component-Based Design**: Distinct modules for player, level, display, and item systems
-- **Test Organization**: Separate test files for each component
+- **Test Organization**: Separate test files for each component with namespaces to prevent conflicts 
 
 #### 6. Multiple Difficulty Levels
 - **Three Difficulty Options**: 
-  - Catacombs (Easy): Slower map growth, more generous stamina regeneration (70%)
-  - Labyrinth (Medium): Moderate map growth, balanced stamina regeneration (50%)
-  - Purgatory (Hard): Rapid map growth, minimal stamina regeneration (30%)
+  - Catacombs (Easy): Slower map growth, more generous stamina regeneration (75%)
+  - Labyrinth (Medium): Moderate map growth, balanced stamina regeneration (55%)
+  - Purgatory (Hard): Rapid map growth, minimal stamina regeneration (40%)
 - **Scaling Complexity**: Maps increase in size as players progress through levels
 - **Resource Management**: Different difficulty levels affect how scarce resources are
+
 
 ### Code Structure
 The project is structured modularly and is organized into several key components:
@@ -138,13 +143,6 @@ The code follows a consistent documentation pattern:
 - **Class Documentation**: Classes include descriptions of their purpose and usage
 
 - **Implementation Notes**: Complex algorithms include step-by-step explanations
-
-### Understanding the Codebase
-
-1. Start with main.cpp to understand the entry point and game loop
-2. Examine the class definitions in the `include` folder
-3. Follow the implementation in the corresponding `.cpp` files
-4. Review the test cases for usage examples
 
 ### Contributing Guidelines
 

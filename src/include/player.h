@@ -11,8 +11,8 @@ const int DEFAULT_RATION_REGEN = 15;
 const int DEFAULT_RATION_REGEN_MULT = 1;
 const int DEFAULT_FOV = 2;
 const int DEFAULT_FOV_MULT = 1;
-const int DEFAULT_RATION_CAPACITY = 2;
-const int DEFAULT_PICKAXE_CAPACITY = 1;
+const int DEFAULT_RATION_CAPACITY = 3;
+const int DEFAULT_PICKAXE_CAPACITY = 2;
 const int DEFAULT_RATION_CAPACITY_MULT = 1;
 const int DEFAULT_PICKAXE_CAPACITY_MULT = 1;
 
@@ -31,9 +31,9 @@ class Player {
     int basePickaxeCapacity; // The number of pickaxes that can be carried
 #pragma endregion
 #pragma region Current Stats
-    int stamina;         // Current stamina
-    int staminaMax;      // Current max stamina
-    int rationRegen;     // Current ration regeneration amount
+    int stamina;     // Current stamina
+    int staminaMax;  // Current max stamina
+    int rationRegen; // Current ration regeneration amount
     int rationsOwned;
     int pickaxesOwned;
     int fov;             // Current FOV
@@ -41,7 +41,7 @@ class Player {
     int pickaxeCapacity; // Current pickaxe capacity
     Vector2D prevPos;    // Previous position
     Vector2D pos;        // Current position
-#pragma region endregion
+#pragma endregion
 #pragma region Stat Multipliers
     float staminaMaxMult;      // Multiplier for max stamina
     float rationRegenMult;     // Multiplier for ration stamina regen
@@ -56,49 +56,23 @@ class Player {
     Player(int baseStaminaMax, int baseRationRegen, int baseFov,
            int baseRationCapacity, int basePickaxeCapacity, Vector2D pos,
            std::vector<std::unique_ptr<Item> > &&inventory);
+    
+    void resetStats();
 
 #pragma region Inventory Management
-  
-    void addItem(std::unique_ptr<Item> item);
 
-    template <typename ItemType>
-    void removeItem(std::vector<std::unique_ptr<Item> > itemList) {
-        for (auto &item : this->inventory) {
-            if (dynamic_cast<ItemType *>(item.get()) != nullptr) {
-                itemList.push_back(std::move(item));
-            }
-        }
-    }
+    void addItem(std::unique_ptr<Item> &item,
+                 std::vector<std::unique_ptr<Item> > &itemList);
+    void removeItem(
+        int itemID,
+        std::vector<std::vector<std::unique_ptr<Item> > > &unobtainedItems);
+    bool hasItem(int itemID) const;
 
-    template <typename ItemType> bool hasItem() {
-        for (auto &item : this->inventory)
-            if (dynamic_cast<ItemType *>(item.get()) != nullptr)
-                return true;
-        return false;
-    }
+    inline const std::vector<std::unique_ptr<Item> > &getInventory() const {
+        return this->inventory;
+    };
+    inline int getItemCount() const { return this->inventory.size(); }
 
-const std::vector<std::unique_ptr<Item>>& getInventory() const;
-
-
-template <typename ItemType>
-void removeItemTo(std::vector<std::unique_ptr<Item>>& itemList) {
-  
-auto it = inventory.begin();
-  
-    while (it != inventory.end()) {
-          
-        if (dynamic_cast<ItemType*>(it->get()) != nullptr) {
-              
-            itemList.push_back(std::move(*it));
-            it = inventory.erase(it);
-        } 
-        else {
-            ++it;
-        }
-    }
-}
-
-  
 #pragma endregion
 
     void preUpdate();  // Prepares the player instance for update()
@@ -128,6 +102,7 @@ auto it = inventory.begin();
     inline int getRationCapacity() const { return this->rationCapacity; }
     inline int getPickaxeCapacity() const { return this->pickaxeCapacity; }
 
+    inline Vector2D getPrevPos() const { return this->prevPos; }
     inline Vector2D getPos() const { return this->pos; }
 
     inline double getStaminaMaxMult() const { return this->staminaMaxMult; }
@@ -160,6 +135,8 @@ auto it = inventory.begin();
     inline void setRationCapacity(int value) { this->rationCapacity = value; }
     inline void setPickaxeCapacity(int value) { this->pickaxeCapacity = value; }
 
+    inline void setPrevPos(int y, int x) { this->prevPos = Vector2D(y, x); }
+    inline void setPrevPos(Vector2D newPos) { this->prevPos = newPos; }
     inline void setPos(int y, int x) { this->pos = Vector2D(y, x); }
     inline void setPos(Vector2D newPos) { this->pos = newPos; }
 

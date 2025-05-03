@@ -1,8 +1,8 @@
 #include "include/player.h"
 #include "include/item.h"
 #include "include/vector2d.h"
-#include <memory>
-#include <vector>
+// #include <iostream>
+#include <algorithm>
 
 /*
  * Constructor for default player
@@ -16,29 +16,7 @@
  * @return none
  */
 Player::Player() {
-    this->baseStaminaMax = DEFAULT_STAMINA_MAX;
-    this->baseRationRegen = DEFAULT_RATION_REGEN;
-    this->baseFov = DEFAULT_FOV;
-    this->baseRationCapacity = DEFAULT_RATION_CAPACITY;
-    this->basePickaxeCapacity = DEFAULT_PICKAXE_CAPACITY;
-
-    this->stamina = DEFAULT_STAMINA_MAX;
-    this->staminaMax = DEFAULT_STAMINA_MAX;
-    this->rationRegen = DEFAULT_RATION_REGEN;
-    this->fov = DEFAULT_FOV;
-    this->rationCapacity = DEFAULT_RATION_CAPACITY;
-    this->rationsOwned = 0;
-    this->pickaxeCapacity = DEFAULT_PICKAXE_CAPACITY;
-    this->pickaxesOwned = 0;
-
-    this->staminaMaxMult = DEFAULT_STAMINA_MAX_MULT;
-    this->rationRegenMult = DEFAULT_RATION_REGEN_MULT;
-    this->fovMult = DEFAULT_FOV_MULT;
-    this->rationCapacityMult = DEFAULT_RATION_CAPACITY_MULT;
-    this->pickaxeCapacityMult = DEFAULT_PICKAXE_CAPACITY_MULT;
-
-    this->prevPos = Vector2D(0, 0);
-    this->pos = Vector2D(0, 0);
+    resetStats();
 }
 /*
  * Constructor with custom base stats and inventory
@@ -68,6 +46,42 @@ Player::Player(int baseStaminaMax, int baseRationRegen, int baseFov,
     this->pos = pos;
     this->inventory = std::move(inventory);
 }
+
+/*
+ * Resets player stats to default base stats, multipliers,
+ * and starting position (0, 0).
+ *
+ * Usage:
+ * player.resetStats();
+ *
+ * @return void
+ */
+void Player::resetStats() {
+    this->baseStaminaMax = DEFAULT_STAMINA_MAX;
+    this->baseRationRegen = DEFAULT_RATION_REGEN;
+    this->baseFov = DEFAULT_FOV;
+    this->baseRationCapacity = DEFAULT_RATION_CAPACITY;
+    this->basePickaxeCapacity = DEFAULT_PICKAXE_CAPACITY;
+
+    this->stamina = DEFAULT_STAMINA_MAX;
+    this->staminaMax = DEFAULT_STAMINA_MAX;
+    this->rationRegen = DEFAULT_RATION_REGEN;
+    this->fov = DEFAULT_FOV;
+    this->rationCapacity = DEFAULT_RATION_CAPACITY;
+    this->rationsOwned = 0;
+    this->pickaxeCapacity = DEFAULT_PICKAXE_CAPACITY;
+    this->pickaxesOwned = 0;
+
+    this->staminaMaxMult = DEFAULT_STAMINA_MAX_MULT;
+    this->rationRegenMult = DEFAULT_RATION_REGEN_MULT;
+    this->fovMult = DEFAULT_FOV_MULT;
+    this->rationCapacityMult = DEFAULT_RATION_CAPACITY_MULT;
+    this->pickaxeCapacityMult = DEFAULT_PICKAXE_CAPACITY_MULT;
+
+    this->prevPos = Vector2D(0, 0);
+    this->pos = Vector2D(0, 0);
+}
+
 /*
  * Adds an item to the player's inventory
  *
@@ -79,8 +93,51 @@ Player::Player(int baseStaminaMax, int baseRationRegen, int baseFov,
  * @param item Item to add (unique pointer)
  * @return void
  */
-void Player::addItem(std::unique_ptr<Item> item) {
+void Player::addItem(std::unique_ptr<Item> &item,
+                     std::vector<std::unique_ptr<Item> > &itemList) {
+    if (this->inventory.size() >= 5)
+        return;
+
     this->inventory.push_back(std::move(item));
+    itemList.erase(std::remove(itemList.begin(), itemList.end(), nullptr),
+                   itemList.end());
+}
+
+/*
+ * Removes an item from the player's inventory
+ *
+ * Transfers ownership of the given item to the unobtained items list
+ *
+ * Usage:
+ * player.addItem(std::make_unique<Item>());
+ *
+ * @param item Item to add (unique pointer)
+ * @return void
+ */
+void Player::removeItem(
+    int itemID,
+    std::vector<std::vector<std::unique_ptr<Item> > > &unobtainedItems) {
+    // Doesn't have the item to be removed
+    if (!this->hasItem(itemID))
+        return;
+
+    // Go through inventory to find the item & move it back to the itemList
+    // responsible to hold it
+    for (auto &item : this->inventory) {
+        if (item->id == itemID) {
+            unobtainedItems[item->rarity].push_back(std::move(item));
+        }
+    }
+    this->inventory.erase(
+        std::remove(this->inventory.begin(), this->inventory.end(), nullptr),
+        this->inventory.end());
+}
+
+bool Player::hasItem(int itemID) const {
+    for (auto &item : this->inventory)
+        if (item->id == itemID)
+            return true;
+    return false;
 }
 
 /*
@@ -151,6 +208,18 @@ void Player::update() {
     this->rationCapacityMult = 1.0f;
     this->pickaxeCapacityMult = 1.0f;
 
+    // Snap multipliers to zero if they became NaN or negative
+    if (this->staminaMaxMult < 0.0f)
+        this->staminaMaxMult = 1.0f;
+    if (this->rationRegenMult < 0.0f)
+        this->rationRegenMult = 1.0f;
+    if (this->fovMult < 0.0f)
+        this->fovMult = 1.0f;
+    if (this->rationCapacityMult < 0.0f)
+        this->rationCapacityMult = 1.0f;
+    if (this->pickaxeCapacityMult < 0.0f)
+        this->pickaxeCapacityMult = 1.0f;
+
     for (const auto &item : inventory) {
         if (!item)
             continue;
@@ -217,15 +286,5 @@ void Player::postUpdate() {
     if (this->fov > 10)
         this->fov = 10;
 
-    // Optional: Snap multipliers to zero if they became NaN or negative
-    if (this->staminaMaxMult < 0.0f)
-        this->staminaMaxMult = 1.0f;
-    if (this->rationRegenMult < 0.0f)
-        this->rationRegenMult = 1.0f;
-    if (this->fovMult < 0.0f)
-        this->fovMult = 1.0f;
-    if (this->rationCapacityMult < 0.0f)
-        this->rationCapacityMult = 1.0f;
-    if (this->pickaxeCapacityMult < 0.0f)
-        this->pickaxeCapacityMult = 1.0f;
+    this->prevPos = this->pos;
 }
