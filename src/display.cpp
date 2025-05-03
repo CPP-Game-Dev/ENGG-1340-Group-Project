@@ -549,6 +549,7 @@ void Display::drawItemMenu(int highlighted, std::string desc) {
     drawMenu(options, highlighted, 2);
 }
 
+#pragma region Draw Animation
 /*
  * Displays the intro screen
  * @return void
