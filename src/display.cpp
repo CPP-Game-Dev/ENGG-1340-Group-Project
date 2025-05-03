@@ -41,7 +41,6 @@ void Display::initCurses() {
 
 /*
  * Clears and refreshes the screen
- *
  * @return void
  */
 void Display::flush() {
@@ -51,7 +50,6 @@ void Display::flush() {
 
 /*
  * Maps a TileObject to a string representation
- *
  * @param tile TileObject enum
  * @return std::string representation for display
  */
@@ -82,7 +80,7 @@ std::string getTileChar(TileObject tile) {
  * Maps a TileObject to its color pair ID
  *
  * @param tile TileObject enum
- * @return int representing ncurses color pair
+ * @return int representing ncurses color
  */
 int getTileColor(TileObject tile) {
     switch (tile) {
@@ -100,10 +98,9 @@ int getTileColor(TileObject tile) {
 }
 
 /*
- * Normalizes field of view value for consistent rendering
- *
+ * Adjusts field of view value to ensure odd and minimum values
  * @param fov raw field of view
- * @return int adjusted field of view for calculations
+ * @return int normalized field of view
  */
 int mapfov(int fov) {
     if (fov == 0 || fov == 1) {
@@ -212,13 +209,12 @@ void drawLevelHUD(const Player &player, const int maxY, const int maxX,
 }
 #pragma endregion
 
-/*
- * Draws the current state of the maze, centered around the player
- * Applies FOV logic and colors based on tile type
- *
- * @param level Level object representing the current map
- * @param player Player object used for position and FOV
- * @return void
+
+ /*
+ * Renders the visible portion of the maze centered on the player
+ * @param level current Level object
+ * @param player current Player object
+ * @param currentLevel index of current level (0 indexed)
  */
 #pragma region DRAW LEVEL
 void Display::drawLevel(const Level &level, const Player &player,
@@ -290,6 +286,12 @@ void Display::drawLevel(const Level &level, const Player &player,
 }
 #pragma endregion
 
+/*
+ * Displays a menu with selectable options and highlights current selection
+ * @param options list of menu options
+ * @param highlighted index of highlighted option
+ * @return void
+ */
 #pragma region DRAW MENU
 void drawMenu(std::vector<std::string> options, int highlighted, int dy = 0,
               int dx = 0) {
@@ -317,11 +319,21 @@ void drawMenu(std::vector<std::string> options, int highlighted, int dy = 0,
 }
 #pragma endregion
 
+/*
+ * Displays the main menu with default options
+ * @param highlighted index of selected item
+ * @return void
+ */
 void Display::drawMainMenu(int highlighted) {
     std::vector<std::string> options = {"New Game", "Help", "Settings", "Exit"};
     drawMenu(options, highlighted);
 }
 
+/*
+ * Displays the difficulty selection menu
+ * @param highlighted index of selected item
+ * @return void
+ */
 void Display::drawDifficultyMenu(int highlighted) {
     std::vector<std::string> options = {"Catacombs", "Labyrinth", "Purgatory",
                                         "Back"};
@@ -329,18 +341,33 @@ void Display::drawDifficultyMenu(int highlighted) {
     drawMenu(options, highlighted);
 }
 
+/*
+ * Displays the pause menu during gameplay
+ *
+ * @param highlighted index of selected item
+ * @return void
+ */
 void Display::drawPauseMenu(int highlighted) {
     std::vector<std::string> options = {"Continue", "New Game", "Help",
                                         "Settings", "Exit"};
     drawMenu(options, highlighted);
 }
 
+/*
+ * Displays the game over menu
+ * @param highlighted index of selected item
+ * @return void
+ */
 void Display::drawGameOverMenu(int highlighted) {
     std::vector<std::string> options = {"Start Over", "Exit"};
 
     drawMenu(options, highlighted);
 }
-
+/*
+ * Displays the help menu screen
+ * @param highlighted index of selected item
+ * @return void
+ */
 void Display::drawHelpMenu(int highlighted) {
     std::vector<std::string> options = {"Back"};
 
@@ -349,7 +376,6 @@ void Display::drawHelpMenu(int highlighted) {
 
 /*
  * Terminates ncurses session and restores terminal
- *
  * @return void
  */
 void Display::terminate() { endwin(); }
